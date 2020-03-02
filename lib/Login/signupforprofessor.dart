@@ -15,24 +15,28 @@ class Professorsignup extends StatefulWidget {
 class ProfessorsignupPage extends State<Professorsignup> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode Professoridnode = FocusNode();
+  final FocusNode Professoremailnode = FocusNode();
   final FocusNode Professornamenode = FocusNode();
   final FocusNode Professoragenode = FocusNode();
   final FocusNode Professorgraduatednode = FocusNode();
   final FocusNode Professorpasswordnode = FocusNode();
   TextEditingController Professorid;
   TextEditingController Professorname;
+  TextEditingController Professoremail;
   TextEditingController Professorage;
   TextEditingController Professorgraduated;
   TextEditingController Professorpassword;
   String Professoridsave,
       Professorpasswordsave,
       Professornamesave,
+      Professoremailsave,
       Professoragesave,
       Professorgraduatedsave;
   void initState() {
     super.initState();
     Professorid = new TextEditingController();
     Professorname = new TextEditingController();
+    Professoremail = new TextEditingController();
     Professorage = new TextEditingController();
     Professorgraduated = new TextEditingController();
     Professorpassword = new TextEditingController();
@@ -44,10 +48,11 @@ class ProfessorsignupPage extends State<Professorsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  login(String name, int id, String password, String graduated, int age) async {
+  login(String name, String email, int id, String password, String graduated,
+      int age) async {
     database api = new database();
     var l = await api.sendtodatabase1(
-        'Professor_request', name, id, password, graduated, age);
+        'Professor', name, email, id, password, graduated, age);
     print(l);
   }
 
@@ -70,7 +75,7 @@ class ProfessorsignupPage extends State<Professorsignup> {
                     onSaved: (input) => Professoridsave = input,
                     onFieldSubmitted: (term) {
                       _fieldFocusChange(
-                          context, Professoridnode, Professorpasswordnode);
+                          context, Professoridnode, Professoremailnode);
                     },
                     decoration: InputDecoration(
                       labelText: "Your ID",
@@ -81,6 +86,28 @@ class ProfessorsignupPage extends State<Professorsignup> {
                         return 'Enter Your ID';
                       } else if (value.length < 6) {
                         return 'Your ID must be longer than 6 numbers';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: Professoremail,
+                    focusNode: Professoremailnode,
+                    textInputAction: TextInputAction.next,
+                    onSaved: (input) => Professoremailsave = input,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(
+                          context, Professoremailnode, Professorpasswordnode);
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Your email",
+                      hintText: "Enter your email",
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Enter Your email';
                       } else {
                         return null;
                       }
@@ -196,13 +223,16 @@ class ProfessorsignupPage extends State<Professorsignup> {
                 "sign up Professor",
               ),
               onPressed: () {
-                login(
-                    Professorname.text,
-                    int.parse(Professorid.text),
-                    Professorpassword.text,
-                    Professorgraduated.text,
-                    int.parse(Professorage.text));
-                print("cccccccccc");
+                if (_formKey.currentState.validate()) {
+                  login(
+                      Professorname.text,
+                      Professoremail.text,
+                      int.parse(Professorid.text),
+                      Professorpassword.text,
+                      Professorgraduated.text,
+                      int.parse(Professorage.text));
+                  print("cccccccccc");
+                }
               },
             ),
           ],

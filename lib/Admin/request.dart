@@ -35,17 +35,25 @@ class requestpage extends State<request> {
       itemBuilder: (context, index) {
         return Column(
           children: <Widget>[
+            Text("${data[index]['type']}"),
             Text("${data[index]['realName']}"),
-            Text("${data[index]['Nationalid']}"),
             Text("${data[index]['Email']}"),
+            Text("${data[index]['Password']}"),
+            Text("${data[index]['Nationalid']}"),
+            Text("${data[index]['ID']}"),
+            Text("${data[index]['graduted']}"),
             FlatButton(
               onPressed: () {
                 database().accept(
-                    data[index]['Nationalid'],
-                    data[index]['Email'],
-                    data[index]['realName'],
-                    data[index]['Password'],
-                    data[index]['ID']);
+                  data[index]['Nationalid'],
+                  data[index]['Email'],
+                  data[index]['realName'],
+                  data[index]['Password'],
+                  data[index]['ID'],
+                  data[index]['graduted'],
+                  data[index]['age'],
+                  data[index]['type'],
+                );
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => request()));
               },
@@ -53,7 +61,11 @@ class requestpage extends State<request> {
               color: Colors.blue,
             ),
             FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                database().remove(data[index]['ID']);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => request()));
+              },
               child: Text("reject"),
               color: Colors.blue,
             ),

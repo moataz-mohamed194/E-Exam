@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'Admin/add_department.dart';
+import 'Admin/add_subject.dart';
 import 'Admin/mainpageforadmin.dart';
+import 'Admin/request.dart';
 import 'Database/Database.dart';
 import 'Login/choose_Login.dart';
 import 'Login/student_login.dart';
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/mainforadmin': (BuildContext context) => new mainadmin(),
       },
-      home: Chooselogin(),
+      home: add_subject(),
     );
   }
 }

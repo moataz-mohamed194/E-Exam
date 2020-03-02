@@ -4,6 +4,8 @@ import '../Database/Database.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 
+import 'add_department.dart';
+import 'add_subject.dart';
 import 'request.dart';
 
 class mainadmin extends StatefulWidget {
@@ -29,6 +31,30 @@ class mainadminpage extends State<mainadmin> {
                     MaterialPageRoute(builder: (context) => request()));
               },
               child: Text("request"),
+              color: Colors.blue,
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => add_department()));
+              },
+              child: Text("add department"),
+              color: Colors.blue,
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => add_subject()));
+              },
+              child: Text("add subject"),
+              color: Colors.blue,
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => add_subject()));
+              },
+              child: Text("edit subject"),
               color: Colors.blue,
             ),
           ],

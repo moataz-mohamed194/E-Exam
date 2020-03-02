@@ -18,16 +18,27 @@ class AdminsignupPage extends State<Adminsignup> {
   final FocusNode Adminnamenode = FocusNode();
   final FocusNode Adminnationalidnode = FocusNode();
   final FocusNode Adminpasswordnode = FocusNode();
+  final FocusNode Admingradutednode = FocusNode();
+  final FocusNode Adminagenode = FocusNode();
   TextEditingController Adminemail;
   TextEditingController Adminname;
+  TextEditingController Admingraduted;
+  TextEditingController Adminage;
   TextEditingController Adminnationalid;
   TextEditingController Adminpassword;
-  String Adminemailsave, Adminpasswordsave, Adminnamesave, Adminnationalidsave;
+  String Adminemailsave,
+      Adminpasswordsave,
+      Admingradutedsave,
+      Adminagesave,
+      Adminnamesave,
+      Adminnationalidsave;
   void initState() {
     super.initState();
     Adminemail = new TextEditingController();
     Adminname = new TextEditingController();
     Adminnationalid = new TextEditingController();
+    Admingraduted = new TextEditingController();
+    Adminage = new TextEditingController();
     Adminpassword = new TextEditingController();
   }
 
@@ -37,10 +48,11 @@ class AdminsignupPage extends State<Adminsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  login(String national, String name, String id, String password) async {
+  login(String national, String name, String email, String password,
+      String graduted, String age) async {
     database api = new database();
-    var l =
-        await api.sendtodatabase('Admin_request', national, name, id, password);
+    var l = await api.sendtodatabase1('Admin', name, email, int.parse(national),
+        password, graduted, int.parse(age));
     print(l);
   }
 
@@ -107,7 +119,7 @@ class AdminsignupPage extends State<Adminsignup> {
                     onSaved: (input) => Adminpasswordsave = input,
                     onFieldSubmitted: (term) {
                       _fieldFocusChange(
-                          context, Adminpasswordnode, Adminnamenode);
+                          context, Adminpasswordnode, Admingradutednode);
                     },
                     decoration: InputDecoration(
                       labelText: "Your Password",
@@ -116,6 +128,49 @@ class AdminsignupPage extends State<Adminsignup> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Your Password';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: Admingraduted,
+                    focusNode: Admingradutednode,
+                    textInputAction: TextInputAction.done,
+                    onSaved: (input) => Admingradutedsave = input,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(
+                          context, Admingradutednode, Adminagenode);
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Your graduted",
+                      hintText: "Enter your graduted",
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Enter Your graduted';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: Adminage,
+                    focusNode: Adminagenode,
+                    textInputAction: TextInputAction.done,
+                    onSaved: (input) => Adminagesave = input,
+                    onFieldSubmitted: (term) {
+                      _fieldFocusChange(context, Adminagenode, Adminnamenode);
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Your age",
+                      hintText: "Enter your age",
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Enter Your age';
                       } else {
                         return null;
                       }
@@ -163,9 +218,11 @@ class AdminsignupPage extends State<Adminsignup> {
                 "sign up admin",
               ),
               onPressed: () {
-                login(Adminnationalid.text, Adminname.text, Adminemail.text,
-                    Adminpassword.text);
-                print("cccccccccc");
+                if (_formKey.currentState.validate()) {
+                  login(Adminnationalid.text, Adminname.text, Adminemail.text,
+                      Adminpassword.text, Admingraduted.text, Adminage.text);
+                  print("cccccccccc");
+                }
               },
             ),
           ],

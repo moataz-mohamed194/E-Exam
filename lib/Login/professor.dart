@@ -43,7 +43,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     controller: Professorid,
                     focusNode: Professoridnode,
                     textInputAction: TextInputAction.next,
@@ -53,14 +53,12 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                           context, Professoridnode, Professorpasswordnode);
                     },
                     decoration: InputDecoration(
-                      labelText: "Your ID",
-                      hintText: "Enter your ID",
+                      labelText: "Your Email",
+                      hintText: "Enter your Email",
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Enter Your ID';
-                      } else if (value.length < 6) {
-                        return 'Your ID must be longer than 6 numbers';
+                        return 'Enter Your Email';
                       } else {
                         return null;
                       }

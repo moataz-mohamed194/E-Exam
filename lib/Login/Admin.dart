@@ -75,14 +75,12 @@ class AdminLoginPage extends State<AdminLogin> {
                           context, adminidnode, adminpasswordnode);
                     },
                     decoration: InputDecoration(
-                      labelText: "Your ID",
-                      hintText: "Enter your ID",
+                      labelText: "Your Email",
+                      hintText: "Enter your Email",
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Enter Your ID';
-                      } else if (value.length < 6) {
-                        return 'Your ID must be longer than 6 numbers';
+                        return 'Enter Your Email';
                       } else {
                         return null;
                       }
@@ -133,7 +131,9 @@ class AdminLoginPage extends State<AdminLogin> {
                 "Login admin",
               ),
               onPressed: () {
-                login(adminid.text, adminpassword.text);
+                if (_formKey.currentState.validate()) {
+                  login(adminid.text, adminpassword.text);
+                }
               },
             ),
           ],
