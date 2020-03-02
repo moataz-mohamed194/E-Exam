@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'Admin/mainpageforadmin.dart';
+import 'Database/Database.dart';
 import 'Login/choose_Login.dart';
 import 'Login/student_login.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  /*database bb = new database();
+  var l = await bb.create();
+  print(l);*/
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,6 +20,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      routes: <String, WidgetBuilder>{
+        '/mainforadmin': (BuildContext context) => new mainadmin(),
+      },
       home: Chooselogin(),
     );
   }

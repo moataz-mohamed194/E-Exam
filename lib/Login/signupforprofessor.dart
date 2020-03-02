@@ -1,3 +1,4 @@
+import 'package:exam/Database/Database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  login() {}
+  login(String name, int id, String password, String graduated, int age) async {
+    database api = new database();
+    var l = await api.sendtodatabase1(
+        'Professor_request', name, id, password, graduated, age);
+    print(l);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,6 +196,12 @@ class ProfessorsignupPage extends State<Professorsignup> {
                 "sign up Professor",
               ),
               onPressed: () {
+                login(
+                    Professorname.text,
+                    int.parse(Professorid.text),
+                    Professorpassword.text,
+                    Professorgraduated.text,
+                    int.parse(Professorage.text));
                 print("cccccccccc");
               },
             ),

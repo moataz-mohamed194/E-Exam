@@ -1,5 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../Database/Database.dart';
+import 'package:sqflite/sqlite_api.dart';
+import 'package:toast/toast.dart' as Toast;
+
+import 'signupadmin.dart';
 
 class AdminLogin extends StatefulWidget {
   @override
@@ -28,7 +33,26 @@ class AdminLoginPage extends State<AdminLogin> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  login() {}
+  List data = new List();
+
+  login(String id, String password) async {
+    database().check_your_email_and_password('Admin', id).then((result) {
+      setState(() {
+        data.addAll(result);
+        print(result);
+        if (password == data[0]['Password']) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/mainforadmin', (Route<dynamic> route) => false);
+          Toast.Toast.show("Welcome to our app", context,
+              duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+        } else {
+          Toast.Toast.show("Check your password and Email", context,
+              duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +65,7 @@ class AdminLoginPage extends State<AdminLogin> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     controller: adminid,
                     focusNode: adminidnode,
                     textInputAction: TextInputAction.next,
@@ -90,12 +114,26 @@ class AdminLoginPage extends State<AdminLogin> {
                 ],
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(right: 15),
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                child: Text(
+                  "sgin up ",
+                  style: TextStyle(color: Colors.grey, fontSize: 20),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Adminsignup()));
+                },
+              ),
+            ),
             FlatButton(
               child: Text(
                 "Login admin",
               ),
               onPressed: () {
-                print("cccccccccc");
+                login(adminid.text, adminpassword.text);
               },
             ),
           ],
