@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'Admin.dart';
-import 'professor.dart';
+import 'Admin_login.dart';
+import 'professor_login.dart';
 import 'student_login.dart';
 
 class Chooselogin extends StatefulWidget {

@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
-import '../Database/Database.dart';
-import 'professor.dart';
+import '../Database/Database_admin.dart';
 
 class Adminsignup extends StatefulWidget {
   @override
@@ -54,6 +53,10 @@ class AdminsignupPage extends State<Adminsignup> {
     var l = await api.sendtodatabase1('Admin', name, email, int.parse(national),
         password, graduted, int.parse(age));
     print(l);
+    Toast.Toast.show("Your request is send", context,
+        duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+
+    Navigator.pop(context);
   }
 
   @override
