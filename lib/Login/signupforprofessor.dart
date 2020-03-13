@@ -112,6 +112,8 @@ class ProfessorsignupPage extends State<Professorsignup> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Your email';
+                      } else if (!value.contains("@")) {
+                        return 'Your Email must contain @';
                       } else {
                         return null;
                       }
@@ -121,7 +123,7 @@ class ProfessorsignupPage extends State<Professorsignup> {
                     keyboardType: TextInputType.text,
                     controller: Professorpassword,
                     focusNode: Professorpasswordnode,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     onSaved: (input) => Professorpasswordsave = input,
                     onFieldSubmitted: (term) {
                       _fieldFocusChange(
@@ -145,7 +147,7 @@ class ProfessorsignupPage extends State<Professorsignup> {
                     keyboardType: TextInputType.number,
                     controller: Professorage,
                     focusNode: Professoragenode,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     onSaved: (input) => Professoragesave = input,
                     onFieldSubmitted: (value) {
                       _fieldFocusChange(
@@ -167,7 +169,7 @@ class ProfessorsignupPage extends State<Professorsignup> {
                     keyboardType: TextInputType.text,
                     controller: Professorgraduated,
                     focusNode: Professorgraduatednode,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     onSaved: (input) => Professorgraduatedsave = input,
                     onFieldSubmitted: (value) {
                       _fieldFocusChange(
@@ -201,6 +203,8 @@ class ProfessorsignupPage extends State<Professorsignup> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Your name';
+                      } else if (value.length < 7) {
+                        return 'Your Name must be longer';
                       } else {
                         return null;
                       }

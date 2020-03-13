@@ -8,6 +8,7 @@ import 'Admin/mainpageforadmin.dart';
 import 'Database/Database_admin.dart';
 import 'Login/choose_Login.dart';
 import 'Login/student_login.dart';
+import 'cleandata.dart';
 import 'professor/mainofprofessor.dart';
 
 Future main() async {
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/chooselogin': (BuildContext context) => new Chooselogin(),
         '/mainprofessor': (BuildContext context) => new mainprofessor(),
       },
-      home: Chooselogin(),
+      home: Chooselogin(), //clean(), //Chooselogin(),
     );
   }
 }

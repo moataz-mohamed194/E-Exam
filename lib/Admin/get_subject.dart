@@ -52,11 +52,11 @@ class get_subjectpage extends State<get_subject> {
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
                   child: Text(
-                      "Subject be in department :${data[index]['department']}"),
+                      "Subject be to department :${data[index]['department']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text("to :${data[index]['level']}"),
+                  child: Text("in :${data[index]['level']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),

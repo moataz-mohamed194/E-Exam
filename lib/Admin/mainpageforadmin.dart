@@ -95,7 +95,8 @@ class mainadminpage extends State<mainadmin> {
                     Expanded(
                       child: IconButton(
                         onPressed: () {
-                          database().accept(
+                          database()
+                              .accept(
                             data[index]['Nationalid'],
                             data[index]['Email'],
                             data[index]['realName'],
@@ -104,11 +105,13 @@ class mainadminpage extends State<mainadmin> {
                             data[index]['graduted'],
                             data[index]['age'],
                             data[index]['type'],
-                          );
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => mainadmin()));
+                          )
+                              .whenComplete(() {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => mainadmin()));
+                          });
                         },
                         icon: Icon(Icons.check),
                         color: Colors.blue,
@@ -117,11 +120,12 @@ class mainadminpage extends State<mainadmin> {
                     Expanded(
                       child: IconButton(
                         onPressed: () {
-                          database().remove(data[index]['ID']);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => mainadmin()));
+                          database().remove(data[index]['ID']).whenComplete(() {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => mainadmin()));
+                          });
                         },
                         icon: Icon(Icons.clear),
                         color: Colors.blue,

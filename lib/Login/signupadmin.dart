@@ -109,6 +109,8 @@ class AdminsignupPage extends State<Adminsignup> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Your Email';
+                      } else if (!value.contains("@")) {
+                        return 'Your Email must contain @';
                       } else {
                         return null;
                       }
@@ -118,7 +120,7 @@ class AdminsignupPage extends State<Adminsignup> {
                     keyboardType: TextInputType.text,
                     controller: Adminpassword,
                     focusNode: Adminpasswordnode,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     onSaved: (input) => Adminpasswordsave = input,
                     onFieldSubmitted: (term) {
                       _fieldFocusChange(
@@ -140,7 +142,7 @@ class AdminsignupPage extends State<Adminsignup> {
                     keyboardType: TextInputType.text,
                     controller: Admingraduted,
                     focusNode: Admingradutednode,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     onSaved: (input) => Admingradutedsave = input,
                     onFieldSubmitted: (term) {
                       _fieldFocusChange(
@@ -162,7 +164,7 @@ class AdminsignupPage extends State<Adminsignup> {
                     keyboardType: TextInputType.number,
                     controller: Adminage,
                     focusNode: Adminagenode,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     onSaved: (input) => Adminagesave = input,
                     onFieldSubmitted: (term) {
                       _fieldFocusChange(context, Adminagenode, Adminnamenode);
@@ -195,6 +197,8 @@ class AdminsignupPage extends State<Adminsignup> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Enter Your name';
+                      } else if (value.length < 7) {
+                        return 'Your Name must be longer';
                       } else {
                         return null;
                       }

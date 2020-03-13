@@ -1,10 +1,16 @@
 import 'dart:io';
 import 'package:exam/Admin/add_department.dart';
+import 'package:exam/Admin/mainpageforadmin.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io' as io;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class database {
   static Database _db;
@@ -58,17 +64,7 @@ class database {
       String level, String semester, String id) async {
     int i;
     var dbclient = await db;
-    /*print(department);
-    print(level);
-    print(semester);
-    print(professor);*/
-    /*   if (department.toString() != "null") {
-      print("ttttttttttttt");
-     i = await dbclient.rawUpdate('Update Subject set '
-          'department="$department"'
-          ' where ID =$id ');
 
-    }*/
     if (department != null) {
       print("ggggggggggggg");
       i = await dbclient.rawUpdate('Update Subject set '
@@ -133,6 +129,17 @@ class database {
     return await dbclient.query("request");
   }
 
+  /* Future<List> get_request1() async {
+    var dbclient = await db;
+    return await dbclient.query("Professor");
+  }
+
+  Future<int> get_request12(int id) async {
+    var dbclient = await db;
+    int delete = await dbclient.rawUpdate('DELETE FROM Professor where ID=$id');
+    return delete;
+  }
+*/
 //that method to get the professor name
   Future<List> Leader_of_department() async {
     var dbclient = await db;
@@ -167,6 +174,7 @@ class database {
       });
       int delete = await dbclient.rawUpdate('DELETE FROM request where ID=$id');
       print(add);
+
       return delete;
     } else if (type == 'Admin') {
       int add = await dbclient.insert('Admin', {
@@ -198,5 +206,18 @@ class database {
     });
     print(add);
     return add;
+  }
+
+  //these two to get the data from table and delete any row of it
+  Future<List> get_request1() async {
+    var dbclient = await db;
+    return await dbclient.query("queastion_true_and_false");
+  }
+
+  Future<int> get_request12(int id) async {
+    var dbclient = await db;
+    int delete = await dbclient
+        .rawUpdate('DELETE FROM queastion_true_and_false where ID=$id');
+    return delete;
   }
 }

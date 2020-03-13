@@ -6,6 +6,9 @@ import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 
 import 'add_queation.dart';
+import 'addchapter.dart';
+import 'getchapter.dart';
+import 'showqueation.dart';
 
 class mainprofessor extends StatefulWidget {
   @override
@@ -66,12 +69,44 @@ class mainprofessorpage extends State<mainprofessor> {
             child: Column(
           children: <Widget>[
             oo(),
+            /*  FlatButton(
+              onPressed: () {
+                //  Navigator.push(context,
+                //    MaterialPageRoute(builder: (context) => add_chapter()));
+              },
+              child: Text("show result"),
+              color: Colors.blue,
+            ),*/
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => add_chapter()));
+              },
+              child: Text("add chapter"),
+              color: Colors.blue,
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => get_chapter()));
+              },
+              child: Text("get chapter"),
+              color: Colors.blue,
+            ),
             FlatButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => add_question()));
               },
               child: Text("add qustion"),
+              color: Colors.blue,
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => show_question()));
+              },
+              child: Text("show qustion"),
               color: Colors.blue,
             ),
             FlatButton(
