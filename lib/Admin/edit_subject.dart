@@ -25,20 +25,32 @@ class edit_subjectPage extends State<edit_subject> {
   String subjectnamesave;
   void initState() {
     super.initState();
-    nameofdepartment();
     nameofprofessor();
     subjectname = new TextEditingController();
   }
 
   List datadepartment = new List();
   //get the professor from database and add them to
-  void nameofdepartment() async {
+  void nameofdepartment(String studentlevel) async {
     database().name_of_department().then((result) {
       setState(() {
         datadepartment.addAll(result);
       });
+      _departmentlist.add("general");
+
       for (int i = 0; i < result.length; i++) {
-        _departmentlist.add(datadepartment[i]['Name']);
+        if (studentlevel == "level 3" || studentlevel == "level 4") {
+          if (!_departmentlist.contains(datadepartment[i]['Name'])) {
+            _departmentlist.add(datadepartment[i]['Name']);
+          }
+        } else if (studentlevel == "level 1" || studentlevel == "level 2") {
+          if (!_departmentlist.contains(datadepartment[i]['Name'])) {
+            if (datadepartment[i]['leader'] == "level 1" ||
+                datadepartment[i]['leader'] == "level 2") {
+              _departmentlist.add(datadepartment[i]['Name']);
+            }
+          }
+        }
       }
     });
   }
@@ -165,6 +177,9 @@ class edit_subjectPage extends State<edit_subject> {
                           .toList(),
                       onChanged: (value) {
                         setState(() {
+                          nameofdepartment(value);
+
+                          _departmentlist.clear();
                           _level = value;
                         });
                       },

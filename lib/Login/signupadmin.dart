@@ -39,6 +39,7 @@ class AdminsignupPage extends State<Adminsignup> {
     Admingraduted = new TextEditingController();
     Adminage = new TextEditingController();
     Adminpassword = new TextEditingController();
+    getadmindata();
   }
 
   _fieldFocusChange(
@@ -47,8 +48,25 @@ class AdminsignupPage extends State<Adminsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
+  List data = new List();
+  void getadmindata() async {
+    database().getadmindata().then((result) {
+      setState(() {
+        data.addAll(result);
+      });
+    });
+  }
+
   login(String national, String name, String email, String password,
       String graduted, String age) async {
+    for (int i = 0; i < data.length; i++) {
+      if (national == data[i]['Nationalid'] || email == data[i]['Email']) {
+        Toast.Toast.show("that eamil or your id is used", context,
+            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+        return 0;
+      }
+    }
+
     database api = new database();
     var l = await api.sendtodatabase1('Admin', name, email, int.parse(national),
         password, graduted, int.parse(age));

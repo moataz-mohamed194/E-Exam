@@ -16,7 +16,7 @@ class add_chapter extends StatefulWidget {
 
 class add_chapterpage extends State<add_chapter> {
   String subjectvalue;
-  List sub = [" "];
+  List sub = [];
   List sub_data = new List();
   void nameofsubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,6 +58,8 @@ class add_chapterpage extends State<add_chapter> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+            child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[
               TextFormField(
@@ -72,7 +74,7 @@ class add_chapterpage extends State<add_chapter> {
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Enter chapter  name';
+                    return 'Enter chapter name';
                   } else {
                     return null;
                   }
@@ -104,14 +106,16 @@ class add_chapterpage extends State<add_chapter> {
               ),
               FlatButton(
                 onPressed: () {
-                  addchapter(controllerchaptername.text, subjectvalue);
+                  if (_formKey.currentState.validate()) {
+                    addchapter(controllerchaptername.text, subjectvalue);
+                  }
                 },
-                child: Text("add department"),
+                child: Text("add chapter"),
                 color: Colors.blue,
               ),
             ],
           ),
-        ),
+        )),
       ),
     );
   }

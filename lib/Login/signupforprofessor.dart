@@ -1,4 +1,5 @@
 import 'package:exam/Database/Database_admin.dart';
+import 'package:exam/Database/Database_professor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
@@ -40,6 +41,16 @@ class ProfessorsignupPage extends State<Professorsignup> {
     Professorage = new TextEditingController();
     Professorgraduated = new TextEditingController();
     Professorpassword = new TextEditingController();
+    getprofessordata();
+  }
+
+  List data = new List();
+  void getprofessordata() async {
+    database_professor().getprofessordata().then((result) {
+      setState(() {
+        data.addAll(result);
+      });
+    });
   }
 
   _fieldFocusChange(
@@ -50,6 +61,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
 
   login(String name, String email, int id, String password, String graduated,
       int age) async {
+    for (int i = 0; i < data.length; i++) {
+      if (id == data[i]['Nationalid'] || email == data[i]['Email']) {
+        Toast.Toast.show("that eamil or your id is used", context,
+            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+        return 0;
+      }
+    }
     database api = new database();
     var l = await api.sendtodatabase1(
         'Professor', name, email, id, password, graduated, age);

@@ -1,5 +1,6 @@
 import 'package:exam/Admin/get_subject.dart';
 import 'package:exam/Database/Database_professor.dart';
+import 'package:exam/Database/Database_student.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,20 +8,20 @@ import '../Database/Database_admin.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 
-class show_question extends StatefulWidget {
+class showquestionbank extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return show_questionpage();
+    return showquestionbankpage();
   }
 }
 
-class show_questionpage extends State<show_question> {
+class showquestionbankpage extends State<showquestionbank> {
   String subjectvalue;
   List sub = ["MCQ", "TRUE&FAULSE"];
   List data = new List();
   void subject() async {
-    database_professor().get_the_queation_mcq().then((result) {
+    Databasestudent().getthequeationmcq().then((result) {
       setState(() {
         data.addAll(result);
       });
@@ -31,7 +32,7 @@ class show_questionpage extends State<show_question> {
   List data1 = new List();
 
   void subject1() async {
-    database_professor().get_the_queationtrue_and_false().then((result) {
+    Databasestudent().getthequeationtrueandfalse().then((result) {
       setState(() {
         data1.addAll(result);
       });
@@ -67,19 +68,6 @@ class show_questionpage extends State<show_question> {
                   Text(
                       "Subject correctanswer :${data[index]['correctanswer']}"),
                   Text("bank:${data[index]['bank']}"),
-                  FlatButton(
-                      color: Colors.blue,
-                      onPressed: () {
-                        database_professor()
-                            .remove_mcq_question(data[index]['ID'])
-                            .whenComplete(() {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => show_question()));
-                        });
-                      },
-                      child: Text("remove queation"))
                 ],
               ));
             }));
@@ -106,19 +94,6 @@ class show_questionpage extends State<show_question> {
                   Text(
                       "Subject correctanswer :${data1[index]['correctanswer']}"),
                   Text("bank:${data1[index]['bank']}"),
-                  FlatButton(
-                      color: Colors.blue,
-                      onPressed: () {
-                        database_professor()
-                            .remove_true_and_false_question(data1[index]['ID'])
-                            .whenComplete(() {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => show_question()));
-                        });
-                      },
-                      child: Text("remove queation"))
                 ],
               ));
             }));

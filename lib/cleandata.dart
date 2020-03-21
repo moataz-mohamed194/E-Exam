@@ -37,10 +37,10 @@ class cleanpage extends State<clean> {
             margin: EdgeInsets.all(MediaQuery.of(context).size.width / 15),
             child: Column(
               children: <Widget>[
-                Text("subjectname:${data[index]['Question']}"),
-                Text("chaptername is:${data[index]['subject']}"),
-                Text("Email:${data[index]['numberofchapter']}"),
-                Text("National ID:${data[index]['bank']}"),
+                Text("subjectname:${data[index]['ID']}"),
+                Text("chaptername is:${data[index]['Nationalid']}"),
+                Text("Email:${data[index]['Email']}"),
+                Text("National ID:${data[index]['realName']}"),
                 Row(
                   children: <Widget>[
                     Expanded(

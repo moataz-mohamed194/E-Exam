@@ -29,7 +29,7 @@ class add_questionpage extends State<add_question> {
   TextEditingController answer3;
   TextEditingController answer4;
   String questionsave, answer1save, answer2save, answer3save, answer4save;
-  List number = [" ", "1", "2", "3", "4", "5"];
+  List number = [];
   List trueandfalseanswer = [" ", "True", "False"];
   List mcqanswer = [" ", "", "", "", ""];
   List level = [" ", "A", "B", "C"];
@@ -38,13 +38,22 @@ class add_questionpage extends State<add_question> {
 
   void initState() {
     super.initState();
-    //countofchapter();
     nameofsubject();
     question = new TextEditingController();
     answer1 = new TextEditingController();
     answer2 = new TextEditingController();
     answer3 = new TextEditingController();
     answer4 = new TextEditingController();
+  }
+
+  Map data = new Map<String, int>();
+
+  void enternumberchapter(String name) {
+    int j = data[name];
+    print(j);
+    for (int i = 1; i <= j; i++) {
+      number.add(i);
+    }
   }
 
   List sub_data = new List();
@@ -59,6 +68,8 @@ class add_questionpage extends State<add_question> {
       print(sub_data);
       for (int i = 0; i < result.length; i++) {
         sub.add(sub_data[i]['Name']);
+        data[sub_data[i]['Name'].toString()] =
+            int.parse(sub_data[i]['counter']);
       }
     });
   }
@@ -86,21 +97,6 @@ class add_questionpage extends State<add_question> {
             correctanswer,
             _value1.toString())
         .whenComplete(() {
-      /*if (_value1 == true) {
-        database_professor().add_question_mcq_tobank(
-            question,
-            subject,
-            numberofchapter,
-            level,
-            answer1,
-            answer2,
-            answer3,
-            answer4,
-            correctanswer);
-
-        print("ffffffffffffffffffffffffffffffffffff");
-      }*/
-
       Toast.Toast.show("that queation is add", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
@@ -113,21 +109,10 @@ class add_questionpage extends State<add_question> {
         .add_question_true_and_false_tosqlite(question, subject,
             numberofchapter, correctanswer, _value1.toString())
         .whenComplete(() {
-      /* if (_value1 == true) {
-        database_professor().add_question_true_and_false_tobank(
-            question, subject, numberofchapter, correctanswer);
-
-        print("ffffffffffffffffffffffffffffffffffff");
-      }*/
       Toast.Toast.show("that queation is add", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
-
-/*    print(question);
-    print(subject);
-    print(numberofchapter);
-    print(correctanswer);*/
   }
 
   _fieldFocusChange(
@@ -380,6 +365,8 @@ class add_questionpage extends State<add_question> {
                   onChanged: (value) {
                     setState(() {
                       subjectvalue = value;
+                      number.clear();
+                      enternumberchapter(subjectvalue);
                     });
                   },
                 ),
@@ -445,25 +432,25 @@ class add_questionpage extends State<add_question> {
                 ),
                 FlatButton(
                   onPressed: () {
-                    //  if (_formKey.currentState.validate()) {
-                    if (mcq == true && trueandfalse == false) {
-                      print("mcq");
-                      addquestionmcq(
-                          question.text,
-                          subjectvalue,
-                          numbervalue,
-                          levelvalue,
-                          answer1.text,
-                          answer2.text,
-                          answer3.text,
-                          answer4.text,
-                          mcqvalue);
-                    } else if (trueandfalse == true && mcq == false) {
-                      print("true&&fal");
-                      addquestiontrue_and_false(question.text, subjectvalue,
-                          numbervalue, trueandfalsevalue);
+                    if (_formKey.currentState.validate()) {
+                      if (mcq == true && trueandfalse == false) {
+                        print("mcq");
+                        addquestionmcq(
+                            question.text,
+                            subjectvalue,
+                            numbervalue,
+                            levelvalue,
+                            answer1.text,
+                            answer2.text,
+                            answer3.text,
+                            answer4.text,
+                            mcqvalue);
+                      } else if (trueandfalse == true && mcq == false) {
+                        print("true&&fal");
+                        addquestiontrue_and_false(question.text, subjectvalue,
+                            numbervalue, trueandfalsevalue);
+                      }
                     }
-                    //  }
                   },
                   child: Text("add department"),
                   color: Colors.blue,

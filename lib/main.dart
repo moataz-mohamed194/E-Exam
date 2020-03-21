@@ -8,6 +8,7 @@ import 'Admin/mainpageforadmin.dart';
 import 'Database/Database_admin.dart';
 import 'Login/choose_Login.dart';
 import 'Login/student_login.dart';
+import 'Student/mainpageforstudent.dart';
 import 'cleandata.dart';
 import 'professor/mainofprofessor.dart';
 
@@ -17,6 +18,8 @@ Future main() async {
     runApp(admin());
   } else if (prefs.getString('loginasprofessor') == "yes") {
     runApp(professor());
+  } else if (prefs.getString('loginasstudent') == "yes") {
+    runApp(Student());
   } else {
     runApp(MyApp());
   }
@@ -33,6 +36,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Bellota',
       ),
       routes: <String, WidgetBuilder>{
+        '/mainstudent': (BuildContext context) => new mainstudent(),
         '/mainforadmin': (BuildContext context) => new mainadmin(),
         '/chooselogin': (BuildContext context) => new Chooselogin(),
         '/mainprofessor': (BuildContext context) => new mainprofessor(),
@@ -54,6 +58,7 @@ class admin extends StatelessWidget {
       ),
       routes: <String, WidgetBuilder>{
         '/chooselogin': (BuildContext context) => new Chooselogin(),
+        '/mainstudent': (BuildContext context) => new mainstudent(),
         '/mainforadmin': (BuildContext context) => new mainadmin(),
         '/mainprofessor': (BuildContext context) => new mainprofessor(),
       },
@@ -74,10 +79,32 @@ class professor extends StatelessWidget {
       ),
       routes: <String, WidgetBuilder>{
         '/chooselogin': (BuildContext context) => new Chooselogin(),
+        '/mainstudent': (BuildContext context) => new mainstudent(),
         '/mainforadmin': (BuildContext context) => new mainadmin(),
         '/mainprofessor': (BuildContext context) => new mainprofessor(),
       },
       home: mainprofessor(),
+    );
+  }
+}
+
+class Student extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'Bellota',
+      ),
+      routes: <String, WidgetBuilder>{
+        '/chooselogin': (BuildContext context) => new Chooselogin(),
+        '/mainstudent': (BuildContext context) => new mainstudent(),
+        '/mainforadmin': (BuildContext context) => new mainadmin(),
+        '/mainprofessor': (BuildContext context) => new mainprofessor(),
+      },
+      home: mainstudent(),
     );
   }
 }

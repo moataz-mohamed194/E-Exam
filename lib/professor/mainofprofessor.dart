@@ -8,6 +8,7 @@ import 'package:toast/toast.dart' as Toast;
 import 'add_queation.dart';
 import 'addchapter.dart';
 import 'getchapter.dart';
+import 'profile.dart';
 import 'showqueation.dart';
 
 class mainprofessor extends StatefulWidget {
@@ -19,35 +20,35 @@ class mainprofessor extends StatefulWidget {
 }
 
 class mainprofessorpage extends State<mainprofessor> {
-  String q, w, e, r, t, y;
+  String email, nationalid, password, realName, graduted, age;
 
   void initState() {
     super.initState();
-    hh();
+    get_professor_data_from_SharedPreferences();
   }
 
-  Future hh() async {
+  Future get_professor_data_from_SharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      q = prefs.getString('Email');
-      w = prefs.getString('Nationalid');
-      e = prefs.getString('Password');
-      r = prefs.getString('realName');
-      t = prefs.getString('graduted');
-      y = prefs.getString('age');
+      email = prefs.getString('Email');
+      nationalid = prefs.getString('Nationalid');
+      password = prefs.getString('Password');
+      realName = prefs.getString('realName');
+      graduted = prefs.getString('graduted');
+      age = prefs.getString('age');
     });
   }
 
-  Widget oo() {
+  Widget get_the_professor_data() {
     return Container(
       child: Column(
         children: <Widget>[
-          Text("$q"),
-          Text("$w"),
-          Text("$e"),
-          Text("$r"),
-          Text("$t"),
-          Text("$y"),
+          Text("$email"),
+          Text("$nationalid"),
+          Text("$password"),
+          Text("$realName"),
+          Text("$graduted"),
+          Text("$age"),
         ],
       ),
     );
@@ -68,7 +69,7 @@ class mainprofessorpage extends State<mainprofessor> {
         body: Container(
             child: Column(
           children: <Widget>[
-            oo(),
+            get_the_professor_data(),
             /*  FlatButton(
               onPressed: () {
                 //  Navigator.push(context,
@@ -77,6 +78,14 @@ class mainprofessorpage extends State<mainprofessor> {
               child: Text("show result"),
               color: Colors.blue,
             ),*/
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => profile()));
+              },
+              child: Text("profile"),
+              color: Colors.blue,
+            ),
             FlatButton(
               onPressed: () {
                 Navigator.push(context,

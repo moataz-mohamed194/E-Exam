@@ -8,6 +8,7 @@ import 'package:toast/toast.dart' as Toast;
 import 'add_department.dart';
 import 'add_subject.dart';
 import 'get_subject.dart';
+import 'profile.dart';
 
 class mainadmin extends StatefulWidget {
   @override
@@ -161,6 +162,14 @@ class mainadminpage extends State<mainadmin> {
               ),
               Divider(),
               ListTile(
+                title: Text('Profile'),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => profile()));
+                },
+              ),
+              Divider(),
+              ListTile(
                 title: Text('add department'),
                 onTap: () {
                   Navigator.push(
@@ -203,6 +212,14 @@ class mainadminpage extends State<mainadmin> {
         body: Container(
             child: Column(
           children: <Widget>[
+            Align(
+              alignment: Alignment(0, -0.9),
+              child: Container(
+                width: 35,
+                height: 110,
+                color: Colors.blue,
+              ),
+            ),
             Expanded(
               child: get_the_requests(),
             ),

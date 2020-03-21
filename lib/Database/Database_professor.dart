@@ -30,9 +30,6 @@ class database_professor {
   }
 
   _onCreate(Database db, int version) async {
-    await db.execute('    ALTER TABLE queastion_true_and_false ADD bank TEXT;');
-    await db.execute('    ALTER TABLE queastion_mcq ADD bank TEXT;');
-
     await db.execute(
         'CREATE TABLE `Subject` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`department`	TEXT,	`professor`	TEXT,	`level`	TEXT,	`semester`	TEXT,`counter`	TEXT)');
     await db.execute(
@@ -42,10 +39,11 @@ class database_professor {
     await db.execute(
         'CREATE TABLE `queastion_true_and_false` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Question`	TEXT UNIQUE,	`subject`	TEXT,	`numberofchapter`	TEXT,	`correctanswer`	TEXT,	`bank`	TEXT)');
 
-    await db.execute(
-        'CREATE TABLE `Professor` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
+//    await db.execute(
+    //      'CREATE TABLE `Professor` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
   }
 
+  //to remove mcq question from database
   Future<int> remove_mcq_question(int id) async {
     var dbclient = await db;
     int delete =
@@ -53,6 +51,7 @@ class database_professor {
     return delete;
   }
 
+  //to remove the true&false question from the database
   Future<int> remove_true_and_false_question(int id) async {
     var dbclient = await db;
     int delete = await dbclient
@@ -60,6 +59,7 @@ class database_professor {
     return delete;
   }
 
+  //to add mcq question from database and if the checkbox is checked add that question and be in a bank
   Future<int> add_question_mcq_tosqlite(
       String question,
       String subject,
@@ -87,6 +87,7 @@ class database_professor {
     return add;
   }
 
+  //to add true&false question from database and if checkbox is checked add that question and be in bank
   Future<int> add_question_true_and_false_tosqlite(
       String question,
       String subject,
@@ -105,45 +106,8 @@ class database_professor {
     });
     return add;
   }
-//that method to add department data to database
-  /* Future<int> add_question_mcq_tobank(
-      String question,
-      String subject,
-      String numberofchapter,
-      String level,
-      String answer1,
-      String answer2,
-      String answer3,
-      String answer4,
-      String correctanswer) async {
-    var dbclient = await db;
-    int add = await dbclient.insert('queastion_mcq_bank', {
-      'Question': '$question',
-      'subject': '$subject',
-      'numberofchapter': '$numberofchapter',
-      'level': '$level',
-      'answer1': '$answer1',
-      'answer2': '$answer2',
-      'answer3': '$answer3',
-      'answer4': '$answer4',
-      'correctanswer': '$correctanswer'
-    });
-    return add;
-  }
 
-  Future<int> add_question_true_and_false_tobank(String question,
-      String subject, String numberofchapter, String correctanswer) async {
-    var dbclient = await db;
-
-    int add = await dbclient.insert('queastion_true_and_false_bank', {
-      'Question': '$question',
-      'subject': '$subject',
-      'numberofchapter': '$numberofchapter',
-      'correctanswer': '$correctanswer'
-    });
-    return add;
-  }*/
-
+  //to add chapter to database
   Future<int> add_chapter_tosqlite(
       String subjectname, String chaptername) async {
     var dbclient = await db;
@@ -159,6 +123,7 @@ class database_professor {
     return count;
   }
 
+  //to remove the chapter for subject from database
   Future<int> remove_chapter_tosqlite(String subjectname, int id) async {
     var dbclient = await db;
     int delete = await dbclient.rawUpdate('DELETE FROM Chapter where ID=$id');
@@ -172,26 +137,37 @@ class database_professor {
     return count;
   }
 
+  //to get mcq questions
   Future<List> get_the_queation_mcq() async {
     var dbclient = await db;
     return await dbclient.query("queastion_mcq");
   }
 
+  //to get professor data
+  Future<List> getprofessordata() async {
+    var dbclient = await db;
+    return await dbclient.query("Professor");
+  }
+
+  //to get the chapter
   Future<List> getchapter() async {
     var dbclient = await db;
     return await dbclient.query("Chapter");
   }
 
+  //to get true&false queations
   Future<List> get_the_queationtrue_and_false() async {
     var dbclient = await db;
     return await dbclient.query("queastion_true_and_false");
   }
 
+//to get the subjects
   Future<List> get_subject() async {
     var dbclient = await db;
     return await dbclient.query("Subject");
   }
 
+//to add the department to database
   Future<int> add_departmenttosqlite(
       String name, String whenstart, String leader) async {
     var dbclient = await db;
@@ -201,12 +177,14 @@ class database_professor {
     return add;
   }
 
+//to check the email and password in professor login
   Future<List> check_your_email_and_password(
       String table_name, String emailadmin) async {
     var dbclient = await db;
     return await dbclient.query("$table_name", where: 'Email="$emailadmin"');
   }
 
+//to get the subjects from database
   Future<List> get_the_subject(String name) async {
     var dbclient = await db;
     return await dbclient.query("Subject", where: 'professor="$name"');

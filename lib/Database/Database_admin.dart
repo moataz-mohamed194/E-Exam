@@ -38,7 +38,7 @@ class database {
   //to create table for admines
   _onCreate(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE `Subject` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`department`	TEXT,	`professor`	TEXT,	`level`	TEXT,	`semester`	TEXT)');
+        'CREATE TABLE `Subject` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`department`	TEXT,	`professor`	TEXT,	`level`	TEXT,	`semester`	TEXT,`counter`	TEXT)');
 
     await db.execute(
         'CREATE TABLE `Department` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`whenstart`	TEXT,	`leader`	TEXT)');
@@ -57,6 +57,12 @@ class database {
   Future<List> get_subject() async {
     var dbclient = await db;
     return await dbclient.query("Subject");
+  }
+
+  //to get professor data
+  Future<List> getadmindata() async {
+    var dbclient = await db;
+    return await dbclient.query("Admin");
   }
 
 //that method to get the subject from database
@@ -129,17 +135,6 @@ class database {
     return await dbclient.query("request");
   }
 
-  /* Future<List> get_request1() async {
-    var dbclient = await db;
-    return await dbclient.query("Professor");
-  }
-
-  Future<int> get_request12(int id) async {
-    var dbclient = await db;
-    int delete = await dbclient.rawUpdate('DELETE FROM Professor where ID=$id');
-    return delete;
-  }
-*/
 //that method to get the professor name
   Future<List> Leader_of_department() async {
     var dbclient = await db;
@@ -149,7 +144,7 @@ class database {
 //that method to get the department name
   Future<List> name_of_department() async {
     var dbclient = await db;
-    return await dbclient.query("Department", columns: ['Name']);
+    return await dbclient.query("Department");
   }
 
 // that method to remove the request from database when admin reject the request
@@ -211,13 +206,12 @@ class database {
   //these two to get the data from table and delete any row of it
   Future<List> get_request1() async {
     var dbclient = await db;
-    return await dbclient.query("queastion_true_and_false");
+    return await dbclient.query("Professor");
   }
 
   Future<int> get_request12(int id) async {
     var dbclient = await db;
-    int delete = await dbclient
-        .rawUpdate('DELETE FROM queastion_true_and_false where ID=$id');
+    int delete = await dbclient.rawUpdate('DELETE FROM Professor where ID=$id');
     return delete;
   }
 }
