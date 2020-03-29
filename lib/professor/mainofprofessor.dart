@@ -7,6 +7,7 @@ import 'package:toast/toast.dart' as Toast;
 
 import 'add_queation.dart';
 import 'addchapter.dart';
+import 'addexam.dart';
 import 'getchapter.dart';
 import 'profile.dart';
 import 'showqueation.dart';
@@ -70,14 +71,14 @@ class mainprofessorpage extends State<mainprofessor> {
             child: Column(
           children: <Widget>[
             get_the_professor_data(),
-            /*  FlatButton(
+            FlatButton(
               onPressed: () {
-                //  Navigator.push(context,
-                //    MaterialPageRoute(builder: (context) => add_chapter()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => addexam()));
               },
-              child: Text("show result"),
+              child: Text("add exam"),
               color: Colors.blue,
-            ),*/
+            ),
             FlatButton(
               onPressed: () {
                 Navigator.push(context,

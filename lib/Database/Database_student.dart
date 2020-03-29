@@ -67,6 +67,7 @@ class Databasestudent {
   Future<int> signupstudent(String nationalid, String collageid, String name,
       String password, String level, String department) async {
     var dbclient = await db;
+    //  _onCreate(dbclient, 0);
     int add = await dbclient.insert('Student', {
       'Nationalid': '$nationalid',
       'Collageid': '$collageid',

@@ -52,7 +52,7 @@ class add_questionpage extends State<add_question> {
     int j = data[name];
     print(j);
     for (int i = 1; i <= j; i++) {
-      number.add(i);
+      number.add(i.toString());
     }
   }
 

@@ -98,11 +98,6 @@ class show_questionpage extends State<show_question> {
                   Text("Subject subject :${data1[index]['subject']}"),
                   Text(
                       "Subject numberofchapter :${data1[index]['numberofchapter']}"),
-                  Text("Subject level :${data1[index]['level']}"),
-                  Text("Subject answer1 :${data1[index]['answer1']}"),
-                  Text("Subject answer2 :${data1[index]['answer2']}"),
-                  Text("Subject answer3 :${data1[index]['answer3']}"),
-                  Text("Subject answer4 :${data1[index]['answer4']}"),
                   Text(
                       "Subject correctanswer :${data1[index]['correctanswer']}"),
                   Text("bank:${data1[index]['bank']}"),

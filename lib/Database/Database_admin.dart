@@ -37,20 +37,80 @@ class database {
 
   //to create table for admines
   _onCreate(Database db, int version) async {
-    await db.execute(
-        'CREATE TABLE `Subject` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`department`	TEXT,	`professor`	TEXT,	`level`	TEXT,	`semester`	TEXT,`counter`	TEXT)');
+    try {
+      await db.execute(
+          'CREATE TABLE `Admin` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
+    } catch (Exaption) {}
+    try {
+      await db.execute(
+          'CREATE TABLE `Professor` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
+    } catch (Exaption) {}
 
-    await db.execute(
-        'CREATE TABLE `Department` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`whenstart`	TEXT,	`leader`	TEXT)');
+    try {
+      await db.execute(
+          'CREATE TABLE `request` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`type`	TEXT,	`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
+    } catch (Exaption) {}
 
-    await db.execute(
-        'CREATE TABLE `request` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`type`	TEXT,	`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
-    await db.execute(
-        'CREATE TABLE `Admin` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
-    await db.execute(
-        'CREATE TABLE `Professor` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
+    try {
+      await db.execute(
+          'CREATE TABLE `Subject` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`department`	TEXT,	`professor`	TEXT,	`level`	TEXT,	`semester`	TEXT,`counter`	TEXT)');
+    } catch (Exaption) {}
+
+    try {
+      await db.execute(
+          'CREATE TABLE `Department` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Name`	TEXT UNIQUE,	`whenstart`	TEXT,	`leader`	TEXT)');
+    } catch (Exaption) {}
 
     //       '  CREATE TABLE `Student` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Email`	TEXT UNIQUE,	`realName`	TEXT,	`Password`	TEXT)');
+  }
+
+// that method when admin accept request and remove the request from database
+  Future<int> accept(int nationalid, String email, String realName,
+      String password, int id, String graduted, int age, String type) async {
+    var dbclient = await db;
+    if (type == 'Professor') {
+      int add = await dbclient.insert('Professor', {
+        'Nationalid': '$nationalid',
+        'Email': '$email',
+        'realName': '$realName',
+        'Password': '$password',
+        'graduted': '$graduted',
+        'age': '$age'
+      });
+      int delete = await dbclient.rawUpdate('DELETE FROM request where ID=$id');
+      print(add);
+
+      return delete;
+    } else if (type == 'Admin') {
+      int add = await dbclient.insert('Admin', {
+        'Nationalid': '$nationalid',
+        'Email': '$email',
+        'realName': '$realName',
+        'Password': '$password',
+        'graduted': '$graduted',
+        'age': '$age'
+      });
+      int delete = await dbclient.rawUpdate('DELETE FROM request where ID=$id');
+      print(add);
+      return delete;
+    }
+  }
+
+//that method to add the admin and professor request to database
+  Future<int> sendtodatabase1(String table, String name, String email,
+      int nationalid, String password, String graduted, int age) async {
+    var dbclient = await db;
+    int add = await dbclient.insert('request', {
+      'type': '$table',
+      'Nationalid': '$nationalid',
+      'Email': '$email',
+      'realName': '$name',
+      'Password': '$password',
+      'graduted': '$graduted',
+      'age': '$age'
+    });
+    print(add);
+    return add;
   }
 
 //that method to get the subject from database
@@ -62,7 +122,12 @@ class database {
   //to get professor data
   Future<List> getadmindata() async {
     var dbclient = await db;
-    return await dbclient.query("Admin");
+    try {
+      return await dbclient.query("Admin");
+    } catch (Exaption) {
+      List list;
+      return list;
+    }
   }
 
 //that method to get the subject from database
@@ -132,7 +197,12 @@ class database {
 //that method to get the request from admin and professor
   Future<List> get_request() async {
     var dbclient = await db;
-    return await dbclient.query("request");
+    try {
+      return await dbclient.query("request");
+    } catch (Exaption) {
+      List list;
+      return list;
+    }
   }
 
 //that method to get the professor name
@@ -154,64 +224,24 @@ class database {
     return delete;
   }
 
-// that method when admin accept request and remove the request from database
-  Future<int> accept(int nationalid, String email, String realName,
-      String password, int id, String graduted, int age, String type) async {
-    var dbclient = await db;
-    if (type == 'Professor') {
-      int add = await dbclient.insert('Professor', {
-        'Nationalid': '$nationalid',
-        'Email': '$email',
-        'realName': '$realName',
-        'Password': '$password',
-        'graduted': '$graduted',
-        'age': '$age'
-      });
-      int delete = await dbclient.rawUpdate('DELETE FROM request where ID=$id');
-      print(add);
-
-      return delete;
-    } else if (type == 'Admin') {
-      int add = await dbclient.insert('Admin', {
-        'Nationalid': '$nationalid',
-        'Email': '$email',
-        'realName': '$realName',
-        'Password': '$password',
-        'graduted': '$graduted',
-        'age': '$age'
-      });
-      int delete = await dbclient.rawUpdate('DELETE FROM request where ID=$id');
-      print(add);
-      return delete;
-    }
-  }
-
-//that method to add the admin and professor request to database
-  Future<int> sendtodatabase1(String table, String name, String email,
-      int nationalid, String password, String graduted, int age) async {
-    var dbclient = await db;
-    int add = await dbclient.insert('request', {
-      'type': '$table',
-      'Nationalid': '$nationalid',
-      'Email': '$email',
-      'realName': '$name',
-      'Password': '$password',
-      'graduted': '$graduted',
-      'age': '$age'
-    });
-    print(add);
-    return add;
-  }
-
   //these two to get the data from table and delete any row of it
   Future<List> get_request1() async {
     var dbclient = await db;
-    return await dbclient.query("Professor");
+    //_onCreate(dbclient, 0);
+    return await dbclient.rawQuery("SELECT * FROM Student  ");
+//    await dbclient.query("examchapter");
+  }
+
+  Future<List> get_request13() async {
+    var dbclient = await db;
+    //_onCreate(dbclient, 0);
+    return await dbclient.query("examchapter");
   }
 
   Future<int> get_request12(int id) async {
     var dbclient = await db;
-    int delete = await dbclient.rawUpdate('DELETE FROM Professor where ID=$id');
+    int delete =
+        await dbclient.rawUpdate('DELETE FROM examdetails where ID=$id');
     return delete;
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async' as prefix0;
 import 'dart:io';
 import 'package:exam/Admin/add_department.dart';
 import 'package:exam/professor/getchapter.dart';
@@ -39,8 +40,130 @@ class database_professor {
     await db.execute(
         'CREATE TABLE `queastion_true_and_false` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`Question`	TEXT UNIQUE,	`subject`	TEXT,	`numberofchapter`	TEXT,	`correctanswer`	TEXT,	`bank`	TEXT)');
 
-//    await db.execute(
-    //      'CREATE TABLE `Professor` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`Nationalid`	INTEGER UNIQUE,	`Email`	TEXT UNIQUE,	`Password`	TEXT,	`realName`	TEXT,	`graduted`	TEXT,	`age`	INTEGER)');
+    await db.execute(
+        'CREATE TABLE `examdetails` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,	`subject`	TEXT,	`whenstart`	TEXT,	`time`	TEXT)');
+    await db.execute(
+        'CREATE TABLE `examchapter` (	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,		`examid`	INTEGER ,	`chapter`	INTEGER ,	`type`	TEXT,	`level`	TEXT,	`count`	TEXT)');
+  }
+
+  Future<int> addchaptertoexam(String idexam, String chapter, String level,
+      String type, String count) async {
+    /*print(idexam);
+    print(chapter);
+    print(level);
+    print(type);
+    print(count);
+    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+   */
+    var dbclient = await db;
+    int addtwo = await dbclient.insert('examchapter', {
+      'examid': '$idexam',
+      'chapter': chapter,
+      'level': level,
+      'type': type,
+      'count': count
+    });
+    //  print("object$addtwo");
+    return addtwo;
+  }
+
+  Future<int> add_exam(
+      String subject, String when, String time, Map data) async {
+    /*  print(subject);
+    print(when);
+    print(time);*/
+    var dbclient = await db;
+    //_onCreate(dbclient, 0);
+    int add = await dbclient.insert('examdetails',
+        {'subject': '$subject', 'whenstart': '$when', 'time': '$time'});
+    data["chapter1trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "1", "null", "trueandfalse", data["chapter1trueandfalse"]);
+    data["chapter2trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "2", "null", "trueandfalse", data["chapter2trueandfalse"]);
+    data["chapter3trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "3", "null", "trueandfalse", data["chapter3trueandfalse"]);
+    data["chapter4trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "4", "null", "trueandfalse", data["chapter4trueandfalse"]);
+    data["chapter5trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "5", "null", "trueandfalse", data["chapter5trueandfalse"]);
+    data["chapter1mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "1", "A", "mcq", data["chapter1mcqa"]);
+    data["chapter1mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "1", "B", "mcq", data["chapter1mcqb"]);
+    data["chapter1mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("1", "1", "C", "mcq", data["chapter1mcqc"]);
+
+    data["chapter2mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "2", "A", "mcq", data["chapter2mcqa"]);
+    data["chapter2mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "2", "B", "mcq", data["chapter2mcqb"]);
+    data["chapter2mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "2", "C", "mcq", data["chapter2mcqc"]);
+
+    data["chapter3mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "3", "A", "mcq", data["chapter3mcqa"]);
+    data["chapter3mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "3", "B", "mcq", data["chapter3mcqb"]);
+    data["chapter3mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "3", "C", "mcq", data["chapter3mcqc"]);
+
+    data["chapter4mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "4", "A", "mcq", data["chapter4mcqa"]);
+    data["chapter4mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "4", "B", "mcq", data["chapter4mcqb"]);
+    data["chapter4mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "4", "C", "mcq", data["chapter4mcqc"]);
+
+    data["chapter5mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "5", "A", "mcq", data["chapter5mcqa"]);
+    data["chapter5mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "5", "B", "mcq", data["chapter5mcqb"]);
+    data["chapter5mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "5", "C", "mcq", data["chapter5mcqc"]);
+    print("objectobjectobjectobject");
+    /* var dbclient = await db;
+    _onCreate(dbclient, 0);
+    int add = await dbclient.insert('examdetails', {
+      'Question': '$subject',
+      'subject': '$when',
+      'numberofchapter': '$time'
+    });
+    int addtwo;
+    for (int i = 0; i < data.length; i++) {
+      addtwo = await dbclient.insert('examdetails', {
+        'examid': '$add',
+        'chapter': data[i]['chapter'],
+        'level': data[i]['level'],
+        'type': data[i]['type'],
+        'count': data[i]['count']
+      });
+    }
+    return addtwo;*/
   }
 
   //to remove mcq question from database

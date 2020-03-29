@@ -29,6 +29,7 @@ dependencies:
   toast: ^0.1.5
   shared_preferences: any
   rflutter_alert: ^1.0.3
+  datetime_picker_formfield: ^1.0.0
 
 
 dev_dependencies:

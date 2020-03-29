@@ -17,7 +17,7 @@ class showquestionbank extends StatefulWidget {
 }
 
 class showquestionbankpage extends State<showquestionbank> {
-  String subjectvalue;
+  String subjectvalue, subjectvalue1;
   List sub = ["MCQ", "TRUE&FAULSE"];
   List data = new List();
   void subject() async {
@@ -40,11 +40,33 @@ class showquestionbankpage extends State<showquestionbank> {
     data1 = List.from(data1.reversed);
   }
 
+  List sub_data1 = new List();
+  List sub_data = new List();
+  void nameofsubject() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Databasestudent()
+        .getstudentsubject(prefs.getString('level'))
+        .then((result) {
+      setState(() {
+        sub_data1.addAll(result);
+
+        print("rrrr");
+      });
+      for (int i = 0; i < sub_data1.length; i++) {
+        setState(() {
+          sub_data.add(sub_data1[i]['Name']);
+          //  print("object");
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     subject();
     subject1();
+    nameofsubject();
   }
 
   Widget get_queation() {
@@ -52,24 +74,48 @@ class showquestionbankpage extends State<showquestionbank> {
         child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
-              return Card(
-                  child: Column(
-                children: <Widget>[
-                  Text("Subject Question :${data[index]['ID']}"),
-                  Text("Subject Question :${data[index]['Question']}"),
-                  Text("Subject subject :${data[index]['subject']}"),
-                  Text(
-                      "Subject numberofchapter :${data[index]['numberofchapter']}"),
-                  Text("Subject level :${data[index]['level']}"),
-                  Text("Subject answer1 :${data[index]['answer1']}"),
-                  Text("Subject answer2 :${data[index]['answer2']}"),
-                  Text("Subject answer3 :${data[index]['answer3']}"),
-                  Text("Subject answer4 :${data[index]['answer4']}"),
-                  Text(
-                      "Subject correctanswer :${data[index]['correctanswer']}"),
-                  Text("bank:${data[index]['bank']}"),
-                ],
-              ));
+              if (subjectvalue1 == null) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("Subject Question :${data[index]['ID']}"),
+                    Text("Subject Question :${data[index]['Question']}"),
+                    Text("Subject subject :${data[index]['subject']}"),
+                    Text(
+                        "Subject numberofchapter :${data[index]['numberofchapter']}"),
+                    Text("Subject level :${data[index]['level']}"),
+                    Text("Subject answer1 :${data[index]['answer1']}"),
+                    Text("Subject answer2 :${data[index]['answer2']}"),
+                    Text("Subject answer3 :${data[index]['answer3']}"),
+                    Text("Subject answer4 :${data[index]['answer4']}"),
+                    Text(
+                        "Subject correctanswer :${data[index]['correctanswer']}"),
+                    Text("bank:${data[index]['bank']}"),
+                  ],
+                ));
+              } else if (subjectvalue1 != null &&
+                  data[index]['subject'] == subjectvalue1) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("Subject Question :${data[index]['ID']}"),
+                    Text("Subject Question :${data[index]['Question']}"),
+                    Text("Subject subject :${data[index]['subject']}"),
+                    Text(
+                        "Subject numberofchapter :${data[index]['numberofchapter']}"),
+                    Text("Subject level :${data[index]['level']}"),
+                    Text("Subject answer1 :${data[index]['answer1']}"),
+                    Text("Subject answer2 :${data[index]['answer2']}"),
+                    Text("Subject answer3 :${data[index]['answer3']}"),
+                    Text("Subject answer4 :${data[index]['answer4']}"),
+                    Text(
+                        "Subject correctanswer :${data[index]['correctanswer']}"),
+                    Text("bank:${data[index]['bank']}"),
+                  ],
+                ));
+              } else {
+                return Container();
+              }
             }));
   }
 
@@ -78,24 +124,36 @@ class showquestionbankpage extends State<showquestionbank> {
         child: ListView.builder(
             itemCount: data1.length,
             itemBuilder: (context, index) {
-              return Card(
-                  child: Column(
-                children: <Widget>[
-                  Text("Subject Question :${data1[index]['ID']}"),
-                  Text("Subject Question :${data1[index]['Question']}"),
-                  Text("Subject subject :${data1[index]['subject']}"),
-                  Text(
-                      "Subject numberofchapter :${data1[index]['numberofchapter']}"),
-                  Text("Subject level :${data1[index]['level']}"),
-                  Text("Subject answer1 :${data1[index]['answer1']}"),
-                  Text("Subject answer2 :${data1[index]['answer2']}"),
-                  Text("Subject answer3 :${data1[index]['answer3']}"),
-                  Text("Subject answer4 :${data1[index]['answer4']}"),
-                  Text(
-                      "Subject correctanswer :${data1[index]['correctanswer']}"),
-                  Text("bank:${data1[index]['bank']}"),
-                ],
-              ));
+              if (subjectvalue1 == null) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("Subject Question :${data1[index]['ID']}"),
+                    Text("Subject Question :${data1[index]['Question']}"),
+                    Text("Subject subject :${data1[index]['subject']}"),
+                    Text(
+                        "Subject correctanswer :${data1[index]['correctanswer']}"),
+                    Text("bank:${data1[index]['bank']}"),
+                  ],
+                ));
+              } else if (subjectvalue1 != null &&
+                  data1[index]['subject'] == subjectvalue1) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("Subject Question :${data1[index]['ID']}"),
+                    Text("Subject Question :${data1[index]['Question']}"),
+                    Text("Subject subject :${data1[index]['subject']}"),
+                    Text(
+                        "Subject numberofchapter :${data1[index]['numberofchapter']}"),
+                    Text(
+                        "Subject correctanswer :${data1[index]['correctanswer']}"),
+                    Text("bank:${data1[index]['bank']}"),
+                  ],
+                ));
+              } else {
+                return Container();
+              }
             }));
   }
 
@@ -120,6 +178,21 @@ class showquestionbankpage extends State<showquestionbank> {
             onChanged: (value) {
               setState(() {
                 subjectvalue = value;
+              });
+            },
+          ),
+          DropdownButtonFormField<dynamic>(
+            value: subjectvalue1,
+            items: sub_data
+                .map((label) => DropdownMenuItem(
+                      child: Text(label.toString()),
+                      value: label,
+                    ))
+                .toList(),
+            hint: Text('Subject :'),
+            onChanged: (value) {
+              setState(() {
+                subjectvalue1 = value;
               });
             },
           ),
