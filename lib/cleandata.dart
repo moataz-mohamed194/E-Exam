@@ -100,22 +100,6 @@ class cleanpage extends State<clean> {
                 },
               ),
             )
-
-            /*Row(
-              children: <Widget>[
-                Expanded(
-                  child: IconButton(
-                    onPressed: () {
-                      database().get_request12(data[index]['ID']);
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => clean()));
-                    },
-                    icon: Icon(Icons.clear),
-                    color: Colors.blue,
-                  ),
-                )
-              ],
-            )*/
           ],
         ));
       },
@@ -136,10 +120,6 @@ class cleanpage extends State<clean> {
 //            get_the_admin_data(),
           ],
         )),
-
-/*         Container(
-          child: Expanded(child: oo()),
-        ),*/
       ),
     );
   }

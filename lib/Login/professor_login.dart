@@ -8,7 +8,6 @@ import 'signupforprofessor.dart';
 class ProfessorLogin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ProfessorLoginPage();
   }
 }
@@ -66,86 +65,125 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: Color(0xFF2E2E2E),
+      body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: Professorid,
-                    focusNode: Professoridnode,
-                    textInputAction: TextInputAction.next,
-                    onSaved: (input) => Professoridsave = input,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(
-                          context, Professoridnode, Professorpasswordnode);
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Your Email",
-                      hintText: "Enter your Email",
+            Expanded(
+              child: Image.asset('img/logo.png'),
+              flex: 1,
+            ),
+            Expanded(
+                flex: 1,
+                child: Column(children: <Widget>[
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height / 40),
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          child: TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: Professorid,
+                            focusNode: Professoridnode,
+                            textInputAction: TextInputAction.next,
+                            onSaved: (input) => Professoridsave = input,
+                            onFieldSubmitted: (term) {
+                              _fieldFocusChange(context, Professoridnode,
+                                  Professorpasswordnode);
+                            },
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: "Your Email",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              hintText: "Enter your Email",
+                            ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Enter Your Email';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).size.height / 40),
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: TextFormField(
+                              keyboardType: TextInputType.text,
+                              controller: Professorpassword,
+                              focusNode: Professorpasswordnode,
+                              textInputAction: TextInputAction.done,
+                              onSaved: (input) => Professorpasswordsave = input,
+                              onFieldSubmitted: (value) {
+                                Professorpasswordnode.unfocus();
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                labelText: "Your Password",
+                                hintText: "Enter your Password",
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Enter Your Password';
+                                } else if (value.length < 6) {
+                                  return 'Your Password must be longer than 6 numbers';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ))
+                      ],
                     ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Enter Your Email';
-                      } else {
-                        return null;
-                      }
-                    },
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: Professorpassword,
-                    focusNode: Professorpasswordnode,
-                    textInputAction: TextInputAction.done,
-                    onSaved: (input) => Professorpasswordsave = input,
-                    onFieldSubmitted: (value) {
-                      Professorpasswordnode.unfocus();
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Your Password",
-                      hintText: "Enter your Password",
+                  Card(
+                      color: Colors.blue,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: FlatButton(
+                          child: Text("Login as Professor",
+                              style: TextStyle(color: Colors.white)),
+                          onPressed: () {
+                            login(Professorid.text, Professorpassword.text);
+                          },
+                        ),
+                      )),
+                  Container(
+                    margin: EdgeInsets.only(
+                        right: 15,
+                        bottom: MediaQuery.of(context).size.height / 40),
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      child: Text(
+                        "sgin up ",
+                        style: TextStyle(color: Colors.grey, fontSize: 20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Professorsignup()));
+                      },
                     ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Enter Your Password';
-                      } else if (value.length < 6) {
-                        return 'Your Password must be longer than 6 numbers';
-                      } else {
-                        return null;
-                      }
-                    },
                   )
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(right: 15),
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                child: Text(
-                  "sgin up ",
-                  style: TextStyle(color: Colors.grey, fontSize: 20),
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Professorsignup()));
-                },
-              ),
-            ),
-            FlatButton(
-              child: Text(
-                "Login Professor",
-              ),
-              onPressed: () {
-                login(Professorid.text, Professorpassword.text);
-              },
-            ),
+                ]))
           ],
         ),
       ),

@@ -1,24 +1,19 @@
-import 'package:exam/Admin/get_subject.dart';
-import 'package:exam/Database/Database_professor.dart';
 import 'package:exam/Database/Database_student.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Database/Database_admin.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:toast/toast.dart' as Toast;
 
 class showquestionbank extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return showquestionbankpage();
   }
 }
 
 class showquestionbankpage extends State<showquestionbank> {
   String subjectvalue, subjectvalue1;
-  List sub = ["MCQ", "TRUE&FAULSE"];
+  List sub = ["MCQ", "TRUE&FALSE"];
   List data = new List();
   void subject() async {
     Databasestudent().getthequeationmcq().then((result) {
@@ -71,6 +66,7 @@ class showquestionbankpage extends State<showquestionbank> {
 
   Widget get_queation() {
     return Container(
+        width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
@@ -78,18 +74,15 @@ class showquestionbankpage extends State<showquestionbank> {
                 return Card(
                     child: Column(
                   children: <Widget>[
-                    Text("Subject Question :${data[index]['ID']}"),
-                    Text("Subject Question :${data[index]['Question']}"),
-                    Text("Subject subject :${data[index]['subject']}"),
-                    Text(
-                        "Subject numberofchapter :${data[index]['numberofchapter']}"),
-                    Text("Subject level :${data[index]['level']}"),
-                    Text("Subject answer1 :${data[index]['answer1']}"),
-                    Text("Subject answer2 :${data[index]['answer2']}"),
-                    Text("Subject answer3 :${data[index]['answer3']}"),
-                    Text("Subject answer4 :${data[index]['answer4']}"),
-                    Text(
-                        "Subject correctanswer :${data[index]['correctanswer']}"),
+                    Text("${data[index]['subject']}"),
+                    Text("chapter :${data[index]['numberofchapter']}"),
+                    Text(" level :${data[index]['level']}"),
+                    Text("Question :${data[index]['Question']} ?"),
+                    Text("A :${data[index]['answer1']}"),
+                    Text("B :${data[index]['answer2']}"),
+                    Text("C :${data[index]['answer3']}"),
+                    Text("D :${data[index]['answer4']}"),
+                    Text("correct answer:${data[index]['correctanswer']}"),
                     Text("bank:${data[index]['bank']}"),
                   ],
                 ));
@@ -98,18 +91,15 @@ class showquestionbankpage extends State<showquestionbank> {
                 return Card(
                     child: Column(
                   children: <Widget>[
-                    Text("Subject Question :${data[index]['ID']}"),
-                    Text("Subject Question :${data[index]['Question']}"),
-                    Text("Subject subject :${data[index]['subject']}"),
-                    Text(
-                        "Subject numberofchapter :${data[index]['numberofchapter']}"),
-                    Text("Subject level :${data[index]['level']}"),
-                    Text("Subject answer1 :${data[index]['answer1']}"),
-                    Text("Subject answer2 :${data[index]['answer2']}"),
-                    Text("Subject answer3 :${data[index]['answer3']}"),
-                    Text("Subject answer4 :${data[index]['answer4']}"),
-                    Text(
-                        "Subject correctanswer :${data[index]['correctanswer']}"),
+                    Text("${data[index]['subject']}"),
+                    Text("Chapter :${data[index]['numberofchapter']}"),
+                    Text("level :${data[index]['level']}"),
+                    Text("Question :${data[index]['Question']}"),
+                    Text("(A) ${data[index]['answer1']}"),
+                    Text("(B) ${data[index]['answer2']}"),
+                    Text("(C) ${data[index]['answer3']}"),
+                    Text("(D) ${data[index]['answer4']}"),
+                    Text("Correct answer :${data[index]['correctanswer']}"),
                     Text("bank:${data[index]['bank']}"),
                   ],
                 ));
@@ -121,6 +111,7 @@ class showquestionbankpage extends State<showquestionbank> {
 
   Widget get_queation1() {
     return Container(
+        width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(
             itemCount: data1.length,
             itemBuilder: (context, index) {
@@ -128,12 +119,11 @@ class showquestionbankpage extends State<showquestionbank> {
                 return Card(
                     child: Column(
                   children: <Widget>[
-                    Text("Subject Question :${data1[index]['ID']}"),
-                    Text("Subject Question :${data1[index]['Question']}"),
-                    Text("Subject subject :${data1[index]['subject']}"),
-                    Text(
-                        "Subject correctanswer :${data1[index]['correctanswer']}"),
-                    Text("bank:${data1[index]['bank']}"),
+                    Text("Question :${data1[index]['Question']}"),
+                    Text("${data1[index]['subject']}"),
+                    Text("Chapter :${data1[index]['numberofchapter']}"),
+                    Text("Correct answer :${data1[index]['correctanswer']}"),
+                    Text("Bank:${data1[index]['bank']}"),
                   ],
                 ));
               } else if (subjectvalue1 != null &&
@@ -141,14 +131,11 @@ class showquestionbankpage extends State<showquestionbank> {
                 return Card(
                     child: Column(
                   children: <Widget>[
-                    Text("Subject Question :${data1[index]['ID']}"),
-                    Text("Subject Question :${data1[index]['Question']}"),
-                    Text("Subject subject :${data1[index]['subject']}"),
-                    Text(
-                        "Subject numberofchapter :${data1[index]['numberofchapter']}"),
-                    Text(
-                        "Subject correctanswer :${data1[index]['correctanswer']}"),
-                    Text("bank:${data1[index]['bank']}"),
+                    Text("Question :${data1[index]['Question']}"),
+                    Text("${data1[index]['subject']}"),
+                    Text("Chapter :${data1[index]['numberofchapter']}"),
+                    Text("Correct answer :${data1[index]['correctanswer']}"),
+                    Text("Bank:${data1[index]['bank']}"),
                   ],
                 ));
               } else {
@@ -159,48 +146,64 @@ class showquestionbankpage extends State<showquestionbank> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
-      // backgroundColor: Color(0xff2e2e2e),
+      appBar: AppBar(
+        backgroundColor: Color(0xff254660),
+        title: Text("Question Bank"),
+      ),
+      backgroundColor: Color(0xff2e2e2e),
       body: Container(
+          alignment: Alignment.center,
           child: Column(
-        children: <Widget>[
-          DropdownButtonFormField<dynamic>(
-            value: subjectvalue,
-            items: sub
-                .map((label) => DropdownMenuItem(
-                      child: Text(label.toString()),
-                      value: label,
-                    ))
-                .toList(),
-            hint: Text('Type of question :'),
-            onChanged: (value) {
-              setState(() {
-                subjectvalue = value;
-              });
-            },
-          ),
-          DropdownButtonFormField<dynamic>(
-            value: subjectvalue1,
-            items: sub_data
-                .map((label) => DropdownMenuItem(
-                      child: Text(label.toString()),
-                      value: label,
-                    ))
-                .toList(),
-            hint: Text('Subject :'),
-            onChanged: (value) {
-              setState(() {
-                subjectvalue1 = value;
-              });
-            },
-          ),
-          subjectvalue == "TRUE&FAULSE"
-              ? Container(child: Expanded(child: get_queation1()))
-              : Container(child: Expanded(child: get_queation()))
-        ],
-      )),
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height / 55),
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  child: DropdownButtonFormField<dynamic>(
+                    value: subjectvalue,
+                    items: sub
+                        .map((label) => DropdownMenuItem(
+                              child: Text(label.toString()),
+                              value: label,
+                            ))
+                        .toList(),
+                    hint: Text('Type of question :'),
+                    onChanged: (value) {
+                      setState(() {
+                        subjectvalue = value;
+                      });
+                    },
+                  )),
+              Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height / 55),
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  child: DropdownButtonFormField<dynamic>(
+                    value: subjectvalue1,
+                    items: sub_data
+                        .map((label) => DropdownMenuItem(
+                              child: Text(label.toString()),
+                              value: label,
+                            ))
+                        .toList(),
+                    hint: Text('Subject :'),
+                    onChanged: (value) {
+                      setState(() {
+                        subjectvalue1 = value;
+                      });
+                    },
+                  )),
+              subjectvalue == "TRUE&FALSE"
+                  ? Container(child: Expanded(child: get_queation1()))
+                  : Container(child: Expanded(child: get_queation()))
+            ],
+          )),
     ));
   }
 }

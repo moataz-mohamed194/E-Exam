@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Database/Database_admin.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signupadmin.dart';
@@ -9,7 +8,6 @@ import 'signupadmin.dart';
 class AdminLogin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return AdminLoginPage();
   }
 }
@@ -65,86 +63,131 @@ class AdminLoginPage extends State<AdminLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: Color(0xFF2E2E2E),
+      body: Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: adminid,
-                    focusNode: adminidnode,
-                    textInputAction: TextInputAction.next,
-                    onSaved: (input) => adminidsave = input,
-                    onFieldSubmitted: (term) {
-                      _fieldFocusChange(
-                          context, adminidnode, adminpasswordnode);
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Your Email",
-                      hintText: "Enter your Email",
+            Expanded(
+              child: Image.asset('img/logo.png'),
+              flex: 1,
+            ),
+            Expanded(
+                flex: 1,
+                child: Column(
+                  children: <Widget>[
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).size.height / 40),
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: TextFormField(
+                              keyboardType: TextInputType.text,
+                              controller: adminid,
+                              focusNode: adminidnode,
+                              textInputAction: TextInputAction.next,
+                              onSaved: (input) => adminidsave = input,
+                              onFieldSubmitted: (term) {
+                                _fieldFocusChange(
+                                    context, adminidnode, adminpasswordnode);
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                labelText: "Your Email",
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                hintText: "Enter your Email",
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Enter Your Email';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).size.height / 40),
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: TextFormField(
+                              keyboardType: TextInputType.text,
+                              controller: adminpassword,
+                              focusNode: adminpasswordnode,
+                              textInputAction: TextInputAction.done,
+                              onSaved: (input) => adminpasswordsave = input,
+                              onFieldSubmitted: (value) {
+                                adminpasswordnode.unfocus();
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                labelText: "Your Password",
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                hintText: "Enter your Password",
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Enter Your Password';
+                                } else if (value.length < 6) {
+                                  return 'Your Password must be longer than 6 numbers';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Enter Your Email';
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: adminpassword,
-                    focusNode: adminpasswordnode,
-                    textInputAction: TextInputAction.done,
-                    onSaved: (input) => adminpasswordsave = input,
-                    onFieldSubmitted: (value) {
-                      adminpasswordnode.unfocus();
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Your Password",
-                      hintText: "Enter your Password",
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Enter Your Password';
-                      } else if (value.length < 6) {
-                        return 'Your Password must be longer than 6 numbers';
-                      } else {
-                        return null;
-                      }
-                    },
-                  )
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(right: 15),
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                child: Text(
-                  "sgin up ",
-                  style: TextStyle(color: Colors.grey, fontSize: 20),
-                ),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Adminsignup()));
-                },
-              ),
-            ),
-            FlatButton(
-              child: Text(
-                "Login admin",
-              ),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  login(adminid.text, adminpassword.text);
-                }
-              },
-            ),
+                    Card(
+                        color: Colors.blue,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: FlatButton(
+                            child: Text(
+                              "Login as admin",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                login(adminid.text, adminpassword.text);
+                              }
+                            },
+                          ),
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(right: 15),
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        child: Text(
+                          "sgin up ",
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Adminsignup()));
+                        },
+                      ),
+                    )
+                  ],
+                ))
           ],
         ),
       ),

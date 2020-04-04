@@ -147,6 +147,25 @@ class mainadminpage extends State<mainadmin> {
         '/chooselogin', (Route<dynamic> route) => false);
   }
 
+  Widget datainmenu() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            child: CircleAvatar(
+              radius: 45.0,
+              backgroundImage: AssetImage(
+                'img/professor.png',
+              ),
+            ),
+          ),
+          Text("Mr: $name"),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -157,12 +176,13 @@ class mainadminpage extends State<mainadmin> {
           child: ListView(
             children: <Widget>[
               ListTile(
-                title: get_the_admin_data(),
+                title: datainmenu(),
                 onTap: () {},
               ),
               Divider(),
               ListTile(
-                title: Text('Profile'),
+                title: Text('Profile',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => profile()));
@@ -170,7 +190,8 @@ class mainadminpage extends State<mainadmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('add department'),
+                title: Text('add department',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -180,7 +201,8 @@ class mainadminpage extends State<mainadmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('add subject'),
+                title: Text('add subject',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => add_subject()));
@@ -188,7 +210,8 @@ class mainadminpage extends State<mainadmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('edit subject'),
+                title: Text('edit subject',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => get_subject()));
@@ -196,7 +219,8 @@ class mainadminpage extends State<mainadmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('log out'),
+                title: Text('log out',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   logout();
                 },

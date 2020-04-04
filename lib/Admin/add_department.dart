@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Database/Database_admin.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 
 class add_department extends StatefulWidget {
@@ -20,7 +19,7 @@ class add_departmentpage extends State<add_department> {
 
   //controller about combox
   String _ratingController;
-  List _professors = [" "];
+  List _professors = [];
   List data = new List();
   //to get the element from database and add them to combox
   void nameofprofessor() async {
@@ -35,7 +34,7 @@ class add_departmentpage extends State<add_department> {
   }
 
   String _ratingController1;
-  List _start = [" ", "level 1", "level 3"];
+  List _start = ["level 1", "level 3"];
 
   void initState() {
     super.initState();
@@ -56,8 +55,13 @@ class add_departmentpage extends State<add_department> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xff254660),
+          title: Text("Add Department"),
+        ),
         backgroundColor: Color(0xff2e2e2e),
         body: Container(
+          alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -67,8 +71,9 @@ class add_departmentpage extends State<add_department> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: TextFormField(
                           cursorColor: Colors.blue,
                           keyboardType: TextInputType.text,
@@ -78,6 +83,13 @@ class add_departmentpage extends State<add_department> {
                           onSaved: (input) => departmentnamesave = input,
                           decoration: InputDecoration(
                             labelText: "Department name",
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.blue,
+                              ),
+                            ),
                             hintText: "Enter department name",
                           ),
                           validator: (value) {
@@ -90,8 +102,10 @@ class add_departmentpage extends State<add_department> {
                         ),
                       ),
                       Container(
-                          margin: EdgeInsets.only(bottom: 10),
                           color: Colors.white,
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height / 55),
+                          width: MediaQuery.of(context).size.width / 1.2,
                           child: DropdownButtonFormField<dynamic>(
                             value: _ratingController,
                             validator: (value) {
@@ -117,8 +131,10 @@ class add_departmentpage extends State<add_department> {
                             },
                           )),
                       Container(
-                          margin: EdgeInsets.only(bottom: 10),
                           color: Colors.white,
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height / 55),
+                          width: MediaQuery.of(context).size.width / 1.2,
                           child: DropdownButtonFormField<dynamic>(
                             value: _ratingController1,
                             validator: (value) {
@@ -146,14 +162,18 @@ class add_departmentpage extends State<add_department> {
                       Card(
                         color: Colors.blue,
                         child: FlatButton.icon(
-                          icon: Icon(Icons.save),
+                          icon: Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               add_departmentsqlite(departmentname.text,
                                   _ratingController1, _ratingController);
                             }
                           },
-                          label: Text("ADD Department"),
+                          label: Text("ADD Department",
+                              style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),
                       ),

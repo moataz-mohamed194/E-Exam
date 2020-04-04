@@ -48,13 +48,6 @@ class database_professor {
 
   Future<int> addchaptertoexam(String idexam, String chapter, String level,
       String type, String count) async {
-    /*print(idexam);
-    print(chapter);
-    print(level);
-    print(type);
-    print(count);
-    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-   */
     var dbclient = await db;
     int addtwo = await dbclient.insert('examchapter', {
       'examid': '$idexam',
@@ -69,9 +62,6 @@ class database_professor {
 
   Future<int> add_exam(
       String subject, String when, String time, Map data) async {
-    /*  print(subject);
-    print(when);
-    print(time);*/
     var dbclient = await db;
     //_onCreate(dbclient, 0);
     int add = await dbclient.insert('examdetails',
@@ -146,24 +136,6 @@ class database_professor {
         ? print("time")
         : addchaptertoexam("$add", "5", "C", "mcq", data["chapter5mcqc"]);
     print("objectobjectobjectobject");
-    /* var dbclient = await db;
-    _onCreate(dbclient, 0);
-    int add = await dbclient.insert('examdetails', {
-      'Question': '$subject',
-      'subject': '$when',
-      'numberofchapter': '$time'
-    });
-    int addtwo;
-    for (int i = 0; i < data.length; i++) {
-      addtwo = await dbclient.insert('examdetails', {
-        'examid': '$add',
-        'chapter': data[i]['chapter'],
-        'level': data[i]['level'],
-        'type': data[i]['type'],
-        'count': data[i]['count']
-      });
-    }
-    return addtwo;*/
   }
 
   //to remove mcq question from database

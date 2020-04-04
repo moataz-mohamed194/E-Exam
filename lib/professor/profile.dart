@@ -25,7 +25,7 @@ class profilepage extends State<profile> {
     get_professor_data_from_SharedPreferences();
   }
 
-  List sub = [" "];
+  List sub = [];
 
   List sub_data = new List();
   void nameofsubject() async {
@@ -76,10 +76,6 @@ class profilepage extends State<profile> {
     );
   }
 
-/*  Widget oo() {
-    return ;
-  }
-*/
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -92,10 +88,6 @@ class profilepage extends State<profile> {
               child: get_the_professor_data(),
               flex: 1,
             ),
-            /*   Expanded(
-              child: oo(),
-              flex: 1,
-            )*/
           ],
         ),
       ),

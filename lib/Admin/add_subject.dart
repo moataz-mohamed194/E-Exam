@@ -85,8 +85,13 @@ class add_subjectpage extends State<add_subject> {
     // TODO: implement build
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff254660),
+        title: Text("Add Subject"),
+      ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -96,8 +101,9 @@ class add_subjectpage extends State<add_subject> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: TextFormField(
                           cursorColor: Colors.blue,
                           keyboardType: TextInputType.text,
@@ -105,6 +111,13 @@ class add_subjectpage extends State<add_subject> {
                           onSaved: (input) => subjectnamesave = input,
                           decoration: InputDecoration(
                             labelText: "subject name",
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.blue,
+                              ),
+                            ),
                             hintText: "Enter subject name",
                           ),
                           validator: (value) {
@@ -117,8 +130,10 @@ class add_subjectpage extends State<add_subject> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
                         color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: DropdownButtonFormField<dynamic>(
                           value: _semester,
                           validator: (value) {
@@ -145,8 +160,10 @@ class add_subjectpage extends State<add_subject> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
                         color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: DropdownButtonFormField<dynamic>(
                           value: _level,
                           validator: (value) {
@@ -176,8 +193,10 @@ class add_subjectpage extends State<add_subject> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
                         color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: DropdownButtonFormField<dynamic>(
                           value: _department,
                           validator: (value) {
@@ -204,8 +223,10 @@ class add_subjectpage extends State<add_subject> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
                         color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: DropdownButtonFormField<dynamic>(
                           value: _professor,
                           validator: (value) {
@@ -234,14 +255,18 @@ class add_subjectpage extends State<add_subject> {
                       Card(
                         color: Colors.blue,
                         child: FlatButton.icon(
-                          icon: Icon(Icons.save),
+                          icon: Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               add_subjectsqlite(subjectname.text, _department,
                                   _professor, _level, _semester);
                             }
                           },
-                          label: Text("ADD Subject"),
+                          label: Text("ADD Subject",
+                              style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),
                       ),

@@ -13,6 +13,7 @@ import 'cleandata.dart';
 import 'professor/mainofprofessor.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString('loginasadmin') == "yes") {
     runApp(admin());

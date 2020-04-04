@@ -17,10 +17,10 @@ class edit_subject extends StatefulWidget {
 class edit_subjectPage extends State<edit_subject> {
   final _formKey = GlobalKey<FormState>();
   String _semester, _level, _department, _professor;
-  List _semesterlist = [" ", "semester 1", "semester 2"];
-  List _levellist = [" ", "level 1", "level 2", "level 3", "level 4"];
-  List _departmentlist = [" "];
-  List _professorlist = [" "];
+  List _semesterlist = ["semester 1", "semester 2"];
+  List _levellist = ["level 1", "level 2", "level 3", "level 4"];
+  List _departmentlist = [];
+  List _professorlist = [];
   TextEditingController subjectname;
   String subjectnamesave;
   void initState() {
@@ -92,6 +92,10 @@ class edit_subjectPage extends State<edit_subject> {
     String professor = _store.get('professor');
     // _semesterlist = _store.get('semester');
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff254660),
+        title: Text("Edit Subject"),
+      ),
       backgroundColor: Color(0xff2e2e2e),
       body: Center(
         child: Column(
@@ -102,14 +106,22 @@ class edit_subjectPage extends State<edit_subject> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    color: Colors.white,
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 55),
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: TextFormField(
                       keyboardType: TextInputType.text,
                       cursorColor: Colors.blue,
                       controller: subjectname,
                       onSaved: (input) => subjectnamesave = input,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
                         labelText: "subject name",
                         hintText: "Enter subject name",
                       ),
@@ -123,8 +135,10 @@ class edit_subjectPage extends State<edit_subject> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 10),
                     color: Colors.white,
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 55),
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
                       value: _semester,
                       decoration: InputDecoration(
@@ -153,8 +167,10 @@ class edit_subjectPage extends State<edit_subject> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 10),
                     color: Colors.white,
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 55),
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
                       value: _level,
                       decoration: InputDecoration(
@@ -186,8 +202,10 @@ class edit_subjectPage extends State<edit_subject> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 10),
                     color: Colors.white,
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 55),
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
                       value: _department,
                       decoration: InputDecoration(
@@ -216,8 +234,10 @@ class edit_subjectPage extends State<edit_subject> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 10),
                     color: Colors.white,
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 55),
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
                       value: _professor,
                       decoration: InputDecoration(
@@ -248,10 +268,12 @@ class edit_subjectPage extends State<edit_subject> {
                   Card(
                     color: Colors.blue,
                     child: FlatButton.icon(
-                      icon: Icon(Icons.save),
-                      label: Text(
-                        "ADD Edit",
+                      icon: Icon(
+                        Icons.save,
+                        color: Colors.white,
                       ),
+                      label:
+                          Text("Edit", style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           add_subjectsqlite(
