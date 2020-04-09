@@ -1,4 +1,6 @@
-import 'package:exam/Database/Database_professor.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,19 +16,31 @@ class get_chapter extends StatefulWidget {
 class get_chapterpage extends State<get_chapter> {
   String subjectvalue;
   List sub = [];
+  GlobalState _store = GlobalState.instance;
+
   List sub_data = new List();
   void nameofsubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    database_professor()
+    /*database_professor()
         .get_the_subject(prefs.getString('realName'))
         .then((result) {
       setState(() {
         sub_data.addAll(result);
-      });
-      for (int i = 0; i < result.length; i++) {
-        sub.add(sub_data[i]['Name']);
-      }
+      });*/
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http.post(url, body: {
+      "action": "get_the_subject",
+      "Professor": "${prefs.getString('realName')}"
     });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      sub_data = json.decode(content);
+    });
+    for (int i = 0; i < sub_data.length; i++) {
+      sub.add(sub_data[i]['Name']);
+    }
+    //   });
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -38,28 +52,42 @@ class get_chapterpage extends State<get_chapter> {
 
   List data = new List();
   void subject() async {
-    database_professor().getchapter().then((result) {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http.post(url, body: {"action": "getchapterdata"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
+    });
+
+    /*database_professor().getchapter().then((result) {
       setState(() {
         data.addAll(result);
       });
-    });
+    });*/
   }
 
-  removechapter(String subjectname, int id) {
-    database_professor()
-        .remove_chapter_tosqlite(subjectname, id)
-        .whenComplete(() {
+  removechapter(String subjectname, String id) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    var d = await http.post(url, body: {
+      "action": "remove_chapter",
+      "subjectname": subjectname,
+      "id": id
+    }).whenComplete(() {
       Toast.Toast.show("that subject is removed", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-      Navigator.pop(context);
+      //Navigator.pop(context);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => get_chapter()));
     });
+    /*database_professor()
+        .remove_chapter_tosqlite(subjectname, id)
+      ;*/
   }
 
   Widget get_queation() {
     int i = 0;
+    print(data);
     return Container(
         width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(

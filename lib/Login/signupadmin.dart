@@ -1,7 +1,10 @@
+import 'dart:convert';
+
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
-import '../Database/Database_admin.dart';
+import 'package:http/http.dart' as http;
 
 class Adminsignup extends StatefulWidget {
   @override
@@ -47,17 +50,24 @@ class AdminsignupPage extends State<Adminsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
+  GlobalState _store = GlobalState.instance;
+
   List data = new List();
   void getadmindata() async {
-    database().getadmindata().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response = await http.post(url, body: {"action": "getadmindata2"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
     });
+    print("0000" + response.body);
+    print("1111" + data.toString());
+    return json.decode(response.body);
   }
 
-  login(String national, String name, String email, String password,
+  sendData(String national, String name, String email, String password,
       String graduted, String age) async {
+    //  try {
     for (int i = 0; i < data.length; i++) {
       if (national == data[i]['Nationalid'] || email == data[i]['Email']) {
         Toast.Toast.show("that eamil or your id is used", context,
@@ -65,15 +75,24 @@ class AdminsignupPage extends State<Adminsignup> {
         return 0;
       }
     }
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    await http.post(url, body: {
+      "action": "send_request",
+      "type": "Admin",
+      "Nationalid": national,
+      "Email": email,
+      "Password": password,
+      "realName": name,
+      "graduted": graduted,
+      "age": age
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
+      Toast.Toast.show("Your request is send", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
 
-    database api = new database();
-    var l = await api.sendtodatabase1('Admin', name, email, int.parse(national),
-        password, graduted, int.parse(age));
-    print(l);
-    Toast.Toast.show("Your request is send", context,
-        duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-
-    Navigator.pop(context);
+      Navigator.pop(context);
+    });
   }
 
   @override
@@ -330,14 +349,21 @@ class AdminsignupPage extends State<Adminsignup> {
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
-                                    login(
+                                    /*login(
+                                        Adminnationalid.text,
+                                        Adminname.text,
+                                        Adminemail.text,
+                                        Adminpassword.text,
+                                        Admingraduted.text,
+                                        Adminage.text);*/
+                                    sendData(
                                         Adminnationalid.text,
                                         Adminname.text,
                                         Adminemail.text,
                                         Adminpassword.text,
                                         Admingraduted.text,
                                         Adminage.text);
-                                    print("cccccccccc");
+                                    //  print("cccccccccc");
                                   }
                                 },
                               ),

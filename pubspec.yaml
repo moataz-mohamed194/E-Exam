@@ -30,7 +30,7 @@ dependencies:
   shared_preferences: any
   rflutter_alert: ^1.0.3
   datetime_picker_formfield: ^1.0.0
-
+  http:
 
 dev_dependencies:
   flutter_test:

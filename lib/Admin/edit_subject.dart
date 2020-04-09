@@ -1,8 +1,11 @@
-import '../Database/Database_admin.dart';
+import 'dart:convert';
+
+//import '../Database/Database_admin.dart';
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 import 'get_subject.dart';
 
@@ -25,52 +28,135 @@ class edit_subjectPage extends State<edit_subject> {
   String subjectnamesave;
   void initState() {
     super.initState();
-    nameofprofessor();
+    getData();
     subjectname = new TextEditingController();
   }
 
-  List datadepartment = new List();
-  //get the professor from database and add them to
-  void nameofdepartment(String studentlevel) async {
-    database().name_of_department().then((result) {
-      setState(() {
-        datadepartment.addAll(result);
-      });
-      _departmentlist.add("general");
+  GlobalState _store = GlobalState.instance;
 
-      for (int i = 0; i < result.length; i++) {
-        if (studentlevel == "level 3" || studentlevel == "level 4") {
-          if (!_departmentlist.contains(datadepartment[i]['Name'])) {
-            _departmentlist.add(datadepartment[i]['Name']);
-          }
-        } else if (studentlevel == "level 1" || studentlevel == "level 2") {
-          if (!_departmentlist.contains(datadepartment[i]['Name'])) {
-            if (datadepartment[i]['leader'] == "level 1" ||
-                datadepartment[i]['leader'] == "level 2") {
-              _departmentlist.add(datadepartment[i]['Name']);
-            }
+  List data1 = new List<dynamic>();
+
+  List datadepartment = new List();
+  void nameofdepartment(String studentlevel) async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response =
+        await http.post(url, body: {"action": "getdepartmentdata"});
+    String content = response.body;
+    setState(() {
+      data1 = json.decode(content);
+    });
+    for (int i = 0; i < data1.length; i++) {
+      setState(() {
+        datadepartment.add(data1[i]['Name'].toString());
+      });
+    }
+    print(studentlevel);
+    _departmentlist.add("general");
+    for (int i = 0; i < data1.length; i++) {
+      if (studentlevel == "level 3" || studentlevel == "level 4") {
+        if (!_departmentlist.contains(data1[i]['Name'])) {
+          _departmentlist.add(data1[i]['Name'].toString());
+        }
+      } else if (studentlevel == "level 1" || studentlevel == "level 2") {
+        if (!_departmentlist.contains(data1[i]['Name'])) {
+          if (data1[i]['whenstart'] == "level 1" ||
+              data1[i]['whenstart'] == "level 2") {
+            _departmentlist.add(data1[i]['Name'].toString());
           }
         }
       }
-    });
+    }
+    // });
   }
 
   List dataprofessor = new List();
   //get the professor from database and add them to
-  void nameofprofessor() async {
-    database().Leader_of_department().then((result) {
-      setState(() {
-        dataprofessor.addAll(result);
-      });
-      for (int i = 0; i < result.length; i++) {
-        _professorlist.add(dataprofessor[i]['realName']);
-      }
+  List data = new List<dynamic>();
+  Future<List> getData() async {
+    var url = "http:///app/admin.php";
+    final response = await http.post(url, body: {"action": "getprofessordata"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
     });
+    for (int i = 0; i < data.length; i++) {
+      setState(() {
+        _professorlist.add(data[i]['realName']);
+      });
+    }
+    setState(() {
+      subjectname.text = _store.get('Name');
+    });
+    //return json.decode(response.body);
   }
 
-  void add_subjectsqlite(String name, String department, String professor,
-      String level, String semester, String id) {
-    database()
+  Future<void> add_subjectsqlite(String name, String department,
+      String professor, var level, String semester, String id) async {
+    Map<dynamic, dynamic> f = new Map();
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    //*if (name != null || semester != null) {
+
+    f["action"] = "updatesubject";
+    f["id"] = "$id";
+    print("[$professor]");
+
+    if (name != null) {
+      f["name"] = "$name";
+    }
+    if (semester != null) {
+      f["semester"] = "$semester";
+    }
+    if (level != null) {
+      f["level"] = "$level";
+    }
+    if (professor != null) {
+      f["professor0000"] = "$professor";
+    }
+    if (department != null) {
+      f["department"] = "$department";
+    }
+
+    var response;
+    print(f);
+    response = await http.post(url, body: f);
+    /*.catchError((e) {
+      print("qqqqqqqqqqqqqqqqqqqqqqqqqq$e");
+    }).whenComplete(() {*/
+    String content = response.body;
+    print(content);
+
+    Toast.Toast.show("that subject is edited", context,
+        duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => get_subject()));
+    // });
+    // }
+    /*if (level != null || professor != null) {
+      await http.post(url, body: {
+        "action": "updatesubject",
+        "professor": professor,
+        "id": id,
+        "level": level,
+        //"level": level
+      });
+    }*/
+    /*await http.post(url, body: {
+      "name": name,
+      "id": id,
+      "semester": semester,
+      "level": level
+    }).catchError((e) {
+      print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqq$e");
+    }).whenComplete(() {
+      Toast.Toast.show("that subject is edited", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => get_subject()));
+    });*/
+
+    /*database()
         .update_subject(name, department, professor, level, semester, id)
         .whenComplete(() {
       Toast.Toast.show("that subject is edited", context,
@@ -78,14 +164,12 @@ class edit_subjectPage extends State<edit_subject> {
       Navigator.pop(context);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => get_subject()));
-    });
+    });*/
   }
 
-  GlobalState _store = GlobalState.instance;
   String i;
   @override
   Widget build(BuildContext context) {
-    subjectname.text = _store.get('Name');
     String semester = _store.get('semester');
     String level = _store.get('level');
     String department = _store.get('department');
@@ -98,12 +182,13 @@ class edit_subjectPage extends State<edit_subject> {
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(
@@ -122,7 +207,7 @@ class edit_subjectPage extends State<edit_subject> {
                             color: Colors.blue,
                           ),
                         ),
-                        labelText: "subject name",
+                        labelText: "Current subject name:${_store.get('Name')}",
                         hintText: "Enter subject name",
                       ),
                       validator: (value) {

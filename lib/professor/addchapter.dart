@@ -1,4 +1,6 @@
-import 'package:exam/Database/Database_professor.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,19 +16,32 @@ class add_chapter extends StatefulWidget {
 class add_chapterpage extends State<add_chapter> {
   String subjectvalue;
   List sub = [];
+  GlobalState _store = GlobalState.instance;
+
   List sub_data = new List();
   void nameofsubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    database_professor()
+    /*database_professor()
         .get_the_subject(prefs.getString('realName'))
         .then((result) {
       setState(() {
         sub_data.addAll(result);
-      });
-      for (int i = 0; i < result.length; i++) {
-        sub.add(sub_data[i]['Name']);
-      }
+      });*/
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http.post(url, body: {
+      "action": "get_the_subject",
+      "Professor": "${prefs.getString('realName')}"
     });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      sub_data = json.decode(content);
+    });
+
+    for (int i = 0; i < sub_data.length; i++) {
+      sub.add(sub_data[i]['Name']);
+    }
+    //  });
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -39,14 +54,25 @@ class add_chapterpage extends State<add_chapter> {
     controllerchaptername = new TextEditingController();
   }
 
-  addchapter(String subjectname, String chaptername) {
-    database_professor()
-        .add_chapter_tosqlite(chaptername, subjectname)
-        .whenComplete(() {
+  var d;
+  addchapter(String subjectname, String chaptername) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    d = await http.post(url, body: {
+      "action": "add_chapter",
+      "subjectname": subjectname,
+      "chaptername": chaptername
+    }).catchError((e) {
+      print("00000000000000000000000$e");
+    }).whenComplete(() {
       Toast.Toast.show("that chapter is added", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
+
+    /*database_professor()
+        .add_chapter_tosqlite(chaptername, subjectname)
+        .whenComplete(() {
+    });*/
   }
 
   @override

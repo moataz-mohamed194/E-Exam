@@ -1,10 +1,12 @@
+import 'dart:convert';
+
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Database/Database_admin.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
-
+import 'package:http/http.dart' as http;
 import 'add_department.dart';
 import 'add_subject.dart';
 import 'get_subject.dart';
@@ -14,6 +16,7 @@ class mainadmin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
+
     return mainadminpage();
   }
 }
@@ -22,7 +25,52 @@ class mainadminpage extends State<mainadmin> {
   void initState() {
     super.initState();
     get_admin_data_from_SharedPreferences();
-    get_request_data_from_SharedPreferences();
+    //get_request_data_from_SharedPreferences();
+    getData();
+  }
+
+  GlobalState _store = GlobalState.instance;
+
+  Map<String, dynamic> chatMap;
+  List data = new List<dynamic>();
+  Future<List> getData() async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response = await http.post(url, body: {"action": "getadmindata"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
+    });
+    return json.decode(response.body);
+  }
+
+  rejected(String id) async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    await http
+        .post(url, body: {"action": "rejected", "id": "$id"}).whenComplete(() {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => mainadmin()));
+    });
+  }
+
+  accept(String nationalid, String email, String realName, String password,
+      String id, String graduted, String age, String type) async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    await http.post(url, body: {
+      "action": "accept",
+      "type": type,
+      "id": id,
+      "Nationalid": nationalid,
+      "Email": email,
+      "Password": password,
+      "realName": realName,
+      "graduted": graduted,
+      "age": age
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => mainadmin()));
+    });
   }
 
   String email, nationalid, name, password, graduted, age;
@@ -52,15 +100,6 @@ class mainadminpage extends State<mainadmin> {
         ],
       ),
     );
-  }
-
-  List data = new List();
-  void get_request_data_from_SharedPreferences() async {
-    database().get_request().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-    });
   }
 
   Widget get_the_requests() {
@@ -96,8 +135,7 @@ class mainadminpage extends State<mainadmin> {
                     Expanded(
                       child: IconButton(
                         onPressed: () {
-                          database()
-                              .accept(
+                          accept(
                             data[index]['Nationalid'],
                             data[index]['Email'],
                             data[index]['realName'],
@@ -106,13 +144,7 @@ class mainadminpage extends State<mainadmin> {
                             data[index]['graduted'],
                             data[index]['age'],
                             data[index]['type'],
-                          )
-                              .whenComplete(() {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => mainadmin()));
-                          });
+                          );
                         },
                         icon: Icon(Icons.check),
                         color: Colors.blue,
@@ -121,12 +153,7 @@ class mainadminpage extends State<mainadmin> {
                     Expanded(
                       child: IconButton(
                         onPressed: () {
-                          database().remove(data[index]['ID']).whenComplete(() {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => mainadmin()));
-                          });
+                          rejected(data[index]['ID']);
                         },
                         icon: Icon(Icons.clear),
                         color: Colors.blue,
@@ -236,18 +263,18 @@ class mainadminpage extends State<mainadmin> {
         body: Container(
             child: Column(
           children: <Widget>[
-            Align(
+            /* Align(
               alignment: Alignment(0, -0.9),
               child: Container(
                 width: 35,
                 height: 110,
                 color: Colors.blue,
               ),
-            ),
+            ),*/
             Expanded(
               child: get_the_requests(),
             ),
-//            get_the_admin_data(),
+            //   get_the_admin_data(),
           ],
         )),
       ),

@@ -1,8 +1,9 @@
-import 'package:exam/Database/Database_admin.dart';
-import 'package:exam/Database/Database_professor.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 class Professorsignup extends StatefulWidget {
   @override
@@ -42,13 +43,23 @@ class ProfessorsignupPage extends State<Professorsignup> {
     getprofessordata();
   }
 
+  GlobalState _store = GlobalState.instance;
+
   List data = new List();
   void getprofessordata() async {
-    database_professor().getprofessordata().then((result) {
+    /*database_professor().getprofessordata().then((result) {
       setState(() {
         data.addAll(result);
       });
+    });*/
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http.post(url, body: {"action": "getProfessordata"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
     });
+    //return json.decode(response.body);
   }
 
   _fieldFocusChange(
@@ -57,8 +68,8 @@ class ProfessorsignupPage extends State<Professorsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  login(String name, String email, int id, String password, String graduated,
-      int age) async {
+  login(String name, String email, String id, String password, String graduated,
+      String age) async {
     for (int i = 0; i < data.length; i++) {
       if (id == data[i]['Nationalid'] || email == data[i]['Email']) {
         Toast.Toast.show("that eamil or your id is used", context,
@@ -66,14 +77,34 @@ class ProfessorsignupPage extends State<Professorsignup> {
         return 0;
       }
     }
-    database api = new database();
-    var l = await api.sendtodatabase1(
-        'Professor', name, email, id, password, graduated, age);
-    Navigator.pop(context);
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final q = await http.post(url, body: {
+      "action": "send_request",
+      "type": "Professor",
+      "Nationalid": id,
+      "Email": email,
+      "Password": password,
+      "realName": name,
+      "graduted": graduated,
+      "age": age
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
+      Toast.Toast.show("Your request is send", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+
+      Navigator.pop(context);
+    });
+    print(q.body);
+
+    // database api = new database();
+    //var l = await api.sendtodatabase1(
+    //  'Professor', name, email, id, password, graduated, age);
+    /* Navigator.pop(context);
     Toast.Toast.show("your request is send", context,
         duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-
-    print(l);
+*/
+    //  print(l);
   }
 
   @override
@@ -336,11 +367,11 @@ class ProfessorsignupPage extends State<Professorsignup> {
                                     login(
                                         Professorname.text,
                                         Professoremail.text,
-                                        int.parse(Professorid.text),
+                                        Professorid.text,
                                         Professorpassword.text,
                                         Professorgraduated.text,
-                                        int.parse(Professorage.text));
-                                    print("cccccccccc");
+                                        Professorage.text);
+                                    //print("cccccccccc");
                                   }
                                 },
                               ),

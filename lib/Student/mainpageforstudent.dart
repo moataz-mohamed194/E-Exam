@@ -1,4 +1,6 @@
-import 'package:exam/Database/Database_student.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,15 +23,27 @@ class mainstudentpage extends State<mainstudent> {
     getstudentdatafromSharedPreferences();
   }
 
+  GlobalState _store = GlobalState.instance;
+
   List sub_data = new List();
   void nameofsubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Databasestudent()
+    /*Databasestudent()
         .getstudentsubject(prefs.getString('level'))
         .then((result) {
       setState(() {
         sub_data.addAll(result);
       });
+    });*/
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response = await http.post(url, body: {
+      "action": "getstudentsubject",
+      "level": "${prefs.getString('level')}"
+    });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      sub_data = json.decode(content);
     });
   }
 

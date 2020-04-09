@@ -1,9 +1,11 @@
-import 'package:exam/Database/Database_student.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signupforstudent.dart';
+import 'package:http/http.dart' as http;
 
 class StudentLogin extends StatefulWidget {
   @override
@@ -32,10 +34,51 @@ class StudentLoginPage extends State<StudentLogin> {
   }
 
   List data = new List();
+  GlobalState _store = GlobalState.instance;
 
   login(String id, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await Databasestudent().checkyouridandpassword(id).then((result) {
+    try {
+      var url = "http://${_store.ipaddress}/app/student.php";
+      final response = await http.post(url, body: {
+        "action": "check_your_email_and_password",
+        "email": "$id",
+      });
+      String content = response.body;
+      print("99999999999" + response.body);
+
+      setState(() {
+        data = json.decode(content);
+      });
+//      print("99999999999" + response.body);
+      print(data);
+      if (password == data[0]['password']) {
+        prefs.setString('ID', "${data[0]['ID']}");
+        prefs.setString('Nationalid', "${data[0]['Nationalid']}");
+        prefs.setString('Collageid', "${data[0]['Collageid']}");
+        prefs.setString('name', "${data[0]['name']}");
+        prefs.setString('password', "${data[0]['password']}");
+        prefs.setString('level', "${data[0]['level']}");
+        prefs.setString('department', "${data[0]['department']}");
+        prefs.setString('loginasstudent', "yes");
+
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/mainstudent', (Route<dynamic> route) => false);
+        Toast.Toast.show("Welcome to our app", context,
+            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+        data.clear();
+      } else {
+        Toast.Toast.show(
+            "$password Check your password${data[0]['password']} ", context,
+            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+      }
+    } catch (e) {
+      //print("0000000000000" + response.body);
+      Toast.Toast.show("Check your  Email", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    }
+
+    /*await Databasestudent().checkyouridandpassword(id).then((result) {
       setState(() {
         data.addAll(result);
         // print(result);
@@ -61,7 +104,7 @@ class StudentLoginPage extends State<StudentLogin> {
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
         data.clear();
       }
-    });
+    });*/
   }
 
   @override
@@ -168,7 +211,7 @@ class StudentLoginPage extends State<StudentLogin> {
                                 style: TextStyle(color: Colors.white)),
                             onPressed: () {
                               login(studentid.text, studentpassword.text);
-                              print("ffffffffff");
+                              //   print("ffffffffff");
                             },
                           ),
                         )),

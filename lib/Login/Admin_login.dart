@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../Database/Database_admin.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signupadmin.dart';
+
+import 'package:http/http.dart' as http;
 
 class AdminLogin extends StatefulWidget {
   @override
@@ -31,33 +35,48 @@ class AdminLoginPage extends State<AdminLogin> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  List data = new List();
+  List data = new List<dynamic>();
+  var response;
+  GlobalState _store = GlobalState.instance;
 
-  login(String id, String password) async {
+  login(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    database().check_your_email_and_password('Admin', id).then((result) {
-      setState(() {
-        data.addAll(result);
-        print(result);
-        if (password == data[0]['Password']) {
-          prefs.setString('ID', "${data[0]['ID']}");
-          prefs.setString('Nationalid', "${data[0]['Nationalid']}");
-          prefs.setString('Email', "${data[0]['Email']}");
-          prefs.setString('Password', "${data[0]['Password']}");
-          prefs.setString('realName', "${data[0]['realName']}");
-          prefs.setString('graduted', "${data[0]['graduted']}");
-          prefs.setString('age', "${data[0]['age']}");
-          prefs.setString('loginasadmin', "yes");
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              '/mainforadmin', (Route<dynamic> route) => false);
-          Toast.Toast.show("Welcome to our app", context,
-              duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-        } else {
-          Toast.Toast.show("Check your password and Email", context,
-              duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-        }
+    print(email);
+    print(password);
+    try {
+      var url = "http://${_store.ipaddress}/app/admin.php";
+      response = await http.post(url, body: {
+        "action": "check_your_email_and_password",
+        "email": "$email",
       });
-    });
+      String content = response.body;
+      setState(() {
+        data = json.decode(content);
+      });
+      print("99999999999" + response.body);
+      print(data);
+      if (password == data[0]['Password']) {
+        prefs.setString('ID', "${data[0]['ID']}");
+        prefs.setString('Nationalid', "${data[0]['Nationalid']}");
+        prefs.setString('Email', "${data[0]['Email']}");
+        prefs.setString('Password', "${data[0]['Password']}");
+        prefs.setString('realName', "${data[0]['realName']}");
+        prefs.setString('graduted', "${data[0]['graduted']}");
+        prefs.setString('age', "${data[0]['age']}");
+        prefs.setString('loginasadmin', "yes");
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/mainforadmin', (Route<dynamic> route) => false);
+        Toast.Toast.show("Welcome to our app", context,
+            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+      } else {
+        Toast.Toast.show("Check your password ", context,
+            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+      }
+    } catch (e) {
+      print("0000000000000" + response.body);
+      Toast.Toast.show("Check your  Email", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    }
   }
 
   @override

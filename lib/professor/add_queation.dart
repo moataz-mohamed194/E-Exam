@@ -1,8 +1,10 @@
-import 'package:exam/Database/Database_professor.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 class add_question extends StatefulWidget {
   @override
@@ -53,25 +55,29 @@ class add_questionpage extends State<add_question> {
     }
   }
 
+  GlobalState _store = GlobalState.instance;
+
   List sub_data = new List();
   void nameofsubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    database_professor()
-        .get_the_subject(prefs.getString('realName'))
-        .then((result) {
-      setState(() {
-        sub_data.addAll(result);
-      });
-      print(sub_data);
-      for (int i = 0; i < result.length; i++) {
-        sub.add(sub_data[i]['Name']);
-        data[sub_data[i]['Name'].toString()] =
-            int.parse(sub_data[i]['counter']);
-      }
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http.post(url, body: {
+      "action": "get_the_subject",
+      "Professor": "${prefs.getString('realName')}"
     });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      sub_data = json.decode(content);
+    });
+    for (int i = 0; i < sub_data.length; i++) {
+      sub.add(sub_data[i]['Name']);
+      data[sub_data[i]['Name'].toString()] = int.parse(sub_data[i]['counter']);
+    }
   }
 
-  void addquestionmcq(
+  var b2;
+  Future<void> addquestionmcq(
       String question,
       String subject,
       String numberofchapter,
@@ -80,36 +86,45 @@ class add_questionpage extends State<add_question> {
       String answer2,
       String answer3,
       String answer4,
-      String correctanswer) {
-    database_professor()
-        .add_question_mcq_tosqlite(
-            question,
-            subject,
-            numberofchapter,
-            level,
-            answer1,
-            answer2,
-            answer3,
-            answer4,
-            correctanswer,
-            _value1.toString())
-        .whenComplete(() {
-      Toast.Toast.show("that queation is add", context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-      Navigator.pop(context);
-    }).catchError(() {});
-  }
-
-  void addquestiontrue_and_false(String question, String subject,
-      String numberofchapter, String correctanswer) {
-    database_professor()
-        .add_question_true_and_false_tosqlite(question, subject,
-            numberofchapter, correctanswer, _value1.toString())
-        .whenComplete(() {
+      String correctanswer) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    b2 = await http.post(url, body: {
+      "action": "add_question_mcq_tosqlite",
+      "question": question,
+      "subject": subject,
+      "numberofchapter": numberofchapter,
+      "level": level,
+      "answer1": answer1,
+      "answer2": answer2,
+      "answer3": answer3,
+      "answer4": answer4,
+      "correctanswer": correctanswer,
+      "bank": _value1.toString()
+    }).whenComplete(() {
       Toast.Toast.show("that queation is add", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
+    print(b2.body);
+  }
+
+  var b1;
+  Future<void> addquestiontrue_and_false(String question, String subject,
+      String numberOfChapter, String correctAnswer) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    b1 = await http.post(url, body: {
+      "action": "add_question_true_and_false_tosqlite",
+      "question": question,
+      "subject": subject,
+      "numberofchapter": numberOfChapter,
+      "correctanswer": correctAnswer,
+      "bank": _value1.toString()
+    }).whenComplete(() {
+      Toast.Toast.show("that queation is add", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+      Navigator.pop(context);
+    });
+    print(b1.body);
   }
 
   _fieldFocusChange(

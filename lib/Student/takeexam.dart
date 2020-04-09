@@ -1,4 +1,6 @@
-import 'package:exam/Database/Database_student.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -13,22 +15,49 @@ class getexam extends StatefulWidget {
 
 class getexampage extends State<getexam> {
   List data = new List();
+
+  List data1 = new List();
+  GlobalState _store = GlobalState.instance;
+  //Map data = new Map<dynamic, dynamic>();
   void mcq() async {
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response =
+        await http.post(url, body: {"action": "get_exam_queation_mcq"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
+    });
+    /*
     Databasestudent().mcqexam().then((result) {
       setState(() {
         data.addAll(result);
       });
-    });
+    });*/
     //  data.removeAt(0);
   }
 
   void trueandfalse() async {
-    Databasestudent().trueandfalseexam().then((result) {
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response = await http
+        .post(url, body: {"action": "get_exam_queationtrue_and_false"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data1 = json.decode(content);
+    });
+    setState(() {
+      data.addAll(data1);
+    });
+    /* setState(() {
+      data.add(data1);
+    });*/
+    /*Databasestudent().trueandfalseexam().then((result) {
       setState(() {
         data.addAll(result);
       });
-    });
-    //  data.removeAt(0);
+    });*/
+    // data.removeAt(0);
   }
 
   @override

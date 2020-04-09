@@ -1,7 +1,9 @@
-import 'package:exam/Database/Database_student.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 class studentsignup extends StatefulWidget {
   @override
@@ -25,29 +27,41 @@ class studentsignupPage extends State<studentsignup> {
   List level = ["level 1", "level 2", "level 3", "level 4"];
   String departmentvalue;
   List department = ["general"];
-  List departmentdata = new List();
-  void nameofdepartment(String studentlevel) async {
-    department.add("general");
+  //List departmentdata = new List();
+  List data1 = new List();
+  GlobalState _store = GlobalState.instance;
 
-    Databasestudent().getdepartment().then((result) {
+  List _departmentlist = ["general"];
+  List datadepartment = new List();
+  void nameofdepartment(String studentlevel) async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response =
+        await http.post(url, body: {"action": "getdepartmentdata"});
+    String content = response.body;
+    setState(() {
+      data1 = json.decode(content);
+    });
+    for (int i = 0; i < data1.length; i++) {
       setState(() {
-        departmentdata.addAll(result);
+        datadepartment.add(data1[i]['Name'].toString());
       });
-      for (int i = 0; i < result.length; i++) {
-        if (studentlevel == "level 3" || studentlevel == "level 4") {
-          if (!department.contains(departmentdata[i]['Name'])) {
-            department.add(departmentdata[i]['Name']);
-          }
-        } else if (studentlevel == "level 1" || studentlevel == "level 2") {
-          if (!department.contains(departmentdata[i]['Name'])) {
-            if (departmentdata[i]['leader'] == "level 1" ||
-                departmentdata[i]['leader'] == "level 2") {
-              department.add(departmentdata[i]['Name']);
-            }
+    }
+    print(studentlevel);
+    _departmentlist.add("general");
+    for (int i = 0; i < data1.length; i++) {
+      if (studentlevel == "level 3" || studentlevel == "level 4") {
+        if (!_departmentlist.contains(data1[i]['Name'])) {
+          _departmentlist.add(data1[i]['Name'].toString());
+        }
+      } else if (studentlevel == "level 1" || studentlevel == "level 2") {
+        if (!_departmentlist.contains(data1[i]['Name'])) {
+          if (data1[i]['whenstart'] == "level 1" ||
+              data1[i]['whenstart'] == "level 2") {
+            _departmentlist.add(data1[i]['Name'].toString());
           }
         }
       }
-    });
+    }
   }
 
   @override
@@ -66,10 +80,26 @@ class studentsignupPage extends State<studentsignup> {
   }
 
   signup(String nationalid, String collageid, String name, String password,
-      String level, String department) {
-    Databasestudent()
+      String level, String department) async {
+    /* Databasestudent()
         .signupstudent(nationalid, collageid, name, password, level, department)
         .whenComplete(() {
+      Navigator.pop(context);
+      Toast.Toast.show("your data is added", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    });*/
+    var url = "http://${_store.ipaddress}/app/student.php";
+    await http.post(url, body: {
+      "action": "signupstudent",
+      "name": name,
+      "nationalid": nationalid,
+      "collageid": collageid,
+      "password": password,
+      "level": level,
+      "department": department,
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
       Navigator.pop(context);
       Toast.Toast.show("your data is added", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
@@ -283,9 +313,10 @@ class studentsignupPage extends State<studentsignup> {
                                         .toList(),
                                     hint: Text('Level :'),
                                     onChanged: (value) {
-                                      department.clear();
                                       setState(() {
                                         nameofdepartment(value);
+                                        _departmentlist.clear();
+
                                         levelvalue = value;
                                       });
                                     },
@@ -310,7 +341,7 @@ class studentsignupPage extends State<studentsignup> {
                                         return null;
                                       }
                                     },
-                                    items: department
+                                    items: _departmentlist
                                         .map((label) => DropdownMenuItem(
                                               child: Text(label.toString()),
                                               value: label,

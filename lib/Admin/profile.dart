@@ -2,7 +2,6 @@ import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Database/Database_admin.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 

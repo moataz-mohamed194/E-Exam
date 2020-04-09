@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../Database/Database_admin.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 import 'edit_subject.dart';
 
@@ -17,19 +19,24 @@ class get_subject extends StatefulWidget {
 
 class get_subjectpage extends State<get_subject> {
   GlobalState _store = GlobalState.instance;
-  List data = new List();
-  void subject() async {
-    database().get_subject().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-    });
-  }
-
+  // List data = new List();
   @override
   void initState() {
     super.initState();
-    subject();
+    // subject();
+    getData();
+  }
+
+  List data = new List<dynamic>();
+  Future<List> getData() async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response = await http.post(url, body: {"action": "getsubject"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
+    });
+
+    return json.decode(response.body);
   }
 
   Widget subject_data() {

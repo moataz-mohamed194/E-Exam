@@ -1,6 +1,8 @@
-import 'package:exam/Database/Database_professor.dart';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class show_question extends StatefulWidget {
   @override
@@ -13,11 +15,29 @@ class show_questionpage extends State<show_question> {
   String subjectvalue;
   List sub = ["MCQ", "TRUE&FAULSE"];
   List data = new List();
+
+  @override
+  void initState() {
+    super.initState();
+    subject();
+    subject1();
+  }
+
+  GlobalState _store = GlobalState.instance;
+
   void subject() async {
-    database_professor().get_the_queation_mcq().then((result) {
+    /*database_professor().get_the_queation_mcq().then((result) {
       setState(() {
         data.addAll(result);
       });
+    });*/
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response =
+        await http.post(url, body: {"action": "get_the_queation_mcq"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
     });
     data = List.from(data.reversed);
   }
@@ -25,19 +45,43 @@ class show_questionpage extends State<show_question> {
   List data1 = new List();
 
   void subject1() async {
-    database_professor().get_the_queationtrue_and_false().then((result) {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http
+        .post(url, body: {"action": "get_the_queationtrue_and_false"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data1 = json.decode(content);
+    });
+    /*database_professor().get_the_queationtrue_and_false().then((result) {
       setState(() {
         data1.addAll(result);
       });
-    });
+    });*/
     data1 = List.from(data1.reversed);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    subject();
-    subject1();
+  var d;
+  remove_mcq_question(String id) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    d = await http.post(url,
+        body: {"action": "remove_mcq_question", "id": id}).whenComplete(() {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => show_question()));
+    });
+    print(d.body);
+  }
+
+  remove_true_and_false_question(String id) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    d = await http.post(url, body: {
+      "action": "queastion_true_and_false",
+      "id": id
+    }).whenComplete(() {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => show_question()));
+    });
+    print(d.body);
   }
 
   Widget get_queation() {
@@ -62,14 +106,15 @@ class show_questionpage extends State<show_question> {
                   FlatButton(
                       color: Colors.blue,
                       onPressed: () {
-                        database_professor()
+                        remove_mcq_question(data[index]['ID']);
+                        /*database_professor()
                             .remove_mcq_question(data[index]['ID'])
                             .whenComplete(() {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => show_question()));
-                        });
+                        });*/
                       },
                       child: Text("remove queation",
                           style: TextStyle(color: Colors.white)))
@@ -95,14 +140,15 @@ class show_questionpage extends State<show_question> {
                   FlatButton(
                       color: Colors.blue,
                       onPressed: () {
-                        database_professor()
+                        remove_true_and_false_question(data1[index]['ID']);
+                        /* database_professor()
                             .remove_true_and_false_question(data1[index]['ID'])
                             .whenComplete(() {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => show_question()));
-                        });
+                        });*/
                       },
                       child: Text("remove queation",
                           style: TextStyle(color: Colors.white)))

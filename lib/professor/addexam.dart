@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:exam/Database/Database_professor.dart';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:toast/toast.dart' as Toast;
+
+import 'package:http/http.dart' as http;
 
 class addexam extends StatefulWidget {
   @override
@@ -60,22 +65,34 @@ class addexampage extends State<addexam> {
     }
   }
 
+  GlobalState _store = GlobalState.instance;
+
   void nameofsubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    database_professor()
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    final response = await http.post(url, body: {
+      "action": "get_the_subject",
+      "Professor": "${prefs.getString('realName')}"
+    });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      subdata = json.decode(content);
+    });
+
+    /* database_professor()
         .get_the_subject(prefs.getString('realName'))
         .then((result) {
       setState(() {
         subdata.addAll(result);
+      });*/
+    for (int i = 0; i < subdata.length; i++) {
+      setState(() {
+        sub.add(subdata[i]['Name']);
+        data[subdata[i]['Name'].toString()] = int.parse(subdata[i]['counter']);
       });
-      for (int i = 0; i < subdata.length; i++) {
-        setState(() {
-          sub.add(subdata[i]['Name']);
-          data[subdata[i]['Name'].toString()] =
-              int.parse(subdata[i]['counter']);
-        });
-      }
-    });
+    }
+    //  });
   }
 
   String label;
@@ -101,21 +118,129 @@ class addexampage extends State<addexam> {
   bool mcq5 = false;
   bool truenandfalse5 = false;
 
-  void mcq1Changed(bool value) => setState(() => mcq1 = value);
-  void trueandfalse1Changed(bool value) =>
-      setState(() => truenandfalse1 = value);
-  void mcq2Changed(bool value) => setState(() => mcq2 = value);
-  void trueandfalse2Changed(bool value) =>
-      setState(() => truenandfalse2 = value);
-  void mcq3Changed(bool value) => setState(() => mcq3 = value);
-  void trueandfalse3Changed(bool value) =>
-      setState(() => truenandfalse3 = value);
-  void mcq4Changed(bool value) => setState(() => mcq4 = value);
-  void trueandfalse4Changed(bool value) =>
-      setState(() => truenandfalse4 = value);
-  void mcq5Changed(bool value) => setState(() => mcq5 = value);
-  void trueandfalse5Changed(bool value) =>
-      setState(() => truenandfalse5 = value);
+  void mcq1Changed(bool value) {
+    setState(() {
+      mcq1 = value;
+    });
+    setState(() {
+      if (mcq1 == false) {
+        examchapter.remove("chapter1mcqc");
+        examchapter.remove("chapter1mcqa");
+        examchapter.remove("chapter1mcqb");
+      }
+    });
+  }
+
+  void trueandfalse1Changed(bool value) {
+    setState(() {
+      truenandfalse1 = value;
+    });
+    setState(() {
+      if (truenandfalse1 == false) {
+        examchapter.remove("chapter1trueandfalse");
+      }
+    });
+  }
+
+  void mcq2Changed(bool value) {
+    setState(() {
+      mcq2 = value;
+    });
+    setState(() {
+      if (mcq2 == false) {
+        examchapter.remove("chapter2mcqc");
+        examchapter.remove("chapter2mcqa");
+        examchapter.remove("chapter2mcqb");
+      }
+    });
+  }
+
+  void trueandfalse2Changed(bool value) {
+    setState(() {
+      truenandfalse2 = value;
+    });
+
+    setState(() {
+      if (truenandfalse2 == false) {
+        examchapter.remove("chapter2trueandfalse");
+      }
+    });
+  }
+
+  void mcq3Changed(bool value) {
+    setState(() {
+      mcq3 = value;
+    });
+    setState(() {
+      if (mcq3 == false) {
+        examchapter.remove("chapter3mcqc");
+        examchapter.remove("chapter3mcqa");
+        examchapter.remove("chapter3mcqb");
+      }
+    });
+  }
+
+  void trueandfalse3Changed(bool value) {
+    setState(() {
+      truenandfalse3 = value;
+    });
+
+    setState(() {
+      if (truenandfalse3 == false) {
+        examchapter.remove("chapter3trueandfalse");
+      }
+    });
+  }
+
+  void mcq4Changed(bool value) {
+    setState(() {
+      mcq4 = value;
+    });
+    setState(() {
+      if (mcq4 == false) {
+        examchapter.remove("chapter4mcqc");
+        examchapter.remove("chapter4mcqa");
+        examchapter.remove("chapter4mcqb");
+      }
+    });
+  }
+
+  void trueandfalse4Changed(bool value) {
+    setState(() {
+      truenandfalse4 = value;
+    });
+
+    setState(() {
+      if (truenandfalse4 == false) {
+        examchapter.remove("chapter4trueandfalse");
+      }
+    });
+  }
+
+  void mcq5Changed(bool value) {
+    setState(() {
+      mcq5 = value;
+    });
+    setState(() {
+      if (mcq5 == false) {
+        examchapter.remove("chapter5mcqc");
+        examchapter.remove("chapter5mcqa");
+        examchapter.remove("chapter5mcqb");
+      }
+    });
+  }
+
+  void trueandfalse5Changed(bool value) {
+    setState(() {
+      truenandfalse5 = value;
+    });
+    setState(() {
+      if (truenandfalse5 == false) {
+        examchapter.remove("chapter5trueandfalse");
+      }
+    });
+  }
+
   final examchapter = Map<String, String>();
   var pp;
   final format = DateFormat("yyyy-MM-dd HH:mm");
@@ -996,6 +1121,108 @@ class addexampage extends State<addexam> {
     );
   }
 
+  var b1;
+  addchaptertoexam(String idexam, String chapter, String level, String type,
+      String count) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+
+    b1 = await http.post(url, body: {
+      "action": "addchaptertoexam",
+      "examid": idexam,
+      "chapter": chapter,
+      "level": level,
+      "type": type,
+      "count": count
+    });
+    print(b1.body);
+  }
+
+  var b;
+  add_exam(String subject, String when, String time, Map data) async {
+    var url = "http://${_store.ipaddress}/app/professor.php";
+    b = await http.post(url, body: {
+      "action": "add_detailsexam",
+      "subject": subject,
+      "when": when,
+      "time": time,
+      "data": data.toString()
+    });
+    print(b.body);
+    String add = b.body;
+    data["chapter1trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "1", "null", "trueandfalse", data["chapter1trueandfalse"]);
+    data["chapter2trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "2", "null", "trueandfalse", data["chapter2trueandfalse"]);
+    data["chapter3trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "3", "null", "trueandfalse", data["chapter3trueandfalse"]);
+    data["chapter4trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "4", "null", "trueandfalse", data["chapter4trueandfalse"]);
+    data["chapter5trueandfalse"] == null
+        ? print("time")
+        : addchaptertoexam(
+            "$add", "5", "null", "trueandfalse", data["chapter5trueandfalse"]);
+    data["chapter1mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "1", "A", "mcq", data["chapter1mcqa"]);
+    data["chapter1mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "1", "B", "mcq", data["chapter1mcqb"]);
+    data["chapter1mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "1", "C", "mcq", data["chapter1mcqc"]);
+
+    data["chapter2mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "2", "A", "mcq", data["chapter2mcqa"]);
+    data["chapter2mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "2", "B", "mcq", data["chapter2mcqb"]);
+    data["chapter2mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "2", "C", "mcq", data["chapter2mcqc"]);
+
+    data["chapter3mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "3", "A", "mcq", data["chapter3mcqa"]);
+    data["chapter3mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "3", "B", "mcq", data["chapter3mcqb"]);
+    data["chapter3mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "3", "C", "mcq", data["chapter3mcqc"]);
+
+    data["chapter4mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "4", "A", "mcq", data["chapter4mcqa"]);
+    data["chapter4mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "4", "B", "mcq", data["chapter4mcqb"]);
+    data["chapter4mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "4", "C", "mcq", data["chapter4mcqc"]);
+
+    data["chapter5mcqa"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "5", "A", "mcq", data["chapter5mcqa"]);
+    data["chapter5mcqb"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "5", "B", "mcq", data["chapter5mcqb"]);
+    data["chapter5mcqc"] == null
+        ? print("time")
+        : addchaptertoexam("$add", "5", "C", "mcq", data["chapter5mcqc"]);
+    Toast.Toast.show("that queation is add", context,
+        duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    Navigator.pop(context);
+  }
+
   Widget question(int chapter) {
     return Container(
         child: Column(
@@ -1161,8 +1388,9 @@ class addexampage extends State<addexam> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 onPressed: () {
-                                  database_professor().add_exam(subjectvalue,
-                                      timeofexam.text, timevalue, examchapter);
+                                  //database_professor().
+                                  add_exam(subjectvalue, timeofexam.text,
+                                      timevalue, examchapter);
                                 },
                                 child: Text("Done",
                                     style: TextStyle(color: Colors.white)),
