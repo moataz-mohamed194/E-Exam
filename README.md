@@ -2,7 +2,7 @@
 
 A new Flutter project.
 # Team members
-  1. moataz mohamed saad  2.Mina Morcos Isaac 3.Mohammed abd al majeed
+  1. moataz mohamed saad  2.Mina Morkos Ishaq 3.Mohammed abd al majeed
 
 ## Getting Started
 
