@@ -5,14 +5,13 @@ import 'Admin/add_department.dart';
 import 'Admin/add_subject.dart';
 import 'Admin/get_subject.dart';
 import 'Admin/mainpageforadmin.dart';
-import 'Database/Database_admin.dart';
 import 'Login/choose_Login.dart';
 import 'Login/student_login.dart';
 import 'Student/mainpageforstudent.dart';
-import 'cleandata.dart';
 import 'professor/mainofprofessor.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString('loginasadmin') == "yes") {
     runApp(admin());

@@ -1,11 +1,9 @@
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Database/Database_admin.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:toast/toast.dart' as Toast;
-
-import 'profile.dart';
 import 'showqueation.dart';
 import 'takeexam.dart';
 
@@ -20,21 +18,68 @@ class mainstudent extends StatefulWidget {
 class mainstudentpage extends State<mainstudent> {
   void initState() {
     super.initState();
+    nameofsubject();
+
     getstudentdatafromSharedPreferences();
   }
 
-  String email, nationalid, name, password, graduted, age;
+  GlobalState _store = GlobalState.instance;
 
-  Future getstudentdatafromSharedPreferences() async {
+  List sub_data = new List();
+  void nameofsubject() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    /*Databasestudent()
+        .getstudentsubject(prefs.getString('level'))
+        .then((result) {
+      setState(() {
+        sub_data.addAll(result);
+      });
+    });*/
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response = await http.post(url, body: {
+      "action": "getstudentsubject",
+      "level": "${prefs.getString('level')}"
+    });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      sub_data = json.decode(content);
+    });
+  }
+
+  Widget thesubjects() {
+    return Container(
+      child: ListView.builder(
+          itemCount: sub_data.length,
+          itemBuilder: (context, index) {
+            return Text("${index + 1}. ${sub_data[index]['Name']}");
+          }),
+    );
+  }
+  /*Widget subject() {
+    return ListView.builder(
+        itemCount: sub_data.length,
+        itemBuilder: (context, index) {
+          return Container(
+            child: Column(
+              children: <Widget>[Text(sub_data[index]['Name'] ?? "00")],
+            ),
+          );
+        });
+  }*/
+
+  String email, nationalId, name, password, CollageId, level, department;
+
+  getstudentdatafromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       email = prefs.getString('ID');
-      nationalid = prefs.getString('Nationalid');
-      password = prefs.getString('Collageid');
-      name = prefs.getString('password');
-      graduted = prefs.getString('name');
-      age = prefs.getString('level');
-      age = prefs.getString('department');
+      nationalId = prefs.getString('Nationalid');
+      CollageId = prefs.getString('Collageid');
+      password = prefs.getString('password');
+      name = prefs.getString('name');
+      level = prefs.getString('level');
+      department = prefs.getString('department');
     });
   }
 
@@ -43,11 +88,13 @@ class mainstudentpage extends State<mainstudent> {
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          Text("$email"),
-          Text("$nationalid"),
-          Text("$name"),
-          Text("$graduted"),
-          Text("$age"),
+          Text("Email: $email"),
+          Text("National ID: $nationalId"),
+          Text("Name: $name"),
+          Text("Collage ID: $CollageId"),
+          Text("Level: $level"),
+          Text("Password: $password"),
+          Text("Department: $department"),
         ],
       ),
     );
@@ -60,44 +107,107 @@ class mainstudentpage extends State<mainstudent> {
         '/chooselogin', (Route<dynamic> route) => false);
   }
 
+  Widget datainmenu() {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 10, bottom: 10),
+          child: CircleAvatar(
+            radius: 45.0,
+            backgroundImage: AssetImage(
+              'img/professor.png',
+            ),
+          ),
+        ),
+        Text(name ?? ""),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff254660),
+        title: Text("E-exam"),
+      ),
+      backgroundColor: Color(0xff2e2e2e),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: datainmenu(),
+            ),
+            /*Divider(),
+            ListTile(
+              title: Text('profile'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => profile()));
+              },
+            ),*/
+            Divider(),
+            ListTile(
+              title: Text('get exam',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => getexam()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title:
+                  Text('Bank', style: TextStyle(fontWeight: FontWeight.bold)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => showquestionbank()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('log out',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              onTap: () {
+                logout();
+              },
+            ),
+            Divider(),
+          ],
+        ),
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
-            getthestudentdata(),
-            FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => profile()));
-                },
-                color: Colors.blue,
-                child: Text("profile")),
-            FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => showquestionbank()));
-                },
-                color: Colors.blue,
-                child: Text("Bank")),
-            FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => getexam()));
-                },
-                color: Colors.blue,
-                child: Text("get exam")),
-            FlatButton(
-                onPressed: () {
-                  logout();
-                },
-                color: Colors.blue,
-                child: Text("log out"))
+            Card(
+                child: Container(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Wrap(
+                children: <Widget>[Text("Welcome to our app :\n $name")],
+              ),
+            )),
+            Container(
+              width: MediaQuery.of(context).size.width / 2,
+              child: getthestudentdata(),
+              //  flex: 1,
+            ),
+            Card(
+                child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: Text("the subjects you teach :"),
+                ),
+                Container(
+                    height: 70,
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: thesubjects())
+              ],
+            ))
           ],
         ),
       ),

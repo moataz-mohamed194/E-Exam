@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../Database/Database_admin.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 import 'edit_subject.dart';
 
@@ -17,19 +19,24 @@ class get_subject extends StatefulWidget {
 
 class get_subjectpage extends State<get_subject> {
   GlobalState _store = GlobalState.instance;
-  List data = new List();
-  void subject() async {
-    database().get_subject().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-    });
-  }
-
+  // List data = new List();
   @override
   void initState() {
     super.initState();
-    subject();
+    // subject();
+    getData();
+  }
+
+  List data = new List<dynamic>();
+  Future<List> getData() async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response = await http.post(url, body: {"action": "getsubject"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
+    });
+
+    return json.decode(response.body);
   }
 
   Widget subject_data() {
@@ -46,27 +53,28 @@ class get_subjectpage extends State<get_subject> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text(
-                      "Professor will teach subject :${data[index]['professor']}"),
+                  child: Text("Professor :${data[index]['professor']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text(
-                      "Subject be to department :${data[index]['department']}"),
+                  child: Text("Department :${data[index]['department']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text("in :${data[index]['level']}"),
+                  child: Text("${data[index]['level']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text("in :${data[index]['semester']}"),
+                  child: Text("Semester :${data[index]['semester']}"),
                 ),
                 Card(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
                   color: Colors.blue,
                   child: FlatButton.icon(
-                    icon: Icon(Icons.edit),
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    ),
                     onPressed: () {
                       _store.set('Name', data[index]['Name']);
                       _store.set('department', data[index]['department']);
@@ -79,7 +87,10 @@ class get_subjectpage extends State<get_subject> {
                           MaterialPageRoute(
                               builder: (context) => edit_subject()));
                     },
-                    label: Text("Edit"),
+                    label: Text(
+                      "Edit",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     color: Colors.blue,
                   ),
                 ),
@@ -94,6 +105,10 @@ class get_subjectpage extends State<get_subject> {
     // TODO: implement build
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff254660),
+        title: Text("Subjects"),
+      ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
         child: subject_data(),

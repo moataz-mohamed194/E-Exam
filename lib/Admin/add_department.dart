@@ -1,8 +1,9 @@
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../Database/Database_admin.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
+import 'package:http/http.dart' as http;
 
 class add_department extends StatefulWidget {
   @override
@@ -18,34 +19,47 @@ class add_departmentpage extends State<add_department> {
   TextEditingController departmentname;
   String departmentnamesave;
 
-  //controller about combox
   String _ratingController;
-  List _professors = [" "];
-  List data = new List();
-  //to get the element from database and add them to combox
-  void nameofprofessor() async {
-    database().Leader_of_department().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-      for (int i = 0; i < result.length; i++) {
-        _professors.add(data[i]['realName']);
-      }
+  List _professors = [];
+  GlobalState _store = GlobalState.instance;
+
+  List data = new List<dynamic>();
+  Future<List> getData() async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    final response = await http.post(url, body: {"action": "getprofessordata"});
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
     });
+    for (int i = 0; i < data.length; i++) {
+      setState(() {
+        _professors.add(data[i]['realName']);
+      });
+    }
+    return json.decode(response.body);
   }
 
   String _ratingController1;
-  List _start = [" ", "level 1", "level 3"];
+  List _start = ["level 1", "level 3"];
 
   void initState() {
     super.initState();
-    nameofprofessor();
+    //  nameofprofessor();
+    getData();
     departmentname = new TextEditingController();
   }
 
   //to add the department data to database
-  void add_departmentsqlite(String name, String level, String leader) {
-    database().add_departmenttosqlite(name, level, leader).whenComplete(() {
+  void add_departmentsql(String name, String level, String leader) async {
+    var url = "http://${_store.ipaddress}/app/admin.php";
+    await http.post(url, body: {
+      "action": "add_department",
+      "name": name,
+      "whenstart": level,
+      "leader": leader
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
       Toast.Toast.show("that department is add", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
@@ -56,8 +70,13 @@ class add_departmentpage extends State<add_department> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xff254660),
+          title: Text("Add Department"),
+        ),
         backgroundColor: Color(0xff2e2e2e),
         body: Container(
+          alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -67,8 +86,9 @@ class add_departmentpage extends State<add_department> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        color: Colors.white,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 55),
+                        width: MediaQuery.of(context).size.width / 1.2,
                         child: TextFormField(
                           cursorColor: Colors.blue,
                           keyboardType: TextInputType.text,
@@ -78,6 +98,13 @@ class add_departmentpage extends State<add_department> {
                           onSaved: (input) => departmentnamesave = input,
                           decoration: InputDecoration(
                             labelText: "Department name",
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.blue,
+                              ),
+                            ),
                             hintText: "Enter department name",
                           ),
                           validator: (value) {
@@ -90,8 +117,10 @@ class add_departmentpage extends State<add_department> {
                         ),
                       ),
                       Container(
-                          margin: EdgeInsets.only(bottom: 10),
                           color: Colors.white,
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height / 55),
+                          width: MediaQuery.of(context).size.width / 1.2,
                           child: DropdownButtonFormField<dynamic>(
                             value: _ratingController,
                             validator: (value) {
@@ -117,8 +146,10 @@ class add_departmentpage extends State<add_department> {
                             },
                           )),
                       Container(
-                          margin: EdgeInsets.only(bottom: 10),
                           color: Colors.white,
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height / 55),
+                          width: MediaQuery.of(context).size.width / 1.2,
                           child: DropdownButtonFormField<dynamic>(
                             value: _ratingController1,
                             validator: (value) {
@@ -146,14 +177,21 @@ class add_departmentpage extends State<add_department> {
                       Card(
                         color: Colors.blue,
                         child: FlatButton.icon(
-                          icon: Icon(Icons.save),
+                          icon: Icon(
+                            Icons.save,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              add_departmentsqlite(departmentname.text,
-                                  _ratingController1, _ratingController);
+                              add_departmentsql(
+                                departmentname.text,
+                                _ratingController,
+                                _ratingController1,
+                              );
                             }
                           },
-                          label: Text("ADD Department"),
+                          label: Text("ADD Department",
+                              style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),
                       ),

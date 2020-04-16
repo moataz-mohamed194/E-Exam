@@ -1,30 +1,39 @@
-import 'package:exam/Admin/get_subject.dart';
-import 'package:exam/Database/Database_professor.dart';
-import 'package:exam/Database/Database_student.dart';
+import 'dart:convert';
+import 'package:exam/data/globals.dart';
+import 'package:http/http.dart' as http;
+//import 'package:exam/Database/Database_student.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Database/Database_admin.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:toast/toast.dart' as Toast;
 
 class showquestionbank extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return showquestionbankpage();
   }
 }
 
 class showquestionbankpage extends State<showquestionbank> {
-  String subjectvalue;
-  List sub = ["MCQ", "TRUE&FAULSE"];
+  String subjectvalue, subjectvalue1;
+  List sub = ["MCQ", "TRUE&FALSE"];
   List data = new List();
+  GlobalState _store = GlobalState.instance;
+
   void subject() async {
-    Databasestudent().getthequeationmcq().then((result) {
+/*    Databasestudent().getthequeationmcq().then((result) {
       setState(() {
         data.addAll(result);
       });
+    });
+    data = List.from(data.reversed);*/
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response =
+        await http.post(url, body: {"action": "get_the_queation_mcq"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data = json.decode(content);
     });
     data = List.from(data.reversed);
   }
@@ -32,12 +41,51 @@ class showquestionbankpage extends State<showquestionbank> {
   List data1 = new List();
 
   void subject1() async {
-    Databasestudent().getthequeationtrueandfalse().then((result) {
+    /*Databasestudent().getthequeationtrueandfalse().then((result) {
       setState(() {
         data1.addAll(result);
       });
     });
-    data1 = List.from(data1.reversed);
+    data1 = List.from(data1.reversed);*/
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response = await http
+        .post(url, body: {"action": "get_the_queationtrue_and_false"});
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      data1 = json.decode(content);
+    });
+  }
+
+  List sub_data1 = new List();
+  List sub_data = new List();
+  void nameofsubject() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = "http://${_store.ipaddress}/app/student.php";
+    final response = await http.post(url, body: {
+      "action": "getstudentsubject",
+      "level": "${prefs.getString('level')}"
+    });
+    print(response.body);
+    String content = response.body;
+    setState(() {
+      sub_data1 = json.decode(content);
+    });
+    /*Databasestudent()
+        .getstudentsubject(prefs.getString('level'))
+        .then((result) {
+      setState(() {
+        sub_data1.addAll(result);
+
+        print("rrrr");
+      });*/
+    for (int i = 0; i < sub_data1.length; i++) {
+      setState(() {
+        sub_data.add(sub_data1[i]['Name']);
+        //  print("object");
+      });
+    }
+    // });
   }
 
   @override
@@ -45,89 +93,149 @@ class showquestionbankpage extends State<showquestionbank> {
     super.initState();
     subject();
     subject1();
+    nameofsubject();
   }
 
   Widget get_queation() {
     return Container(
+        width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
-              return Card(
-                  child: Column(
-                children: <Widget>[
-                  Text("Subject Question :${data[index]['ID']}"),
-                  Text("Subject Question :${data[index]['Question']}"),
-                  Text("Subject subject :${data[index]['subject']}"),
-                  Text(
-                      "Subject numberofchapter :${data[index]['numberofchapter']}"),
-                  Text("Subject level :${data[index]['level']}"),
-                  Text("Subject answer1 :${data[index]['answer1']}"),
-                  Text("Subject answer2 :${data[index]['answer2']}"),
-                  Text("Subject answer3 :${data[index]['answer3']}"),
-                  Text("Subject answer4 :${data[index]['answer4']}"),
-                  Text(
-                      "Subject correctanswer :${data[index]['correctanswer']}"),
-                  Text("bank:${data[index]['bank']}"),
-                ],
-              ));
+              if (subjectvalue1 == null) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("${data[index]['subject']}"),
+                    Text("chapter :${data[index]['numberofchapter']}"),
+                    Text(" level :${data[index]['level']}"),
+                    Text("Question :${data[index]['Question']} ?"),
+                    Text("A :${data[index]['answer1']}"),
+                    Text("B :${data[index]['answer2']}"),
+                    Text("C :${data[index]['answer3']}"),
+                    Text("D :${data[index]['answer4']}"),
+                    Text("correct answer:${data[index]['correctanswer']}"),
+                    Text("bank:${data[index]['bank']}"),
+                  ],
+                ));
+              } else if (subjectvalue1 != null &&
+                  data[index]['subject'] == subjectvalue1) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("${data[index]['subject']}"),
+                    Text("Chapter :${data[index]['numberofchapter']}"),
+                    Text("level :${data[index]['level']}"),
+                    Text("Question :${data[index]['Question']}"),
+                    Text("(A) ${data[index]['answer1']}"),
+                    Text("(B) ${data[index]['answer2']}"),
+                    Text("(C) ${data[index]['answer3']}"),
+                    Text("(D) ${data[index]['answer4']}"),
+                    Text("Correct answer :${data[index]['correctanswer']}"),
+                    Text("bank:${data[index]['bank']}"),
+                  ],
+                ));
+              } else {
+                return Container();
+              }
             }));
   }
 
   Widget get_queation1() {
     return Container(
+        width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(
             itemCount: data1.length,
             itemBuilder: (context, index) {
-              return Card(
-                  child: Column(
-                children: <Widget>[
-                  Text("Subject Question :${data1[index]['ID']}"),
-                  Text("Subject Question :${data1[index]['Question']}"),
-                  Text("Subject subject :${data1[index]['subject']}"),
-                  Text(
-                      "Subject numberofchapter :${data1[index]['numberofchapter']}"),
-                  Text("Subject level :${data1[index]['level']}"),
-                  Text("Subject answer1 :${data1[index]['answer1']}"),
-                  Text("Subject answer2 :${data1[index]['answer2']}"),
-                  Text("Subject answer3 :${data1[index]['answer3']}"),
-                  Text("Subject answer4 :${data1[index]['answer4']}"),
-                  Text(
-                      "Subject correctanswer :${data1[index]['correctanswer']}"),
-                  Text("bank:${data1[index]['bank']}"),
-                ],
-              ));
+              if (subjectvalue1 == null) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("Question :${data1[index]['Question']}"),
+                    Text("${data1[index]['subject']}"),
+                    Text("Chapter :${data1[index]['numberofchapter']}"),
+                    Text("Correct answer :${data1[index]['correctanswer']}"),
+                    Text("Bank:${data1[index]['bank']}"),
+                  ],
+                ));
+              } else if (subjectvalue1 != null &&
+                  data1[index]['subject'] == subjectvalue1) {
+                return Card(
+                    child: Column(
+                  children: <Widget>[
+                    Text("Question :${data1[index]['Question']}"),
+                    Text("${data1[index]['subject']}"),
+                    Text("Chapter :${data1[index]['numberofchapter']}"),
+                    Text("Correct answer :${data1[index]['correctanswer']}"),
+                    Text("Bank:${data1[index]['bank']}"),
+                  ],
+                ));
+              } else {
+                return Container();
+              }
             }));
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
-      // backgroundColor: Color(0xff2e2e2e),
+      appBar: AppBar(
+        backgroundColor: Color(0xff254660),
+        title: Text("Question Bank"),
+      ),
+      backgroundColor: Color(0xff2e2e2e),
       body: Container(
+          alignment: Alignment.center,
           child: Column(
-        children: <Widget>[
-          DropdownButtonFormField<dynamic>(
-            value: subjectvalue,
-            items: sub
-                .map((label) => DropdownMenuItem(
-                      child: Text(label.toString()),
-                      value: label,
-                    ))
-                .toList(),
-            hint: Text('Type of question :'),
-            onChanged: (value) {
-              setState(() {
-                subjectvalue = value;
-              });
-            },
-          ),
-          subjectvalue == "TRUE&FAULSE"
-              ? Container(child: Expanded(child: get_queation1()))
-              : Container(child: Expanded(child: get_queation()))
-        ],
-      )),
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height / 55),
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  child: DropdownButtonFormField<dynamic>(
+                    value: subjectvalue,
+                    items: sub
+                        .map((label) => DropdownMenuItem(
+                              child: Text(label.toString()),
+                              value: label,
+                            ))
+                        .toList(),
+                    hint: Text('Type of question :'),
+                    onChanged: (value) {
+                      setState(() {
+                        subjectvalue = value;
+                      });
+                    },
+                  )),
+              Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height / 55),
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  child: DropdownButtonFormField<dynamic>(
+                    value: subjectvalue1,
+                    items: sub_data
+                        .map((label) => DropdownMenuItem(
+                              child: Text(label.toString()),
+                              value: label,
+                            ))
+                        .toList(),
+                    hint: Text('Subject :'),
+                    onChanged: (value) {
+                      setState(() {
+                        subjectvalue1 = value;
+                      });
+                    },
+                  )),
+              subjectvalue == "TRUE&FALSE"
+                  ? Container(child: Expanded(child: get_queation1()))
+                  : Container(child: Expanded(child: get_queation()))
+            ],
+          )),
     ));
   }
 }
