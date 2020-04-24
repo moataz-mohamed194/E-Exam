@@ -18,15 +18,15 @@ class ProfessorLogin extends StatefulWidget {
 
 class ProfessorLoginPage extends State<ProfessorLogin> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode Professoridnode = FocusNode();
-  final FocusNode Professorpasswordnode = FocusNode();
-  TextEditingController Professorid;
-  TextEditingController Professorpassword;
-  String Professoridsave, Professorpasswordsave;
+  final FocusNode professorIdNode = FocusNode();
+  final FocusNode professorPasswordNode = FocusNode();
+  TextEditingController professorId;
+  TextEditingController professorPassword;
+  String professorIdSave, professorPasswordSave;
   void initState() {
     super.initState();
-    Professorid = new TextEditingController();
-    Professorpassword = new TextEditingController();
+    professorId = new TextEditingController();
+    professorPassword = new TextEditingController();
   }
 
   _fieldFocusChange(
@@ -39,11 +39,12 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
 
   List data = new List();
   var response;
+  //send http request and get the data from professor table Dependent on email you entered
   login(String id, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
-      var url = "http://${_store.ipaddress}/app/professor.php";
+      var url = "http://${_store.ipAddress}/app/professor.php";
       response = await http.post(url, body: {
         "action": "check_your_email_and_password",
         "email": "$id",
@@ -52,8 +53,6 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
       setState(() {
         data = json.decode(content);
       });
-      print("99999999999" + response.body);
-      print(data);
       if (password == data[0]['Password']) {
         prefs.setString('ID', "${data[0]['ID']}");
         prefs.setString('Nationalid', "${data[0]['Nationalid']}");
@@ -73,15 +72,17 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
-      print("0000000000000" + response.body);
       Toast.Toast.show("Check your  Email", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
   }
 
+  final GlobalKey<ScaffoldState> scaffoldState = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldState,
       backgroundColor: Color(0xFF2E2E2E),
       body: Container(
         child: Column(
@@ -104,13 +105,13 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Professorid,
-                            focusNode: Professoridnode,
+                            controller: professorId,
+                            focusNode: professorIdNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Professoridsave = input,
+                            onSaved: (input) => professorIdSave = input,
                             onFieldSubmitted: (term) {
-                              _fieldFocusChange(context, Professoridnode,
-                                  Professorpasswordnode);
+                              _fieldFocusChange(context, professorIdNode,
+                                  professorPasswordNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -139,12 +140,12 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: TextFormField(
                               keyboardType: TextInputType.text,
-                              controller: Professorpassword,
-                              focusNode: Professorpasswordnode,
+                              controller: professorPassword,
+                              focusNode: professorPasswordNode,
                               textInputAction: TextInputAction.done,
-                              onSaved: (input) => Professorpasswordsave = input,
+                              onSaved: (input) => professorPasswordSave = input,
                               onFieldSubmitted: (value) {
-                                Professorpasswordnode.unfocus();
+                                professorPasswordNode.unfocus();
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -178,7 +179,19 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                           child: Text("Login as Professor",
                               style: TextStyle(color: Colors.white)),
                           onPressed: () {
-                            login(Professorid.text, Professorpassword.text);
+                            if (_formKey.currentState.validate()) {
+                              scaffoldState.currentState
+                                  .showSnackBar(new SnackBar(
+                                content: Row(
+                                  children: <Widget>[
+                                    new CircularProgressIndicator(),
+                                    new Text("Loading ...")
+                                  ],
+                                ),
+                              ));
+
+                              login(professorId.text, professorPassword.text);
+                            }
                           },
                         ),
                       )),
@@ -196,7 +209,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Professorsignup()));
+                                builder: (context) => ProfessorSignUp()));
                       },
                     ),
                   )

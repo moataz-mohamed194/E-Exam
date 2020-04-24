@@ -6,18 +6,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
-class add_question extends StatefulWidget {
+class AddQuestion extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return add_questionpage();
+    return AddQuestionPage();
   }
 }
 
 enum SingingCharacter { lafayette, jefferson }
 
-class add_questionpage extends State<add_question> {
+class AddQuestionPage extends State<AddQuestion> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode questionnode = FocusNode();
+  final FocusNode questionNode = FocusNode();
   final FocusNode answer1node = FocusNode();
   final FocusNode answer2node = FocusNode();
   final FocusNode answer3node = FocusNode();
@@ -27,17 +27,17 @@ class add_questionpage extends State<add_question> {
   TextEditingController answer2;
   TextEditingController answer3;
   TextEditingController answer4;
-  String questionsave, answer1save, answer2save, answer3save, answer4save;
+  String questionSave, answer1save, answer2save, answer3save, answer4save;
   List number = [];
-  List trueandfalseanswer = ["True", "False"];
-  List mcqanswer = ["", "", "", ""];
+  List trueAndFalseAnswer = ["True", "False"];
+  List MCQAnswer = ["", "", "", ""];
   List level = ["A", "B", "C"];
   List sub = [];
   SingingCharacter _character = SingingCharacter.lafayette;
 
   void initState() {
     super.initState();
-    nameofsubject();
+    nameOfSubject();
     question = new TextEditingController();
     answer1 = new TextEditingController();
     answer2 = new TextEditingController();
@@ -46,10 +46,9 @@ class add_questionpage extends State<add_question> {
   }
 
   Map data = new Map<String, int>();
-
-  void enternumberchapter(String name) {
+  //get the count of chapter based on the name of subject
+  void enterNumberChapter(String name) {
     int j = data[name];
-    print(j);
     for (int i = 1; i <= j; i++) {
       number.add(i.toString());
     }
@@ -57,66 +56,48 @@ class add_questionpage extends State<add_question> {
 
   GlobalState _store = GlobalState.instance;
 
-  List sub_data = new List();
-  void nameofsubject() async {
+  List subData = new List();
+  //get the name of subjects
+  void nameOfSubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = "http://${_store.ipaddress}/app/professor.php";
+    var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http.post(url, body: {
       "action": "get_the_subject",
       "Professor": "${prefs.getString('realName')}"
     });
-    print(response.body);
     String content = response.body;
     setState(() {
-      sub_data = json.decode(content);
+      subData = json.decode(content);
     });
-    for (int i = 0; i < sub_data.length; i++) {
-      sub.add(sub_data[i]['Name']);
-      data[sub_data[i]['Name'].toString()] = int.parse(sub_data[i]['counter']);
+    for (int i = 0; i < subData.length; i++) {
+      sub.add(subData[i]['Name']);
+      data[subData[i]['Name'].toString()] = int.parse(subData[i]['counter']);
     }
   }
 
   var b2;
-  Future<void> addquestionmcq(
+  //send the question to database
+  Future<void> addQuestionMCQ(
       String question,
       String subject,
-      String numberofchapter,
+      String numberOfChapter,
       String level,
       String answer1,
       String answer2,
       String answer3,
       String answer4,
-      String correctanswer) async {
-    var url = "http://${_store.ipaddress}/app/professor.php";
+      String correctAnswer) async {
+    var url = "http://${_store.ipAddress}/app/professor.php";
     b2 = await http.post(url, body: {
       "action": "add_question_mcq_tosqlite",
       "question": question,
       "subject": subject,
-      "numberofchapter": numberofchapter,
+      "numberofchapter": numberOfChapter,
       "level": level,
       "answer1": answer1,
       "answer2": answer2,
       "answer3": answer3,
       "answer4": answer4,
-      "correctanswer": correctanswer,
-      "bank": _value1.toString()
-    }).whenComplete(() {
-      Toast.Toast.show("that queation is add", context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-      Navigator.pop(context);
-    });
-    print(b2.body);
-  }
-
-  var b1;
-  Future<void> addquestiontrue_and_false(String question, String subject,
-      String numberOfChapter, String correctAnswer) async {
-    var url = "http://${_store.ipaddress}/app/professor.php";
-    b1 = await http.post(url, body: {
-      "action": "add_question_true_and_false_tosqlite",
-      "question": question,
-      "subject": subject,
-      "numberofchapter": numberOfChapter,
       "correctanswer": correctAnswer,
       "bank": _value1.toString()
     }).whenComplete(() {
@@ -124,7 +105,26 @@ class add_questionpage extends State<add_question> {
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
-    print(b1.body);
+  }
+
+  var b1;
+  Future<void> addQuestionTrueAndFalse(String question, String subject,
+      String numberOfChapter, String correctAnswer) async {
+    var url = "http://${_store.ipAddress}/app/professor.php";
+    b1 = await http.post(url, body: {
+      "action": "add_question_true_and_false_tosqlite",
+      "question": question,
+      "subject": subject,
+      "numberofchapter": numberOfChapter,
+      "correctanswer": correctAnswer,
+      "bank": _value1.toString()
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
+      Toast.Toast.show("that queation is add", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+      Navigator.pop(context);
+    });
   }
 
   _fieldFocusChange(
@@ -133,9 +133,9 @@ class add_questionpage extends State<add_question> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  String trueandfalsevalue, levelvalue, mcqvalue, subjectvalue, numbervalue;
+  String trueAndFalseValue, levelValue, MCQValue, subjectValue, numberValue;
   bool mcq = true;
-  Widget the_answer_of_mcq() {
+  Widget theAnswerOfMCQ() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -146,7 +146,7 @@ class add_questionpage extends State<add_question> {
               ),
               width: MediaQuery.of(context).size.width / 1.2,
               child: DropdownButtonFormField<dynamic>(
-                value: levelvalue,
+                value: levelValue,
                 validator: (value) {
                   if (value == null) {
                     return 'Enter the Level of queation';
@@ -165,7 +165,7 @@ class add_questionpage extends State<add_question> {
                 hint: Text('Level of queation :'),
                 onChanged: (value) {
                   setState(() {
-                    levelvalue = value;
+                    levelValue = value;
                   });
                 },
               )),
@@ -178,7 +178,7 @@ class add_questionpage extends State<add_question> {
                 controller: answer1,
                 focusNode: answer1node,
                 onChanged: (q) {
-                  mcqanswer[1] = q;
+                  MCQAnswer[0] = q;
                 },
                 textInputAction: TextInputAction.next,
                 onSaved: (input) => answer1save = input,
@@ -214,7 +214,7 @@ class add_questionpage extends State<add_question> {
                 focusNode: answer2node,
                 textInputAction: TextInputAction.next,
                 onChanged: (q) {
-                  mcqanswer[2] = q;
+                  MCQAnswer[1] = q;
                 },
                 onSaved: (input) {
                   answer2save = input;
@@ -251,7 +251,7 @@ class add_questionpage extends State<add_question> {
                 focusNode: answer3node,
                 textInputAction: TextInputAction.next,
                 onChanged: (q) {
-                  mcqanswer[3] = q;
+                  MCQAnswer[2] = q;
                 },
                 onSaved: (input) => answer3save = input,
                 decoration: InputDecoration(
@@ -286,7 +286,7 @@ class add_questionpage extends State<add_question> {
                 focusNode: answer4node,
                 textInputAction: TextInputAction.done,
                 onChanged: (q) {
-                  mcqanswer[4] = q;
+                  MCQAnswer[3] = q;
                 },
                 onSaved: (input) => answer4save = input,
                 decoration: InputDecoration(
@@ -318,7 +318,7 @@ class add_questionpage extends State<add_question> {
               ),
               width: MediaQuery.of(context).size.width / 1.2,
               child: DropdownButtonFormField<dynamic>(
-                value: mcqvalue,
+                value: MCQValue,
                 validator: (value) {
                   if (value == null) {
                     return 'Enter the correct Answer';
@@ -328,16 +328,14 @@ class add_questionpage extends State<add_question> {
                     return null;
                   }
                 },
-                items: mcqanswer
-                    .map((label) => DropdownMenuItem(
-                          child: Text(label.toString()),
-                          value: label,
-                        ))
-                    .toList(),
+                items: MCQAnswer.map((label) => DropdownMenuItem(
+                      child: Text(label.toString()),
+                      value: label,
+                    )).toList(),
                 hint: Text('Answer :'),
                 onChanged: (value) {
                   setState(() {
-                    mcqvalue = value;
+                    MCQValue = value;
                   });
                 },
               ))
@@ -346,8 +344,8 @@ class add_questionpage extends State<add_question> {
     );
   }
 
-  bool trueandfalse = false;
-  Widget true_and_false_question() {
+  bool trueAndFalse = false;
+  Widget trueAndFalseQuestion() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -358,7 +356,7 @@ class add_questionpage extends State<add_question> {
               ),
               width: MediaQuery.of(context).size.width / 1.2,
               child: DropdownButtonFormField<dynamic>(
-                value: trueandfalsevalue,
+                value: trueAndFalseValue,
                 validator: (value) {
                   if (value == null) {
                     return 'Enter the correct Answer';
@@ -368,7 +366,7 @@ class add_questionpage extends State<add_question> {
                     return null;
                   }
                 },
-                items: trueandfalseanswer
+                items: trueAndFalseAnswer
                     .map((label) => DropdownMenuItem(
                           child: Text(label.toString()),
                           value: label,
@@ -377,7 +375,7 @@ class add_questionpage extends State<add_question> {
                 hint: Text('Answer :'),
                 onChanged: (value) {
                   setState(() {
-                    trueandfalsevalue = value;
+                    trueAndFalseValue = value;
                   });
                 },
               )),
@@ -388,7 +386,6 @@ class add_questionpage extends State<add_question> {
 
   bool _value1 = false;
   void _value1Changed(bool value) => setState(() => _value1 = value);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -417,9 +414,9 @@ class add_questionpage extends State<add_question> {
                     child: TextFormField(
                       keyboardType: TextInputType.text,
                       controller: question,
-                      focusNode: questionnode,
+                      focusNode: questionNode,
                       textInputAction: TextInputAction.next,
-                      onSaved: (input) => questionsave = input,
+                      onSaved: (input) => questionSave = input,
                       decoration: InputDecoration(
                         labelText: "question",
                         filled: true,
@@ -446,7 +443,7 @@ class add_questionpage extends State<add_question> {
                         bottom: MediaQuery.of(context).size.height / 55),
                     width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
-                      value: subjectvalue,
+                      value: subjectValue,
                       validator: (value) {
                         if (value == null) {
                           return 'Enter the subject';
@@ -465,9 +462,10 @@ class add_questionpage extends State<add_question> {
                       hint: Text('Subject :'),
                       onChanged: (value) {
                         setState(() {
-                          subjectvalue = value;
+                          subjectValue = value;
                           number.clear();
-                          enternumberchapter(subjectvalue);
+                          enterNumberChapter(subjectValue);
+                          numberValue = number[0];
                         });
                       },
                     )),
@@ -479,9 +477,9 @@ class add_questionpage extends State<add_question> {
                     ),
                     width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
-                      value: numbervalue,
+                      value: numberValue,
                       validator: (value) {
-                        if (value == null) {
+                        if (value == null && numberValue == null) {
                           return 'Enter number of chapter';
                         } else if (value == " ") {
                           return 'Enter number of chapter';
@@ -498,7 +496,7 @@ class add_questionpage extends State<add_question> {
                       hint: Text('Number of chapter :'),
                       onChanged: (value) {
                         setState(() {
-                          numbervalue = value;
+                          numberValue = value;
                         });
                       },
                     )),
@@ -516,7 +514,7 @@ class add_questionpage extends State<add_question> {
                           onChanged: (SingingCharacter value) {
                             setState(() {
                               mcq = true;
-                              trueandfalse = false;
+                              trueAndFalse = false;
                               _character = value;
                             });
                           },
@@ -534,7 +532,7 @@ class add_questionpage extends State<add_question> {
                           groupValue: _character,
                           onChanged: (SingingCharacter value) {
                             setState(() {
-                              trueandfalse = true;
+                              trueAndFalse = true;
                               mcq = false;
                               _character = value;
                             });
@@ -544,8 +542,8 @@ class add_questionpage extends State<add_question> {
                     ),
                   ],
                 ),
-                mcq == true ? the_answer_of_mcq() : Container(),
-                trueandfalse == true ? true_and_false_question() : Container(),
+                mcq == true ? theAnswerOfMCQ() : Container(),
+                trueAndFalse == true ? trueAndFalseQuestion() : Container(),
                 CheckboxListTile(
                   value: _value1,
                   checkColor: Colors.white,
@@ -563,25 +561,23 @@ class add_questionpage extends State<add_question> {
                         child: FlatButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              if (mcq == true && trueandfalse == false) {
-                                print("mcq");
-                                addquestionmcq(
+                              if (mcq == true && trueAndFalse == false) {
+                                addQuestionMCQ(
                                     question.text,
-                                    subjectvalue,
-                                    numbervalue,
-                                    levelvalue,
+                                    subjectValue,
+                                    numberValue,
+                                    levelValue,
                                     answer1.text,
                                     answer2.text,
                                     answer3.text,
                                     answer4.text,
-                                    mcqvalue);
-                              } else if (trueandfalse == true && mcq == false) {
-                                print("true&&fal");
-                                addquestiontrue_and_false(
+                                    MCQValue);
+                              } else if (trueAndFalse == true && mcq == false) {
+                                addQuestionTrueAndFalse(
                                     question.text,
-                                    subjectvalue,
-                                    numbervalue,
-                                    trueandfalsevalue);
+                                    subjectValue,
+                                    numberValue,
+                                    trueAndFalseValue);
                               }
                             }
                           },

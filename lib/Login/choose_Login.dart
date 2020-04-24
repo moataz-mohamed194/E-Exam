@@ -4,14 +4,14 @@ import 'Admin_login.dart';
 import 'professor_login.dart';
 import 'student_login.dart';
 
-class Chooselogin extends StatefulWidget {
+class ChooseLogin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return ChooseLoginPage();
   }
 }
 
-class ChooseLoginPage extends State<Chooselogin> {
+class ChooseLoginPage extends State<ChooseLogin> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,8 +69,6 @@ class ChooseLoginPage extends State<Chooselogin> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ProfessorLogin()));
-
-                                  print("xxxxxxx");
                                 },
                               ),
                             )),

@@ -16,15 +16,15 @@ class StudentLogin extends StatefulWidget {
 
 class StudentLoginPage extends State<StudentLogin> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode studentidnode = FocusNode();
-  final FocusNode studentpasswordnode = FocusNode();
-  TextEditingController studentid;
-  TextEditingController studentpassword;
-  String studentidsave, studentpasswordsave;
+  final FocusNode studentIdNode = FocusNode();
+  final FocusNode studentPasswordNode = FocusNode();
+  TextEditingController studentId;
+  TextEditingController studentPassword;
+  String studentIdSave, studentPasswordSave;
   void initState() {
     super.initState();
-    studentid = new TextEditingController();
-    studentpassword = new TextEditingController();
+    studentId = new TextEditingController();
+    studentPassword = new TextEditingController();
   }
 
   _fieldFocusChange(
@@ -35,23 +35,21 @@ class StudentLoginPage extends State<StudentLogin> {
 
   List data = new List();
   GlobalState _store = GlobalState.instance;
-
+  final GlobalKey<ScaffoldState> scaffoldState = new GlobalKey<ScaffoldState>();
+  //send http request and get the data from student table Dependent on email you entered
   login(String id, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
-      var url = "http://${_store.ipaddress}/app/student.php";
+      var url = "http://${_store.ipAddress}/app/student.php";
       final response = await http.post(url, body: {
         "action": "check_your_email_and_password",
         "email": "$id",
       });
       String content = response.body;
-      print("99999999999" + response.body);
 
       setState(() {
         data = json.decode(content);
       });
-//      print("99999999999" + response.body);
-      print(data);
       if (password == data[0]['password']) {
         prefs.setString('ID', "${data[0]['ID']}");
         prefs.setString('Nationalid', "${data[0]['Nationalid']}");
@@ -68,48 +66,19 @@ class StudentLoginPage extends State<StudentLogin> {
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
         data.clear();
       } else {
-        Toast.Toast.show(
-            "$password Check your password${data[0]['password']} ", context,
+        Toast.Toast.show("Check your password", context,
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
-      //print("0000000000000" + response.body);
       Toast.Toast.show("Check your  Email", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
-
-    /*await Databasestudent().checkyouridandpassword(id).then((result) {
-      setState(() {
-        data.addAll(result);
-        // print(result);
-      });
-      //  if (id.toString() == data[0]['Collageid'].toString()) {
-      if (password == data[0]['password']) {
-        prefs.setString('ID', "${data[0]['ID']}");
-        prefs.setString('Nationalid', "${data[0]['Nationalid']}");
-        prefs.setString('Collageid', "${data[0]['Collageid']}");
-        prefs.setString('name', "${data[0]['name']}");
-        prefs.setString('password', "${data[0]['password']}");
-        prefs.setString('level', "${data[0]['level']}");
-        prefs.setString('department', "${data[0]['department']}");
-        prefs.setString('loginasstudent', "yes");
-
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            '/mainstudent', (Route<dynamic> route) => false);
-        Toast.Toast.show("Welcome to our app", context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-        data.clear();
-      } else {
-        Toast.Toast.show("Check your password and Email", context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-        data.clear();
-      }
-    });*/
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldState,
       backgroundColor: Color(0xFF2E2E2E),
       body: Container(
         child: Column(
@@ -134,13 +103,13 @@ class StudentLoginPage extends State<StudentLogin> {
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: TextFormField(
                               keyboardType: TextInputType.number,
-                              controller: studentid,
-                              focusNode: studentidnode,
+                              controller: studentId,
+                              focusNode: studentIdNode,
                               textInputAction: TextInputAction.next,
-                              onSaved: (input) => studentidsave = input,
+                              onSaved: (input) => studentIdSave = input,
                               onFieldSubmitted: (term) {
-                                _fieldFocusChange(context, studentidnode,
-                                    studentpasswordnode);
+                                _fieldFocusChange(context, studentIdNode,
+                                    studentPasswordNode);
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -171,12 +140,12 @@ class StudentLoginPage extends State<StudentLogin> {
                               width: MediaQuery.of(context).size.width / 1.2,
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
-                                controller: studentpassword,
-                                focusNode: studentpasswordnode,
+                                controller: studentPassword,
+                                focusNode: studentPasswordNode,
                                 textInputAction: TextInputAction.done,
-                                onSaved: (input) => studentpasswordsave = input,
+                                onSaved: (input) => studentPasswordSave = input,
                                 onFieldSubmitted: (value) {
-                                  studentpasswordnode.unfocus();
+                                  studentPasswordNode.unfocus();
                                 },
                                 decoration: InputDecoration(
                                   filled: true,
@@ -210,8 +179,18 @@ class StudentLoginPage extends State<StudentLogin> {
                             child: Text("Login as student",
                                 style: TextStyle(color: Colors.white)),
                             onPressed: () {
-                              login(studentid.text, studentpassword.text);
-                              //   print("ffffffffff");
+                              if (_formKey.currentState.validate()) {
+                                scaffoldState.currentState
+                                    .showSnackBar(new SnackBar(
+                                  content: Row(
+                                    children: <Widget>[
+                                      new CircularProgressIndicator(),
+                                      new Text("Loading ...")
+                                    ],
+                                  ),
+                                ));
+                                login(studentId.text, studentPassword.text);
+                              }
                             },
                           ),
                         )),
@@ -229,7 +208,7 @@ class StudentLoginPage extends State<StudentLogin> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => studentsignup()));
+                                  builder: (context) => StudentSignUp()));
                         },
                       ),
                     ),

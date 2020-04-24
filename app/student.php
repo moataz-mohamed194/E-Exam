@@ -12,7 +12,19 @@
 	catch(PDOException $e){
 		echo "failed"." ".$e->getMessage();
 	}
+	$examChapters=array();
+	$idOfTrueAndFalse=array();
+	$idOfMCQ=array();
+	$quection=array();
+	$quection1=array();
+	$rebet=array();
+	$rebet1=array();
+	$quection2=array();
 	$a=array();
+	$subjectforexam=array();
+	$countMCQ=array();
+	$countTrueAndFalse=array();
+	
 	if ($action=="signupstudent"){
 		$nationalid=$_POST['nationalid'];
 		$collageid=$_POST['collageid'];
@@ -20,72 +32,172 @@
 		$password=$_POST['password'];
 		$level=$_POST['level'];
 		$department=$_POST['department'];
-		signupstudent($nationalid,$collageid,$name,$password,$level,$department);
+		signupStudent($nationalid,$collageid,$name,$password,$level,$department);
 	}else if ($action=="check_your_email_and_password"){
 		$email=$_POST['email'];
-		check_your_email_and_password($email);
+		checkYourEmailAndPassword($email);
 	}else if ($action=="getstudentsubject"){
 		$level=$_POST['level'];
-		getstudentsubject($level);
+		$department=$_POST['department'];
+		getStudentSubject($level,$department);
 	}else if ($action=="get_the_queationtrue_and_false"){
-		get_the_queationtrue_and_false();
+		getTheQueationTrueAndFalse();
 	}else if ($action=="get_the_queation_mcq"){
-		get_the_queation_mcq();
-	}else if ($action=="get_exam_queation_mcq"){
-		get_exam_queation_mcq();
-	}else if ($action=="get_exam_queationtrue_and_false"){
-		get_exam_queationtrue_and_false();
+		getTheQueationMcq();
+	}else if ($action=="examdetails"){
+		$subject1=$_POST['subject'];
+		$upd = str_replace('[', '', $subject1);
+		$upd1 = str_replace(']', '', $upd);
+		$pieces = explode(",", $upd1);
+		getExamDetails($pieces);
+	}else if ($action=="getExam"){
+		$subject=$_POST['subject'];
+   		$id=$_POST['id'];
+		getExam($id,$subject);
 	}
-	function get_exam_queation_mcq(){
+		//get the exam questions
+		function getExam($id,$subject){
+			global $db;
+			global $quection1;
+			global $quection2;
+			global $quection;
+			global $rebet1;
+			global $rebet;
+				
+			foreach ($db->query("SELECT * FROM examchapter WHERE examid=$id;") as $result){
+   			$examChapters[]=$result;
+		}
+		for($counter=0;$counter<count($examChapters);$counter++){
+			global $db;
+			global $quection1;
+			global $quection2;
+			global $quection;
+			global $rebet1;
+			global $rebet;
+			if($examChapters[$counter]['type']=="mcq"){
+				$chapter= $examChapters[$counter]['chapter'];
+				$count=$examChapters[$counter]['count'];
+				$level= $examChapters[$counter]['level'];
+				foreach ($db->query("SELECT ID FROM queastion_mcq WHERE numberofchapter='$chapter' AND subject='$subject' AND level='$level';") as $result){
+   					$idOfMCQ[]=$result;
+				}
+				for($k=0;$k<$count;$k++){
+					$randIndex = array_rand($idOfMCQ);
+					$random=$idOfMCQ[$randIndex]['ID'];
+					if (in_array($random, $rebet1)) 
+  					{$k--;} 
+					else
+					{array_push($rebet1,$random);
+					foreach ($db->query("SELECT * FROM queastion_mcq WHERE ID=$random;") as $result){
+   						$quection1[]=$result;
+					}}
+				}
+				unset($random); 
+				unset($randIndex); 
+				unset($rebet1);
+				unset($quection1);
+				unset($idOfMCQ); 
+			}else {
+				$chapter= $examChapters[$counter]['chapter'];
+				$count=$examChapters[$counter]['count'];
+				foreach ($db->query("SELECT ID FROM queastion_true_and_false WHERE numberofchapter='$chapter' AND subject='$subject';") as $result){
+   					$idOfTrueAndFalse[]=$result;
+				}
+				for($j=0;$j<$count;$j++){
+					$randIndex = array_rand($idOfTrueAndFalse);
+					$random=$idOfTrueAndFalse[$randIndex]['ID'];
+					if (in_array($random, $rebet)) 
+  					{$j--;}
+					else
+					{
+						array_push($rebet,$random);
+						foreach ($db->query("SELECT * FROM queastion_true_and_false WHERE ID=$random;") as $result){
+   						$quection2[]=$result;
+						}
+					}
+				}
+				unset($rebet);
+				unset($quection2); 
+				unset($random); 
+				unset($randIndex); 
+				unset($idOfTrueAndFalse); 
+			}
+		}
+		global $quection1;
+			global $quection2;
+			global $quection;
+		$quection=array_merge($quection1, $quection2);
+		echo json_encode($quection);
+	}
+	//gte the exam details
+	function getExamDetails($subject){
 		global $db;
-   		foreach ($db->query("SELECT * FROM queastion_mcq;") as $result){
+		for($i=0;$i<count($subject);$i++){
+			//echo $subject[$i]."-";
+			if($subject[$i][0]==" "){
+				$str = ltrim($subject[$i], ' ');
+				foreach ($db->query("SELECT * FROM examdetails WHERE subject='$str';") as $result){
    			$a[]=$result;
-		}
-		foreach ($db->query("SELECT * FROM queastion_true_and_false ;") as $result){
+			}}else{
+				foreach ($db->query("SELECT * FROM examdetails WHERE subject='$subject[$i]';") as $result){
    			$a[]=$result;
-		}
-		echo json_encode($a);
-	}
-	function get_exam_queationtrue_and_false(){
-		global $db;
-   		foreach ($db->query("SELECT * FROM queastion_true_and_false ;") as $result){
-   			$a[]=$result;
-		}
-		echo json_encode($a);
-	}
+			}
+			}
 
-	function get_the_queation_mcq(){
+			
+			
+		}
+		echo json_encode($a);
+	}
+	//get The Queation Mcq
+	function getTheQueationMcq(){
 		global $db;
    		foreach ($db->query("SELECT * FROM queastion_mcq WHERE bank='true';") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function get_the_queationtrue_and_false(){
+	// get The Queation True And False
+	function getTheQueationTrueAndFalse(){
 		global $db;
    		foreach ($db->query("SELECT * FROM queastion_true_and_false WHERE bank='true';") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	
-	function getstudentsubject($level){
+	//get the subjects
+	function getStudentSubject($level,$department){
 		global $db;
-   		foreach ($db->query("SELECT * FROM Subject WHERE level='$level'  ;") as $result){
+   		//foreach ($db->query("SELECT * FROM Subject WHERE level='$level'  ;") as $result){
+   		foreach ($db->query("SELECT * FROM Subject WHERE level='$level' AND department='$department' OR level='$level' AND department='general';") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	
-	function check_your_email_and_password($email){
+	//check Your Email And Password
+	function checkYourEmailAndPassword($email){
     	global $db;
     	foreach ($db->query("SELECT * FROM Student WHERE Collageid='$email'") as $result) {
     		$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function signupstudent($nationalid,$collageid,$name,$password,$level,$department){
+	//signup for Student
+	function signupStudent($nationalid,$collageid,$name,$password,$level,$department){
 		global $db;
+		foreach ($db->query("SELECT * FROM Student ;") as $result){
+   		$a[]=$result;
+		}
+		for($i=0;$i<count($a);$i++){
+			if($a[$i]['Nationalid']==$nationalid){
+				echo"Nationalid used";
+			return "used";
+			}
+			if($a[$i]['Collageid']==$collageid){
+				echo"collageid used";
+			return "used2";
+			}
+		}
 		try{
 			$state=$db->prepare("INSERT INTO Student(Nationalid,Collageid,name,password,level,department)VALUES('$nationalid','$collageid','$name','$password','$level','$department')");
 			$state->execute();

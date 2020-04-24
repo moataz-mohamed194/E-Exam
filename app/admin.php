@@ -13,15 +13,13 @@
 		echo "failed"." ".$e->getMessage();
 	}
 	$a=array();
-	if($action=="getadmindata"){
-		getrequestdata();
+	if($action=="getrequestdata"){
+		getRequestdata();
 	}else if($action=="getsubject"){
-		getsubject();
-	}else if($action=="getadmindata2"){
-		getadmindata();
+		getSubject();
 	}else if($action=="getprofessordata"){
-		getprofessordata();
-	}else if ($action=="send_request") {
+		getProfessorData();
+		}else if ($action=="send_request") {
 		$table=$_POST['type'];
 		$nationalid=$_POST['Nationalid'];
 		$email=$_POST['Email'];
@@ -29,10 +27,10 @@
 		$name=$_POST['realName'];
 		$graduted=$_POST['graduted'];
 		$age=$_POST['age'];
-		send_request($table, $name,$email,$nationalid,$password, $graduted, $age);
+		sendRequest($table, $name,$email,$nationalid,$password, $graduted, $age);
 	}else if ($action=="check_your_email_and_password"){
 		$email=$_POST['email'];
-		check_your_email_and_password($email);
+		checkYourEmailAndPassword($email);
 	}else if ($action=="rejected"){
 		$id=$_POST['id'];
 		rejected($id);
@@ -50,16 +48,16 @@
 		$name=$_POST['name'];
 		$whenstart=$_POST['whenstart'];
 		$leader=$_POST['leader'];
-		add_department($name, $whenstart,$leader);
+		addDepartment($name, $whenstart,$leader);
 	}else if ($action=="addsubject"){
 		$name=$_POST['name'];
 		$department=$_POST['department'];
 		$professor=$_POST['professor'];
 		$level=$_POST['level'];
 		$semester=$_POST['semester'];
-		addsubject($name, $department,$professor,$level,$semester);
+		addSubject($name, $department,$professor,$level,$semester);
 	}else if($action=="getdepartmentdata"){
-		getdepartmentdata();
+		getDepartmentData();
 	}else if ($action=="updatesubject"){
 		$name=$_POST['name'];
 		$department=$_POST['department'];
@@ -67,11 +65,11 @@
 		$semester=$_POST['semester'];
 		$professor=$_POST['professor0000'];
 		$id=$_POST['id'];
-		updatesubject($name,$department,$professor,$level,$semester,$id);
+		updateSubject($name,$department,$professor,$level,$semester,$id);
 	}
 
-																					
-	function updatesubject($name,$department,$professor,$level,$semester,$id){
+	//check if every any on the name of subject, for department, which professor will tech it, for which level and in which semester and update it
+	function updateSubject($name,$department,$professor,$level,$semester,$id){
 		global $db;
 		if($name!=null){
 	   		$db->query("UPDATE Subject SET Name='".$name."' WHERE id=".$id);			
@@ -96,43 +94,65 @@
 	   		$db->query($sql);		
 		}
 	}
-	function getadmindata(){
-		global $db;
-   		foreach ($db->query("SELECT * FROM Admin") as $result){
-   			$a[]=$result;
-		}
-		echo json_encode($a);
-	}	
-	function getrequestdata(){
+	
+	//get the requests data
+	function getRequestdata(){
 		global $db;
    		foreach ($db->query("SELECT * FROM request") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function getdepartmentdata(){
+	//get the department data
+	function getDepartmentData(){
 		global $db;
    		foreach ($db->query("SELECT * FROM Department") as $result){
 			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function getsubject(){
+	//get the subject data
+	function getSubject(){
 		global $db;
    		foreach ($db->query("SELECT * FROM Subject") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function getprofessordata(){
+	//get professor data
+	function getProfessorData(){
 		global $db;
    		foreach ($db->query("SELECT * FROM Professor") as $result){
 			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function send_request($table, $name,$email,$nationalid,$password, $graduted, $age){
+	//send the requeset if you are admin or professor
+	function sendRequest($table, $name,$email,$nationalid,$password, $graduted, $age){
 		global $db;
+		global $a;
+		foreach ($db->query("SELECT * FROM request ;") as $result){
+   		$a[]=$result;
+		}
+		if($table=='Professor'){
+			foreach ($db->query("SELECT * FROM Professor ;") as $result){
+   		$a[]=$result;
+		}
+	}else if($table=='Admin'){
+		foreach ($db->query("SELECT * FROM Admin ;") as $result){
+   		$a[]=$result;
+		}
+	}
+		for($i=0;$i<count($a);$i++){
+			if($a[$i]['Nationalid']==$nationalid){
+				echo"Nationalid used";
+			return "used";
+			}
+			if($a[$i]['Email']==$email){
+				echo"email used";
+			return "used2";
+			}
+		}
 		try{
 			$state=$db->prepare("INSERT INTO request(type,Nationalid,Email,Password,realName,graduted,age)VALUES('$table',$nationalid,'$email','$password','$name','$graduted',$age)");
 			$state->execute();
@@ -141,13 +161,15 @@
 			echo "failed"." ".$e->getMessage();
 		}
 	}
-	function check_your_email_and_password($email){
+	//when login get the all data when the email is equal the email you enter
+	function checkYourEmailAndPassword($email){
     	global $db;
     	foreach ($db->query("SELECT * FROM Admin WHERE Email='$email'") as $result) {
     		$a[]=$result;
 		}
 		echo json_encode($a);
 	}
+	//when admin reject request delete the request from database
 	function rejected($id){
 		global $db;
    		try{
@@ -158,6 +180,7 @@
 				echo "failed"." ".$e->getMessage();
 		}
 	}
+	//when admin accept request delete it from request table after add it to its table
 	function accept($nationalid, $email,$realName,$password,$id,$graduted,$age,$type){
 		global $db;
 		if ($type == 'Professor') {
@@ -185,7 +208,8 @@
 			}
 	    }
 	}
-	function add_department($name, $whenstart,$leader){
+	//add new department to database
+	function addDepartment($name, $whenstart,$leader){
 		global $db;
 		try{
 			$state=$db->prepare("INSERT INTO Department(Name,whenstart,leader)VALUES('$name','$whenstart','$leader')");
@@ -195,7 +219,8 @@
 			echo "failed"." ".$e->getMessage();
 		}
 	}
-	function addsubject($name, $department,$professor,$level,$semester){
+	//add new subject to database
+	function addSubject($name, $department,$professor,$level,$semester){
 		global $db;
 		try{
 			$state=$db->prepare("INSERT INTO Subject(Name,department,professor,level,semester,counter)VALUES('$name','$department','$professor','$level','$semester','0')");

@@ -3,44 +3,38 @@ import 'dart:convert';
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
-class add_subject extends StatefulWidget {
+class AddSubject extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return add_subjectpage();
+    return AddSubjectPage();
   }
 }
 
-class add_subjectpage extends State<add_subject> {
+class AddSubjectPage extends State<AddSubject> {
   final _formKey = GlobalKey<FormState>();
   String _semester, _level, _department, _professor;
-  List _semesterlist = ["semester 1", "semester 2"];
-  List _levellist = ["level 1", "level 2", "level 3", "level 4"];
-  List _departmentlist = ["general"];
-  List _professorlist = [];
-  TextEditingController subjectname;
-  String subjectnamesave;
+  List _semesterList = ["semester 1", "semester 2"];
+  List _levelList = ["level 1", "level 2", "level 3", "level 4"];
+  List _departmentList = ["general"];
+  List _professorList = [];
+  TextEditingController subjectName;
+  String subjectNameSave;
 
   void initState() {
     super.initState();
-    //   nameofdepartment();
-//    nameofprofessor();
-//    nameofdepartment();
-
     getData();
-
-    subjectname = new TextEditingController();
+    subjectName = new TextEditingController();
   }
 
   GlobalState _store = GlobalState.instance;
 
   List data = new List<dynamic>();
+  //get the names of professors
   Future<List> getData() async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+    var url = "http://${_store.ipAddress}/app/admin.php";
     final response = await http.post(url, body: {"action": "getprofessordata"});
     String content = response.body;
     setState(() {
@@ -48,7 +42,7 @@ class add_subjectpage extends State<add_subject> {
     });
     for (int i = 0; i < data.length; i++) {
       setState(() {
-        _professorlist.add(data[i]['realName']);
+        _professorList.add(data[i]['realName']);
       });
     }
     return json.decode(response.body);
@@ -56,10 +50,10 @@ class add_subjectpage extends State<add_subject> {
 
   List data1 = new List<dynamic>();
 
-  List datadepartment = new List();
-  //get the professor from database and add them to
-  void nameofdepartment(String studentlevel) async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+  List dataDepartment = new List();
+  //get the department data and add them to DropdownButtonFormField
+  void nameOfDepartment(String studentLevel) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
     final response =
         await http.post(url, body: {"action": "getdepartmentdata"});
     String content = response.body;
@@ -68,33 +62,30 @@ class add_subjectpage extends State<add_subject> {
     });
     for (int i = 0; i < data1.length; i++) {
       setState(() {
-        datadepartment.add(data1[i]['Name'].toString());
+        dataDepartment.add(data1[i]['Name'].toString());
       });
     }
-    print(studentlevel);
-    _departmentlist.add("general");
+    _departmentList.add("general");
     for (int i = 0; i < data1.length; i++) {
-      if (studentlevel == "level 3" || studentlevel == "level 4") {
-        if (!_departmentlist.contains(data1[i]['Name'])) {
-          _departmentlist.add(data1[i]['Name'].toString());
+      if (studentLevel == "level 3" || studentLevel == "level 4") {
+        if (!_departmentList.contains(data1[i]['Name'])) {
+          _departmentList.add(data1[i]['Name'].toString());
         }
-      } else if (studentlevel == "level 1" || studentlevel == "level 2") {
-        if (!_departmentlist.contains(data1[i]['Name'])) {
+      } else if (studentLevel == "level 1" || studentLevel == "level 2") {
+        if (!_departmentList.contains(data1[i]['Name'])) {
           if (data1[i]['whenstart'] == "level 1" ||
               data1[i]['whenstart'] == "level 2") {
-            _departmentlist.add(data1[i]['Name'].toString());
+            _departmentList.add(data1[i]['Name'].toString());
           }
         }
       }
     }
-    // });
   }
 
-  List dataprofessor = new List();
-  //get the professor from database and add them to
-  Future<void> add_subjectsqlite(String name, String department,
-      String professor, String level, String semester) async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+  //send subject data to database
+  Future<void> addSubject(String name, String department, String professor,
+      String level, String semester) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
     await http.post(url, body: {
       "action": "addsubject",
       "name": name,
@@ -113,7 +104,6 @@ class add_subjectpage extends State<add_subject> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -138,8 +128,8 @@ class add_subjectpage extends State<add_subject> {
                         child: TextFormField(
                           cursorColor: Colors.blue,
                           keyboardType: TextInputType.text,
-                          controller: subjectname,
-                          onSaved: (input) => subjectnamesave = input,
+                          controller: subjectName,
+                          onSaved: (input) => subjectNameSave = input,
                           decoration: InputDecoration(
                             labelText: "subject name",
                             filled: true,
@@ -176,7 +166,7 @@ class add_subjectpage extends State<add_subject> {
                               return null;
                             }
                           },
-                          items: _semesterlist
+                          items: _semesterList
                               .map((label) => DropdownMenuItem(
                                     child: Text(label.toString()),
                                     value: label,
@@ -206,7 +196,7 @@ class add_subjectpage extends State<add_subject> {
                               return null;
                             }
                           },
-                          items: _levellist
+                          items: _levelList
                               .map((label) => DropdownMenuItem(
                                     child: Text(label.toString()),
                                     value: label,
@@ -215,9 +205,9 @@ class add_subjectpage extends State<add_subject> {
                           hint: Text('level :'),
                           onChanged: (value) {
                             setState(() {
-                              nameofdepartment(value);
+                              nameOfDepartment(value);
 
-                              _departmentlist.clear();
+                              _departmentList.clear();
                               _level = value;
                             });
                           },
@@ -239,7 +229,7 @@ class add_subjectpage extends State<add_subject> {
                               return null;
                             }
                           },
-                          items: _departmentlist
+                          items: _departmentList
                               .map((label) => DropdownMenuItem(
                                     child: Text(label.toString()),
                                     value: label,
@@ -269,7 +259,7 @@ class add_subjectpage extends State<add_subject> {
                               return null;
                             }
                           },
-                          items: _professorlist
+                          items: _professorList
                               .map((label) => DropdownMenuItem(
                                     child: Text(label.toString()),
                                     value: label,
@@ -292,7 +282,7 @@ class add_subjectpage extends State<add_subject> {
                           ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              add_subjectsqlite(subjectname.text, _department,
+                              addSubject(subjectName.text, _department,
                                   _professor, _level, _semester);
                             }
                           },

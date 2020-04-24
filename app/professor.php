@@ -7,47 +7,37 @@
 	$dsn='mysql:host=localhost;dbname=E-exam';
 	try{
 		$db=new PDO($dsn,$username,$password);
-	//	echo "connection"."\n";
 	}
 	catch(PDOException $e){
 		echo "failed"." ".$e->getMessage();
 	}
-/*$a=array();
-//		$aa=$db->query("SELECT * FROM Chapter WHERE chaptername='OOP';");
-//		$a=$aa->execute();
-//		echo $aa;
-	}
-	catch(PDOException $e){
-		echo "failed"." ".$e->getMessage();
-	}
-*/
 	$a=array();
-	//$data=array();
+	$a1=array();
 	if($action=="getProfessordata"){
-		getProfessordata();
+		getProfessordData();
 	}else if ($action=="check_your_email_and_password"){
 		$email=$_POST['email'];
-		check_your_email_and_password($email);
+		checkYourEmailAndPassword($email);
 	}else if ($action=="get_the_subject"){
 		$Professor=$_POST['Professor'];
-		get_the_subject($Professor);
+		getTheSubject($Professor);
 	}else if ($action=="add_chapter"){
 		$subjectname=$_POST['subjectname'];
 		$chaptername=$_POST['chaptername'];
-		add_chapter($subjectname,$chaptername);
+		addChapter($subjectname,$chaptername);
 	}else if ($action=="getchapterdata"){
-		getchapterdata();
+		getChapterData();
 	}else if ($action=="remove_chapter"){
 		$subjectname=$_POST['subjectname'];
 		$id=$_POST['id'];
-		remove_chapter($subjectname,$id);
+		removeChapter($subjectname,$id);
 	}else if ($action=="add_question_true_and_false_tosqlite"){
 		$question=$_POST['question'];
 		$subject=$_POST['subject'];
 		$numberofchapter=$_POST['numberofchapter'];
 		$correctanswer=$_POST['correctanswer'];
 		$bank=$_POST['bank'];
-		add_question_true_and_false_tosqlite($question,$subject,$numberofchapter,$correctanswer,$bank);
+		addQuestionTrueAndFalseToDatabase($question,$subject,$numberofchapter,$correctanswer,$bank);
 	}else if ($action=="add_question_mcq_tosqlite"){
 		$question=$_POST['question'];
 		$subject=$_POST['subject'];
@@ -59,24 +49,23 @@
 		$answer4=$_POST['answer4'];
 		$correctanswer=$_POST['correctanswer'];
 		$bank=$_POST['bank'];
-		add_question_mcq_tosqlite($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank);
+		addQuestionMcqToDatabase($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank);
 	}else if ($action=="get_the_queationtrue_and_false"){
-		get_the_queationtrue_and_false();
+		getTheQueationTrueAndFalse();
 	}else if ($action=="get_the_queation_mcq"){
-		get_the_queation_mcq();
+		getTheQueationMCQ();
 	}else if ($action=="remove_mcq_question"){
 		$id=$_POST['id'];
-		remove_mcq_question($id);
+		removeMCQQuestion($id);
 	}else if ($action=="queastion_true_and_false"){
 		$id=$_POST['id'];
-		queastion_true_and_false($id);
+		queastionTrueAndFalse($id);
 	}else if ($action=="add_detailsexam"){
 		$subject=$_POST['subject'];
 		$when=$_POST['when'];
 		$time=$_POST['time'];
 		$data=$_POST['data'];
-		//$data=$data2;
-		add_detailsexam($subject,$when,$time,$data);
+		addDetailsExam($subject,$when,$time,$data);
 		
 	}else if ($action=="addchaptertoexam"){
 		$examid=$_POST['examid'];
@@ -84,22 +73,52 @@
 		$level=$_POST['level'];
 		$type=$_POST['type'];
 		$count=$_POST['count'];
-		addchaptertoexam($examid,$chapter,$level,$type,$count);
+		addChapterToExam($examid,$chapter,$level,$type,$count);
 
+	}else if ($action=="counterMCQ"){
+		$subject=$_POST['subject'];
+		counterMCQ($subject);
+	}else if ($action=="counterTrueAndFalse"){
+		$subject=$_POST['subject'];
+		counterTrueAndFalse($subject);
 	}
-	function addchaptertoexam($idexam,$chapter,$level,$type,$count) {
+	//add the details about the chapters will be in exam to database
+	function addChapterToExam($idexam,$chapter,$level,$type,$count) {
   		  global $db;
 		$state=$db->prepare("INSERT INTO examchapter(examid,chapter,level,type,count)VALUES('$idexam','$chapter','$level','$type','$count')");
 		$state->execute();
 		
   }
-
-	function add_detailsexam($subject,$when,$time,$data){
+  //add the details about exam to database
+	function addDetailsExam($subject,$when,$time,$data){
 		global $db;
 		$state=$db->prepare("INSERT INTO examdetails(subject,whenstart,time)VALUES('$subject','$when','$time')");
 		$state->execute();
 		$add = $db->lastInsertId();
 		echo $add;
+	/*	$a=json_decode($data);
+		$a1=json_encode($data);
+		$q=1;
+		//echo json_decode($a[0])."\n";
+		//echo $a1."\n";
+		for($i=0;$i<sizeof($data);$i++){
+			if($data[$i]['countOfTrueAndFalse']==null||$data[$i]['countOfTrueAndFalse']==0){}else{
+				addchaptertoexam("$add", "$q", "null", "trueandfalse", $data[$i]['countOfTrueAndFalse']);
+			}
+			if($data[$i]['countOfMCALevelA']==null||$data[$i]['countOfMCALevelA']==0){}else{
+				//addchaptertoexam("$add", "$q", "null", "trueandfalse", $a[$i]['countOfMCALevelA']);
+				addchaptertoexam("$add", "$q", "A", "mcq",$data[$i]['countOfMCALevelA']);
+			}
+			if($data[$i]['countOfMCALevelB']==null||$data[$i]['countOfMCALevelB']==0){}else{
+				//addchaptertoexam("$add", "$q", "null", "trueandfalse", $a[$i]['countOfMCALevelA']);
+				addchaptertoexam("$add", "$q", "B", "mcq",$data[$i]['countOfMCALevelB']);
+			}
+			if($data[$i]['countOfMCALevelC']==null||$data[$i]['countOfMCALevelC']==0){}else{
+				//addchaptertoexam("$add", "$q", "null", "trueandfalse", $a[$i]['countOfMCALevelA']);
+				addchaptertoexam("$add", "$q", "C", "mcq",$data[$i]['countOfMCALevelC']);
+			}
+			$q++;
+		}*/
 	 	 /* $data1=array_map($data);
 	 	  //	echo $data[];
 //	 	  	echo $data1[0];
@@ -153,42 +172,90 @@
 	 	}*/
 
 	}
-
-	function queastion_true_and_false($id){
+	//get the counter of about the questions in database in level A, B or C 
+function counterMCQ($subject){
+		global $db;
+		foreach ($db->query("SELECT counter FROM Subject WHERE Name='$subject';") as $result){
+   				$a[]=$result;
+		}
+		$counter= $a[0]['counter'];
+		for ($i=1;$i<=$counter;$i++){
+			foreach ($db->query("SELECT SUM( numberofchapter=$i AND subject='$subject' AND level='A' )as levelA,SUM( numberofchapter=$i AND subject='$subject' AND level='B' )as levelB,SUM( numberofchapter=$i AND subject='$subject' AND level='C' )as levelC FROM queastion_mcq") as $result){
+					$countMCQ[]=$result;
+			}
+		}
+		echo json_encode($countMCQ);
+	}
+	//get the counter of the true and false questions
+	function counterTrueAndFalse($subject){
+		global $db;
+		foreach ($db->query("SELECT counter FROM Subject WHERE Name='$subject';") as $result){
+   				$a[]=$result;
+		}
+		$counter= $a[0]['counter'];
+		for ($i=1;$i<=$counter;$i++){
+			foreach ($db->query("SELECT COUNT(*)as counter FROM queastion_true_and_false WHERE numberofchapter=$i AND subject='$subject';") as $result){
+   					$countTrueAndFalse[]=$result;
+			}
+		}
+		echo json_encode($countTrueAndFalse);
+		//echo"wwwwwwwwwwww";
+	}
+	//for delete the true and false question
+	function queastionTrueAndFalse($id){
 		global $db;
 		$sql="DELETE FROM queastion_true_and_false WHERE ID='$id'";
 		$db->query($sql);
 	}
-	function remove_mcq_question($id){
+	//for delete the MCQ question
+	function removeMCQQuestion($id){
 		global $db;
 		$sql="DELETE FROM queastion_mcq WHERE ID='$id'";
 		$db->query($sql);
 	}
-	function get_the_queation_mcq(){
+	//get the mcq questions
+	function getTheQueationMCQ(){
 		global $db;
    		foreach ($db->query("SELECT * FROM queastion_mcq ;") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function get_the_queationtrue_and_false(){
+	//get the true and false questions
+	function getTheQueationTrueAndFalse(){
 		global $db;
    		foreach ($db->query("SELECT * FROM queastion_true_and_false ;") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function add_question_mcq_tosqlite($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank){
+	//add the mcq question
+	function addQuestionMcqToDatabase($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank){
 		global $db;
-		$state=$db->prepare("INSERT INTO queastion_mcq(Question,subject,numberofchapter,level,answer1,answer2,answer3,answer4,correctanswer,bank)VALUES('$question','$subject','$numberofchapter','$level','$answer1','$answer2','$answer3','$answer4','$correctanswer','$bank')");
+			foreach ($db->query("SELECT COUNT(*) FROM Chapter WHERE subjectname='$subjectname';") as $result){
+   			$a[]=$result;
+		}
+		json_encode($a);
+		$s=$a[0]['COUNT(*)'];
+		$state=$db->prepare("INSERT INTO queastion_mcq(ID,Question,subject,numberofchapter,level,answer1,answer2,answer3,answer4,correctanswer,bank)VALUES($s,'$question','$subject','$numberofchapter','$level','$answer1','$answer2','$answer3','$answer4','$correctanswer','$bank')");
 			$state->execute();
 	}
-	function add_question_true_and_false_tosqlite($question,$subject,$numberofchapter,$correctanswer,$bank){
+	// add the true and false question
+	function addQuestionTrueAndFalseToDatabase($question,$subject,$numberofchapter,$correctanswer,$bank){
 		global $db;
-		$state=$db->prepare("INSERT INTO queastion_true_and_false(Question,subject,numberofchapter,correctanswer,bank)VALUES('$question','$subject','$numberofchapter','$correctanswer','$bank')");
+			foreach ($db->query("SELECT COUNT(*) FROM Chapter WHERE subjectname='$subjectname';") as $result){
+   			$a[]=$result;
+		}
+		json_encode($a);
+		$s=$a[0]['COUNT(*)'];
+
+		$state=$db->prepare("INSERT INTO queastion_true_and_false(ID,Question,subject,numberofchapter,correctanswer,bank)VALUES($s,'$question','$subject','$numberofchapter','$correctanswer','$bank')");
 			$state->execute();
+			echo($numberofchapter);
+		
 	}
-	function remove_chapter($subjectname,$id){
+	//to remove the chapter
+	function removeChapter($subjectname,$id){
 		try{
 		global $db;
 		$sql="DELETE FROM Chapter WHERE ID='$id'";
@@ -206,7 +273,8 @@
 		echo "failed"." ".$e->getMessage();
 		}		
 	}
-	function getchapterdata(){
+	//get the data about chapter
+	function getChapterData(){
 		global $db;
    		foreach ($db->query("SELECT * FROM Chapter ;") as $result){
    			$a[]=$result;
@@ -214,7 +282,8 @@
 
 		echo json_encode($a);
 	}
-	function add_chapter($subjectname,$chaptername){
+	//add new chapter
+	function addChapter($subjectname,$chaptername){
 		try{
 		global $db;
 		$state=$db->prepare("INSERT INTO Chapter(subjectname,chaptername)VALUES('$chaptername','$subjectname')");
@@ -233,22 +302,25 @@
 		echo "failed"." ".$e->getMessage();
 		}		
 	}
-	function get_the_subject($Professor){
+	//get the subject based on the name of professor
+	function getTheSubject($Professor){
 		global $db;
    		foreach ($db->query("SELECT * FROM Subject WHERE professor='$Professor'  ;") as $result){
    			$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-	function getProfessordata(){
+	//get the professor data
+	function getProfessordData(){
 		global $db;
    		foreach ($db->query("SELECT * FROM Professor ;") as $result){
    			$a[]=$result;
 		}
 
 		echo json_encode($a);
-	}	
-	function check_your_email_and_password($email){
+	}
+	//when login get the all data when the email is equal the email you enter
+	function checkYourEmailAndPassword($email){
     	global $db;
     	foreach ($db->query("SELECT * FROM Professor WHERE Email='$email'") as $result) {
     		$a[]=$result;

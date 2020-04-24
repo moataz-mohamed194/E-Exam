@@ -1,36 +1,28 @@
 import 'dart:convert';
 import 'package:exam/data/globals.dart';
 import 'package:http/http.dart' as http;
-//import 'package:exam/Database/Database_student.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class showquestionbank extends StatefulWidget {
+class ShowQuestionBank extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return showquestionbankpage();
+    return ShowQuestionBankPage();
   }
 }
 
-class showquestionbankpage extends State<showquestionbank> {
-  String subjectvalue, subjectvalue1;
+class ShowQuestionBankPage extends State<ShowQuestionBank> {
+  String subjectValue, subjectValue1;
   List sub = ["MCQ", "TRUE&FALSE"];
   List data = new List();
   GlobalState _store = GlobalState.instance;
-
+//get the question mcq
   void subject() async {
-/*    Databasestudent().getthequeationmcq().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-    });
-    data = List.from(data.reversed);*/
-    var url = "http://${_store.ipaddress}/app/student.php";
+    var url = "http://${_store.ipAddress}/app/student.php";
     final response =
         await http.post(url, body: {"action": "get_the_queation_mcq"});
-    print(response.body);
     String content = response.body;
     setState(() {
       data = json.decode(content);
@@ -39,53 +31,39 @@ class showquestionbankpage extends State<showquestionbank> {
   }
 
   List data1 = new List();
-
+//get the question true and false
   void subject1() async {
-    /*Databasestudent().getthequeationtrueandfalse().then((result) {
-      setState(() {
-        data1.addAll(result);
-      });
-    });
-    data1 = List.from(data1.reversed);*/
-    var url = "http://${_store.ipaddress}/app/student.php";
+    var url = "http://${_store.ipAddress}/app/student.php";
     final response = await http
         .post(url, body: {"action": "get_the_queationtrue_and_false"});
-    print(response.body);
     String content = response.body;
     setState(() {
       data1 = json.decode(content);
     });
   }
 
-  List sub_data1 = new List();
-  List sub_data = new List();
-  void nameofsubject() async {
+  List subData1 = new List();
+  List subData = new List();
+  //get the name of subject
+  void nameOfSubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = "http://${_store.ipaddress}/app/student.php";
+    var url = "http://${_store.ipAddress}/app/student.php";
     final response = await http.post(url, body: {
       "action": "getstudentsubject",
-      "level": "${prefs.getString('level')}"
+      "level": "${prefs.getString('level')}",
+      "department": "${prefs.getString('department')}",
     });
-    print(response.body);
     String content = response.body;
     setState(() {
-      sub_data1 = json.decode(content);
+      subData1 = json.decode(content);
     });
-    /*Databasestudent()
-        .getstudentsubject(prefs.getString('level'))
-        .then((result) {
+    for (int i = 0; i < subData1.length; i++) {
       setState(() {
-        sub_data1.addAll(result);
-
-        print("rrrr");
-      });*/
-    for (int i = 0; i < sub_data1.length; i++) {
-      setState(() {
-        sub_data.add(sub_data1[i]['Name']);
-        //  print("object");
+        subData.add(subData1[i]['Name']);
+        data2[subData1[i]['Name'].toString()] =
+            int.parse(subData1[i]['counter']);
       });
     }
-    // });
   }
 
   @override
@@ -93,33 +71,21 @@ class showquestionbankpage extends State<showquestionbank> {
     super.initState();
     subject();
     subject1();
-    nameofsubject();
+    nameOfSubject();
   }
 
-  Widget get_queation() {
+  //the UI of mcq question
+  Widget getQuestion() {
     return Container(
         width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
-              if (subjectvalue1 == null) {
-                return Card(
-                    child: Column(
-                  children: <Widget>[
-                    Text("${data[index]['subject']}"),
-                    Text("chapter :${data[index]['numberofchapter']}"),
-                    Text(" level :${data[index]['level']}"),
-                    Text("Question :${data[index]['Question']} ?"),
-                    Text("A :${data[index]['answer1']}"),
-                    Text("B :${data[index]['answer2']}"),
-                    Text("C :${data[index]['answer3']}"),
-                    Text("D :${data[index]['answer4']}"),
-                    Text("correct answer:${data[index]['correctanswer']}"),
-                    Text("bank:${data[index]['bank']}"),
-                  ],
-                ));
-              } else if (subjectvalue1 != null &&
-                  data[index]['subject'] == subjectvalue1) {
+              if (data.isEmpty) {
+                return CircularProgressIndicator();
+              } else if (data[index]['subject'] == subjectValue1 &&
+                  data[index]['level'] == levelValue &&
+                  data[index]['numberofchapter'] == numberValue) {
                 return Card(
                     child: Column(
                   children: <Widget>[
@@ -141,25 +107,17 @@ class showquestionbankpage extends State<showquestionbank> {
             }));
   }
 
-  Widget get_queation1() {
+  //the UI of true and false question
+  Widget getQuestion1() {
     return Container(
         width: MediaQuery.of(context).size.width / 1.2,
         child: ListView.builder(
             itemCount: data1.length,
             itemBuilder: (context, index) {
-              if (subjectvalue1 == null) {
-                return Card(
-                    child: Column(
-                  children: <Widget>[
-                    Text("Question :${data1[index]['Question']}"),
-                    Text("${data1[index]['subject']}"),
-                    Text("Chapter :${data1[index]['numberofchapter']}"),
-                    Text("Correct answer :${data1[index]['correctanswer']}"),
-                    Text("Bank:${data1[index]['bank']}"),
-                  ],
-                ));
-              } else if (subjectvalue1 != null &&
-                  data1[index]['subject'] == subjectvalue1) {
+              if (data1.isEmpty) {
+                return CircularProgressIndicator();
+              } else if (subjectValue1 != null &&
+                  data1[index]['subject'] == subjectValue1) {
                 return Card(
                     child: Column(
                   children: <Widget>[
@@ -174,6 +132,18 @@ class showquestionbankpage extends State<showquestionbank> {
                 return Container();
               }
             }));
+  }
+
+  String numberValue, levelValue;
+  List levelData = ["A", "B", "C"];
+  List number = [];
+  Map data2 = new Map<String, int>();
+  //get the count of chapter based on the name of subject
+  void enterNumberChapter(String name) {
+    int j = data2[name];
+    for (int i = 1; i <= j; i++) {
+      number.add(i.toString());
+    }
   }
 
   @override
@@ -196,7 +166,7 @@ class showquestionbankpage extends State<showquestionbank> {
                       bottom: MediaQuery.of(context).size.height / 55),
                   width: MediaQuery.of(context).size.width / 1.2,
                   child: DropdownButtonFormField<dynamic>(
-                    value: subjectvalue,
+                    value: subjectValue,
                     items: sub
                         .map((label) => DropdownMenuItem(
                               child: Text(label.toString()),
@@ -206,7 +176,7 @@ class showquestionbankpage extends State<showquestionbank> {
                     hint: Text('Type of question :'),
                     onChanged: (value) {
                       setState(() {
-                        subjectvalue = value;
+                        subjectValue = value;
                       });
                     },
                   )),
@@ -217,8 +187,8 @@ class showquestionbankpage extends State<showquestionbank> {
                       bottom: MediaQuery.of(context).size.height / 55),
                   width: MediaQuery.of(context).size.width / 1.2,
                   child: DropdownButtonFormField<dynamic>(
-                    value: subjectvalue1,
-                    items: sub_data
+                    value: subjectValue1,
+                    items: subData
                         .map((label) => DropdownMenuItem(
                               child: Text(label.toString()),
                               value: label,
@@ -227,13 +197,62 @@ class showquestionbankpage extends State<showquestionbank> {
                     hint: Text('Subject :'),
                     onChanged: (value) {
                       setState(() {
-                        subjectvalue1 = value;
+                        number.clear();
+                        enterNumberChapter(value);
+                        numberValue = number[0];
+                        subjectValue1 = value;
                       });
                     },
                   )),
-              subjectvalue == "TRUE&FALSE"
-                  ? Container(child: Expanded(child: get_queation1()))
-                  : Container(child: Expanded(child: get_queation()))
+              subjectValue == "MCQ"
+                  ? Container(
+                      alignment: Alignment.center,
+                      color: Colors.white,
+                      margin: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height / 55),
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: DropdownButtonFormField<dynamic>(
+                              value: numberValue,
+                              items: number
+                                  .map((label) => DropdownMenuItem(
+                                        child: Text(label.toString()),
+                                        value: label,
+                                      ))
+                                  .toList(),
+                              hint: Text('chapter :'),
+                              onChanged: (value) {
+                                setState(() {
+                                  numberValue = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: DropdownButtonFormField<dynamic>(
+                              value: levelValue,
+                              items: levelData
+                                  .map((label) => DropdownMenuItem(
+                                        child: Text(label.toString()),
+                                        value: label,
+                                      ))
+                                  .toList(),
+                              hint: Text('Level :'),
+                              onChanged: (value) {
+                                setState(() {
+                                  levelValue = value;
+                                });
+                              },
+                            ),
+                          )
+                        ],
+                      ))
+                  : Container(),
+              subjectValue == "TRUE&FALSE"
+                  ? Container(child: Expanded(child: getQuestion1()))
+                  : Container(child: Expanded(child: getQuestion()))
             ],
           )),
     ));

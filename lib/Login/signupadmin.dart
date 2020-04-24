@@ -6,42 +6,41 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
-class Adminsignup extends StatefulWidget {
+class AdminSignUp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return AdminsignupPage();
+    return AdminSignUpPage();
   }
 }
 
-class AdminsignupPage extends State<Adminsignup> {
+class AdminSignUpPage extends State<AdminSignUp> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode Adminemailnode = FocusNode();
-  final FocusNode Adminnamenode = FocusNode();
-  final FocusNode Adminnationalidnode = FocusNode();
-  final FocusNode Adminpasswordnode = FocusNode();
-  final FocusNode Admingradutednode = FocusNode();
-  final FocusNode Adminagenode = FocusNode();
-  TextEditingController Adminemail;
-  TextEditingController Adminname;
-  TextEditingController Admingraduted;
-  TextEditingController Adminage;
-  TextEditingController Adminnationalid;
-  TextEditingController Adminpassword;
-  String Adminemailsave,
-      Adminpasswordsave,
-      Admingradutedsave,
-      Adminagesave,
-      Adminnamesave,
-      Adminnationalidsave;
+  final FocusNode adminEmailNode = FocusNode();
+  final FocusNode adminNameNode = FocusNode();
+  final FocusNode adminNationalIdNode = FocusNode();
+  final FocusNode adminPasswordNode = FocusNode();
+  final FocusNode adminGraduatedNode = FocusNode();
+  final FocusNode adminAgeNode = FocusNode();
+  TextEditingController adminEmail;
+  TextEditingController adminName;
+  TextEditingController adminGraduated;
+  TextEditingController adminAge;
+  TextEditingController adminNationalId;
+  TextEditingController adminPassword;
+  String adminEmailSave,
+      adminPasswordSave,
+      adminGraduatedSave,
+      adminAgeSave,
+      adminNameSave,
+      adminNationalIdSave;
   void initState() {
     super.initState();
-    Adminemail = new TextEditingController();
-    Adminname = new TextEditingController();
-    Adminnationalid = new TextEditingController();
-    Admingraduted = new TextEditingController();
-    Adminage = new TextEditingController();
-    Adminpassword = new TextEditingController();
-    getadmindata();
+    adminEmail = new TextEditingController();
+    adminName = new TextEditingController();
+    adminNationalId = new TextEditingController();
+    adminGraduated = new TextEditingController();
+    adminAge = new TextEditingController();
+    adminPassword = new TextEditingController();
   }
 
   _fieldFocusChange(
@@ -51,48 +50,34 @@ class AdminsignupPage extends State<Adminsignup> {
   }
 
   GlobalState _store = GlobalState.instance;
-
-  List data = new List();
-  void getadmindata() async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
-    final response = await http.post(url, body: {"action": "getadmindata2"});
-    String content = response.body;
-    setState(() {
-      data = json.decode(content);
-    });
-    print("0000" + response.body);
-    print("1111" + data.toString());
-    return json.decode(response.body);
-  }
-
+  //send the request of admin to database
   sendData(String national, String name, String email, String password,
-      String graduted, String age) async {
-    //  try {
-    for (int i = 0; i < data.length; i++) {
-      if (national == data[i]['Nationalid'] || email == data[i]['Email']) {
-        Toast.Toast.show("that eamil or your id is used", context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-        return 0;
-      }
-    }
-    var url = "http://${_store.ipaddress}/app/admin.php";
-    await http.post(url, body: {
+      String graduated, String age) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
+    var request = await http.post(url, body: {
       "action": "send_request",
       "type": "Admin",
       "Nationalid": national,
       "Email": email,
       "Password": password,
       "realName": name,
-      "graduted": graduted,
+      "graduted": graduated,
       "age": age
     }).catchError((e) {
       print(e);
-    }).whenComplete(() {
-      Toast.Toast.show("Your request is send", context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-
-      Navigator.pop(context);
     });
+    print(request.body);
+    if (request.body == "Nationalid used") {
+      Toast.Toast.show("this national id is used", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else if (request.body == "email used") {
+      Toast.Toast.show("this email is used", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else if (request.body == "Done") {
+      Navigator.pop(context);
+      Toast.Toast.show("your request is added", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    }
   }
 
   @override
@@ -123,13 +108,13 @@ class AdminsignupPage extends State<Adminsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
-                            controller: Adminnationalid,
-                            focusNode: Adminnationalidnode,
+                            controller: adminNationalId,
+                            focusNode: adminNationalIdNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Adminnationalidsave = input,
+                            onSaved: (input) => adminNationalIdSave = input,
                             onFieldSubmitted: (term) {
                               _fieldFocusChange(
-                                  context, Adminnationalidnode, Adminemailnode);
+                                  context, adminNationalIdNode, adminEmailNode);
                             },
                             decoration: InputDecoration(
                               labelText: "Your id",
@@ -157,13 +142,13 @@ class AdminsignupPage extends State<Adminsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Adminemail,
-                            focusNode: Adminemailnode,
+                            controller: adminEmail,
+                            focusNode: adminEmailNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Adminemailsave = input,
+                            onSaved: (input) => adminEmailSave = input,
                             onFieldSubmitted: (term) {
                               _fieldFocusChange(
-                                  context, Adminemailnode, Adminpasswordnode);
+                                  context, adminEmailNode, adminPasswordNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -193,13 +178,13 @@ class AdminsignupPage extends State<Adminsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Adminpassword,
-                            focusNode: Adminpasswordnode,
+                            controller: adminPassword,
+                            focusNode: adminPasswordNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Adminpasswordsave = input,
+                            onSaved: (input) => adminPasswordSave = input,
                             onFieldSubmitted: (term) {
-                              _fieldFocusChange(context, Adminpasswordnode,
-                                  Admingradutednode);
+                              _fieldFocusChange(context, adminPasswordNode,
+                                  adminGraduatedNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -227,13 +212,13 @@ class AdminsignupPage extends State<Adminsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Admingraduted,
-                            focusNode: Admingradutednode,
+                            controller: adminGraduated,
+                            focusNode: adminGraduatedNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Admingradutedsave = input,
+                            onSaved: (input) => adminGraduatedSave = input,
                             onFieldSubmitted: (term) {
                               _fieldFocusChange(
-                                  context, Admingradutednode, Adminagenode);
+                                  context, adminGraduatedNode, adminAgeNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -261,13 +246,13 @@ class AdminsignupPage extends State<Adminsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
-                            controller: Adminage,
-                            focusNode: Adminagenode,
+                            controller: adminAge,
+                            focusNode: adminAgeNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Adminagesave = input,
+                            onSaved: (input) => adminAgeSave = input,
                             onFieldSubmitted: (term) {
                               _fieldFocusChange(
-                                  context, Adminagenode, Adminnamenode);
+                                  context, adminAgeNode, adminNameNode);
                             },
                             decoration: InputDecoration(
                               labelText: "Your age",
@@ -296,12 +281,12 @@ class AdminsignupPage extends State<Adminsignup> {
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: TextFormField(
                               keyboardType: TextInputType.text,
-                              controller: Adminname,
-                              focusNode: Adminnamenode,
+                              controller: adminName,
+                              focusNode: adminNameNode,
                               textInputAction: TextInputAction.done,
-                              onSaved: (input) => Adminnamesave = input,
+                              onSaved: (input) => adminNameSave = input,
                               onFieldSubmitted: (value) {
-                                Adminnamenode.unfocus();
+                                adminNameNode.unfocus();
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -349,21 +334,13 @@ class AdminsignupPage extends State<Adminsignup> {
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
-                                    /*login(
-                                        Adminnationalid.text,
-                                        Adminname.text,
-                                        Adminemail.text,
-                                        Adminpassword.text,
-                                        Admingraduted.text,
-                                        Adminage.text);*/
                                     sendData(
-                                        Adminnationalid.text,
-                                        Adminname.text,
-                                        Adminemail.text,
-                                        Adminpassword.text,
-                                        Admingraduted.text,
-                                        Adminage.text);
-                                    //  print("cccccccccc");
+                                        adminNationalId.text,
+                                        adminName.text,
+                                        adminEmail.text,
+                                        adminPassword.text,
+                                        adminGraduated.text,
+                                        adminAge.text);
                                   }
                                 },
                               ),
@@ -371,7 +348,6 @@ class AdminsignupPage extends State<Adminsignup> {
                       ],
                     ),
                   ),
-                  //    ])
                 )
               ],
             ),

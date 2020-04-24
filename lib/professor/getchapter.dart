@@ -6,28 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart' as Toast;
 
-class get_chapter extends StatefulWidget {
+class GetChapter extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return get_chapterpage();
+    return GetChapterPage();
   }
 }
 
-class get_chapterpage extends State<get_chapter> {
-  String subjectvalue;
+class GetChapterPage extends State<GetChapter> {
+  String subjectValue;
   List sub = [];
   GlobalState _store = GlobalState.instance;
 
-  List sub_data = new List();
-  void nameofsubject() async {
+  List subData = new List();
+  void nameOfSubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    /*database_professor()
-        .get_the_subject(prefs.getString('realName'))
-        .then((result) {
-      setState(() {
-        sub_data.addAll(result);
-      });*/
-    var url = "http://${_store.ipaddress}/app/professor.php";
+    var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http.post(url, body: {
       "action": "get_the_subject",
       "Professor": "${prefs.getString('realName')}"
@@ -35,57 +29,45 @@ class get_chapterpage extends State<get_chapter> {
     print(response.body);
     String content = response.body;
     setState(() {
-      sub_data = json.decode(content);
+      subData = json.decode(content);
     });
-    for (int i = 0; i < sub_data.length; i++) {
-      sub.add(sub_data[i]['Name']);
+    for (int i = 0; i < subData.length; i++) {
+      sub.add(subData[i]['Name']);
     }
     //   });
   }
 
-  final _formKey = GlobalKey<FormState>();
   void initState() {
     super.initState();
-    nameofsubject();
+    nameOfSubject();
     subject();
   }
 
   List data = new List();
   void subject() async {
-    var url = "http://${_store.ipaddress}/app/professor.php";
+    var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http.post(url, body: {"action": "getchapterdata"});
     String content = response.body;
     setState(() {
       data = json.decode(content);
     });
-
-    /*database_professor().getchapter().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-    });*/
   }
 
-  removechapter(String subjectname, String id) async {
-    var url = "http://${_store.ipaddress}/app/professor.php";
-    var d = await http.post(url, body: {
+  removeChapter(String subjectName, String id) async {
+    var url = "http://${_store.ipAddress}/app/professor.php";
+    await http.post(url, body: {
       "action": "remove_chapter",
-      "subjectname": subjectname,
+      "subjectname": subjectName,
       "id": id
     }).whenComplete(() {
       Toast.Toast.show("that subject is removed", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-      //Navigator.pop(context);
-
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => get_chapter()));
+          context, MaterialPageRoute(builder: (context) => GetChapter()));
     });
-    /*database_professor()
-        .remove_chapter_tosqlite(subjectname, id)
-      ;*/
   }
 
-  Widget get_queation() {
+  Widget getQuestion() {
     int i = 0;
     print(data);
     return Container(
@@ -93,7 +75,9 @@ class get_chapterpage extends State<get_chapter> {
         child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
-              if (data[index]['subjectname'] == subjectvalue) {
+              if (data.isEmpty) {
+                return CircularProgressIndicator();
+              } else if (data[index]['subjectname'] == subjectValue) {
                 i++;
                 return Card(
                   child: Column(
@@ -101,7 +85,7 @@ class get_chapterpage extends State<get_chapter> {
                       Text("Chapter $i :${data[index]['chaptername']}"),
                       FlatButton(
                         onPressed: () {
-                          removechapter(subjectvalue, data[index]['ID']);
+                          removeChapter(subjectValue, data[index]['ID']);
                         },
                         child: Text("Remove chapter",
                             style: TextStyle(color: Colors.white)),
@@ -118,7 +102,6 @@ class get_chapterpage extends State<get_chapter> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -137,7 +120,7 @@ class get_chapterpage extends State<get_chapter> {
                     top: MediaQuery.of(context).size.height / 55),
                 width: MediaQuery.of(context).size.width / 1.2,
                 child: DropdownButtonFormField<dynamic>(
-                  value: subjectvalue,
+                  value: subjectValue,
                   validator: (value) {
                     if (value == null) {
                       return 'Enter the subject';
@@ -157,11 +140,11 @@ class get_chapterpage extends State<get_chapter> {
                   hint: Text('Subject :'),
                   onChanged: (value) {
                     setState(() {
-                      subjectvalue = value;
+                      subjectValue = value;
                     });
                   },
                 )),
-            Expanded(child: get_queation())
+            Expanded(child: getQuestion())
           ],
         ),
       ),

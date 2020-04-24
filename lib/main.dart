@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'Admin/add_department.dart';
-import 'Admin/add_subject.dart';
-import 'Admin/get_subject.dart';
 import 'Admin/mainpageforadmin.dart';
 import 'Login/choose_Login.dart';
-import 'Login/student_login.dart';
 import 'Student/mainpageforstudent.dart';
 import 'professor/mainofprofessor.dart';
 
@@ -14,9 +9,9 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString('loginasadmin') == "yes") {
-    runApp(admin());
+    runApp(Admin());
   } else if (prefs.getString('loginasprofessor') == "yes") {
-    runApp(professor());
+    runApp(Professor());
   } else if (prefs.getString('loginasstudent') == "yes") {
     runApp(Student());
   } else {
@@ -35,17 +30,17 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Bellota',
       ),
       routes: <String, WidgetBuilder>{
-        '/mainstudent': (BuildContext context) => new mainstudent(),
-        '/mainforadmin': (BuildContext context) => new mainadmin(),
-        '/chooselogin': (BuildContext context) => new Chooselogin(),
-        '/mainprofessor': (BuildContext context) => new mainprofessor(),
+        '/mainstudent': (BuildContext context) => new MainStudent(),
+        '/mainforadmin': (BuildContext context) => new MainAdmin(),
+        '/chooselogin': (BuildContext context) => new ChooseLogin(),
+        '/mainprofessor': (BuildContext context) => new MainProfessor(),
       },
-      home: Chooselogin(), //clean(), //Chooselogin(),
+      home: ChooseLogin(),
     );
   }
 }
 
-class admin extends StatelessWidget {
+class Admin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,17 +51,17 @@ class admin extends StatelessWidget {
         fontFamily: 'Bellota',
       ),
       routes: <String, WidgetBuilder>{
-        '/chooselogin': (BuildContext context) => new Chooselogin(),
-        '/mainstudent': (BuildContext context) => new mainstudent(),
-        '/mainforadmin': (BuildContext context) => new mainadmin(),
-        '/mainprofessor': (BuildContext context) => new mainprofessor(),
+        '/chooselogin': (BuildContext context) => new ChooseLogin(),
+        '/mainstudent': (BuildContext context) => new MainStudent(),
+        '/mainforadmin': (BuildContext context) => new MainAdmin(),
+        '/mainprofessor': (BuildContext context) => new MainProfessor(),
       },
-      home: mainadmin(),
+      home: MainAdmin(),
     );
   }
 }
 
-class professor extends StatelessWidget {
+class Professor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -77,12 +72,12 @@ class professor extends StatelessWidget {
         fontFamily: 'Bellota',
       ),
       routes: <String, WidgetBuilder>{
-        '/chooselogin': (BuildContext context) => new Chooselogin(),
-        '/mainstudent': (BuildContext context) => new mainstudent(),
-        '/mainforadmin': (BuildContext context) => new mainadmin(),
-        '/mainprofessor': (BuildContext context) => new mainprofessor(),
+        '/chooselogin': (BuildContext context) => new ChooseLogin(),
+        '/mainstudent': (BuildContext context) => new MainStudent(),
+        '/mainforadmin': (BuildContext context) => new MainAdmin(),
+        '/mainprofessor': (BuildContext context) => new MainProfessor(),
       },
-      home: mainprofessor(),
+      home: MainProfessor(),
     );
   }
 }
@@ -98,12 +93,12 @@ class Student extends StatelessWidget {
         fontFamily: 'Bellota',
       ),
       routes: <String, WidgetBuilder>{
-        '/chooselogin': (BuildContext context) => new Chooselogin(),
-        '/mainstudent': (BuildContext context) => new mainstudent(),
-        '/mainforadmin': (BuildContext context) => new mainadmin(),
-        '/mainprofessor': (BuildContext context) => new mainprofessor(),
+        '/chooselogin': (BuildContext context) => new ChooseLogin(),
+        '/mainstudent': (BuildContext context) => new MainStudent(),
+        '/mainforadmin': (BuildContext context) => new MainAdmin(),
+        '/mainprofessor': (BuildContext context) => new MainProfessor(),
       },
-      home: mainstudent(),
+      home: MainStudent(),
     );
   }
 }

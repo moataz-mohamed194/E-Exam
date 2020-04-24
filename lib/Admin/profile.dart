@@ -1,49 +1,43 @@
-import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:toast/toast.dart' as Toast;
 
-import 'edit_subject.dart';
-
-class profile extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return profilepage();
+    return ProfilePage();
   }
 }
 
-class profilepage extends State<profile> {
+class ProfilePage extends State<Profile> {
   void initState() {
     super.initState();
-    get_admin_data_from_SharedPreferences();
+    getAdminDataFromSharedPreferences();
   }
 
-  String email, nationalid, name, password, graduted, age;
+  String email, nationalId, name, password, graduated, age;
 
-  Future get_admin_data_from_SharedPreferences() async {
+  Future getAdminDataFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       email = prefs.getString('Email');
-      nationalid = prefs.getString('Nationalid');
+      nationalId = prefs.getString('Nationalid');
       password = prefs.getString('Password');
       name = prefs.getString('realName');
-      graduted = prefs.getString('graduted');
+      graduated = prefs.getString('graduted');
       age = prefs.getString('age');
     });
   }
 
-  Widget get_the_admin_data() {
+  Widget getTheAdminData() {
     return Container(
       color: Colors.white,
       child: Column(
         children: <Widget>[
           Text("$email"),
-          Text("$nationalid"),
+          Text("$nationalId"),
           Text("$name"),
-          Text("$graduted"),
+          Text("$graduated"),
           Text("$age"),
         ],
       ),
@@ -52,12 +46,11 @@ class profilepage extends State<profile> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
       body: Container(
         child: Column(
-          children: <Widget>[get_the_admin_data()],
+          children: <Widget>[getTheAdminData()],
         ),
       ),
     ));

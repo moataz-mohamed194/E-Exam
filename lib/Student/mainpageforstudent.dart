@@ -4,78 +4,60 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'chooseexam.dart';
 import 'showqueation.dart';
-import 'takeexam.dart';
 
-class mainstudent extends StatefulWidget {
+class MainStudent extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return mainstudentpage();
+    return MainStudentPage();
   }
 }
 
-class mainstudentpage extends State<mainstudent> {
+class MainStudentPage extends State<MainStudent> {
   void initState() {
     super.initState();
-    nameofsubject();
+    nameOfSubject();
 
-    getstudentdatafromSharedPreferences();
+    getStudentDataFromSharedPreferences();
   }
 
   GlobalState _store = GlobalState.instance;
 
-  List sub_data = new List();
-  void nameofsubject() async {
+  List subData = new List();
+  //get the name of his subjects
+  void nameOfSubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    /*Databasestudent()
-        .getstudentsubject(prefs.getString('level'))
-        .then((result) {
-      setState(() {
-        sub_data.addAll(result);
-      });
-    });*/
-    var url = "http://${_store.ipaddress}/app/student.php";
+    var url = "http://${_store.ipAddress}/app/student.php";
     final response = await http.post(url, body: {
       "action": "getstudentsubject",
-      "level": "${prefs.getString('level')}"
+      "level": "${prefs.getString('level')}",
+      "department": "${prefs.getString('department')}",
     });
-    print(response.body);
     String content = response.body;
     setState(() {
-      sub_data = json.decode(content);
+      subData = json.decode(content);
     });
   }
 
-  Widget thesubjects() {
+  Widget theSubjects() {
     return Container(
       child: ListView.builder(
-          itemCount: sub_data.length,
+          itemCount: subData.length,
           itemBuilder: (context, index) {
-            return Text("${index + 1}. ${sub_data[index]['Name']}");
+            return Text("${index + 1}. ${subData[index]['Name']}");
           }),
     );
   }
-  /*Widget subject() {
-    return ListView.builder(
-        itemCount: sub_data.length,
-        itemBuilder: (context, index) {
-          return Container(
-            child: Column(
-              children: <Widget>[Text(sub_data[index]['Name'] ?? "00")],
-            ),
-          );
-        });
-  }*/
 
-  String email, nationalId, name, password, CollageId, level, department;
+  String email, nationalId, name, password, collageId, level, department;
 
-  getstudentdatafromSharedPreferences() async {
+  getStudentDataFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       email = prefs.getString('ID');
       nationalId = prefs.getString('Nationalid');
-      CollageId = prefs.getString('Collageid');
+      collageId = prefs.getString('Collageid');
       password = prefs.getString('password');
       name = prefs.getString('name');
       level = prefs.getString('level');
@@ -83,7 +65,7 @@ class mainstudentpage extends State<mainstudent> {
     });
   }
 
-  Widget getthestudentdata() {
+  Widget getTheStudentData() {
     return Container(
       color: Colors.white,
       child: Column(
@@ -91,7 +73,7 @@ class mainstudentpage extends State<mainstudent> {
           Text("Email: $email"),
           Text("National ID: $nationalId"),
           Text("Name: $name"),
-          Text("Collage ID: $CollageId"),
+          Text("Collage ID: $collageId"),
           Text("Level: $level"),
           Text("Password: $password"),
           Text("Department: $department"),
@@ -107,7 +89,7 @@ class mainstudentpage extends State<mainstudent> {
         '/chooselogin', (Route<dynamic> route) => false);
   }
 
-  Widget datainmenu() {
+  Widget dataInMenu() {
     return Column(
       children: <Widget>[
         Container(
@@ -126,7 +108,6 @@ class mainstudentpage extends State<mainstudent> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -138,23 +119,15 @@ class mainstudentpage extends State<mainstudent> {
         child: ListView(
           children: <Widget>[
             ListTile(
-              title: datainmenu(),
+              title: dataInMenu(),
             ),
-            /*Divider(),
-            ListTile(
-              title: Text('profile'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => profile()));
-              },
-            ),*/
             Divider(),
             ListTile(
               title: Text('get exam',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => getexam()));
+                    MaterialPageRoute(builder: (context) => ChooseExam()));
               },
             ),
             Divider(),
@@ -165,7 +138,7 @@ class mainstudentpage extends State<mainstudent> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => showquestionbank()));
+                        builder: (context) => ShowQuestionBank()));
               },
             ),
             Divider(),
@@ -192,8 +165,7 @@ class mainstudentpage extends State<mainstudent> {
             )),
             Container(
               width: MediaQuery.of(context).size.width / 2,
-              child: getthestudentdata(),
-              //  flex: 1,
+              child: getTheStudentData(),
             ),
             Card(
                 child: Column(
@@ -205,7 +177,7 @@ class mainstudentpage extends State<mainstudent> {
                 Container(
                     height: 70,
                     width: MediaQuery.of(context).size.width / 2,
-                    child: thesubjects())
+                    child: theSubjects())
               ],
             ))
           ],

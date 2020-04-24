@@ -4,28 +4,23 @@ import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 import 'add_department.dart';
 import 'add_subject.dart';
 import 'get_subject.dart';
 import 'profile.dart';
 
-class mainadmin extends StatefulWidget {
+class MainAdmin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-
-    return mainadminpage();
+    return MainAdminPage();
   }
 }
 
-class mainadminpage extends State<mainadmin> {
+class MainAdminPage extends State<MainAdmin> {
   void initState() {
     super.initState();
-    get_admin_data_from_SharedPreferences();
-    //get_request_data_from_SharedPreferences();
+    getAdminDataFromSharedPreferences();
     getData();
   }
 
@@ -33,9 +28,10 @@ class mainadminpage extends State<mainadmin> {
 
   Map<String, dynamic> chatMap;
   List data = new List<dynamic>();
+  //get the requests data
   Future<List> getData() async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
-    final response = await http.post(url, body: {"action": "getadmindata"});
+    var url = "http://${_store.ipAddress}/app/admin.php";
+    final response = await http.post(url, body: {"action": "getrequestdata"});
     String content = response.body;
     setState(() {
       data = json.decode(content);
@@ -43,66 +39,54 @@ class mainadminpage extends State<mainadmin> {
     return json.decode(response.body);
   }
 
+  //the action when admin reject request
   rejected(String id) async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+    var url = "http://${_store.ipAddress}/app/admin.php";
     await http
         .post(url, body: {"action": "rejected", "id": "$id"}).whenComplete(() {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => mainadmin()));
+          context, MaterialPageRoute(builder: (context) => MainAdmin()));
     });
   }
 
-  accept(String nationalid, String email, String realName, String password,
-      String id, String graduted, String age, String type) async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+  //the action when admin accept request
+  accept(String nationalId, String email, String realName, String password,
+      String id, String graduated, String age, String type) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
     await http.post(url, body: {
       "action": "accept",
       "type": type,
       "id": id,
-      "Nationalid": nationalid,
+      "Nationalid": nationalId,
       "Email": email,
       "Password": password,
       "realName": realName,
-      "graduted": graduted,
+      "graduted": graduated,
       "age": age
     }).catchError((e) {
       print(e);
     }).whenComplete(() {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => mainadmin()));
+          context, MaterialPageRoute(builder: (context) => MainAdmin()));
     });
   }
 
-  String email, nationalid, name, password, graduted, age;
-
-  Future get_admin_data_from_SharedPreferences() async {
+  String email, nationalId, name, password, graduated, age;
+  //get the data from shared preferences
+  Future getAdminDataFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       email = prefs.getString('Email');
-      nationalid = prefs.getString('Nationalid');
+      nationalId = prefs.getString('Nationalid');
       password = prefs.getString('Password');
       name = prefs.getString('realName');
-      graduted = prefs.getString('graduted');
+      graduated = prefs.getString('graduted');
       age = prefs.getString('age');
     });
   }
 
-  Widget get_the_admin_data() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          Text("$email"),
-          Text("$nationalid"),
-          Text("$name"),
-          Text("$graduted"),
-          Text("$age"),
-        ],
-      ),
-    );
-  }
-
-  Widget get_the_requests() {
+  //the UI of the requests
+  Widget getTheRequests() {
     return ListView.builder(
       itemCount: data.length,
       itemBuilder: (context, index) {
@@ -167,6 +151,7 @@ class mainadminpage extends State<mainadmin> {
     );
   }
 
+  //the action when admin logout
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginasadmin', "no");
@@ -174,7 +159,7 @@ class mainadminpage extends State<mainadmin> {
         '/chooselogin', (Route<dynamic> route) => false);
   }
 
-  Widget datainmenu() {
+  Widget dataInMenu() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -195,7 +180,6 @@ class mainadminpage extends State<mainadmin> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xff2e2e2e),
@@ -203,7 +187,7 @@ class mainadminpage extends State<mainadmin> {
           child: ListView(
             children: <Widget>[
               ListTile(
-                title: datainmenu(),
+                title: dataInMenu(),
                 onTap: () {},
               ),
               Divider(),
@@ -212,7 +196,7 @@ class mainadminpage extends State<mainadmin> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => profile()));
+                      MaterialPageRoute(builder: (context) => Profile()));
                 },
               ),
               Divider(),
@@ -220,10 +204,8 @@ class mainadminpage extends State<mainadmin> {
                 title: Text('add department',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => add_department()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddDepartment()));
                 },
               ),
               Divider(),
@@ -232,7 +214,7 @@ class mainadminpage extends State<mainadmin> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => add_subject()));
+                      MaterialPageRoute(builder: (context) => AddSubject()));
                 },
               ),
               Divider(),
@@ -241,7 +223,7 @@ class mainadminpage extends State<mainadmin> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => get_subject()));
+                      MaterialPageRoute(builder: (context) => GetSubject()));
                 },
               ),
               Divider(),
@@ -263,18 +245,9 @@ class mainadminpage extends State<mainadmin> {
         body: Container(
             child: Column(
           children: <Widget>[
-            /* Align(
-              alignment: Alignment(0, -0.9),
-              child: Container(
-                width: 35,
-                height: 110,
-                color: Colors.blue,
-              ),
-            ),*/
             Expanded(
-              child: get_the_requests(),
+              child: getTheRequests(),
             ),
-            //   get_the_admin_data(),
           ],
         )),
       ),

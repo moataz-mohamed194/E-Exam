@@ -6,28 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart' as Toast;
 
-class add_chapter extends StatefulWidget {
+class AddChapter extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return add_chapterpage();
+    return AddChapterPage();
   }
 }
 
-class add_chapterpage extends State<add_chapter> {
-  String subjectvalue;
+class AddChapterPage extends State<AddChapter> {
+  String subjectValue;
   List sub = [];
   GlobalState _store = GlobalState.instance;
 
-  List sub_data = new List();
-  void nameofsubject() async {
+  List subData = new List();
+  void nameOfSubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    /*database_professor()
-        .get_the_subject(prefs.getString('realName'))
-        .then((result) {
-      setState(() {
-        sub_data.addAll(result);
-      });*/
-    var url = "http://${_store.ipaddress}/app/professor.php";
+    var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http.post(url, body: {
       "action": "get_the_subject",
       "Professor": "${prefs.getString('realName')}"
@@ -35,32 +29,32 @@ class add_chapterpage extends State<add_chapter> {
     print(response.body);
     String content = response.body;
     setState(() {
-      sub_data = json.decode(content);
+      subData = json.decode(content);
     });
 
-    for (int i = 0; i < sub_data.length; i++) {
-      sub.add(sub_data[i]['Name']);
+    for (int i = 0; i < subData.length; i++) {
+      sub.add(subData[i]['Name']);
     }
     //  });
   }
 
   final _formKey = GlobalKey<FormState>();
-  final FocusNode chapternamenode = FocusNode();
-  TextEditingController controllerchaptername;
-  String chapternamesave;
+  final FocusNode chapterNameNode = FocusNode();
+  TextEditingController controllerChapterName;
+  String chapterNameSave;
   void initState() {
     super.initState();
-    nameofsubject();
-    controllerchaptername = new TextEditingController();
+    nameOfSubject();
+    controllerChapterName = new TextEditingController();
   }
 
   var d;
-  addchapter(String subjectname, String chaptername) async {
-    var url = "http://${_store.ipaddress}/app/professor.php";
+  addChapter(String subjectName, String chapterName) async {
+    var url = "http://${_store.ipAddress}/app/professor.php";
     d = await http.post(url, body: {
       "action": "add_chapter",
-      "subjectname": subjectname,
-      "chaptername": chaptername
+      "subjectname": subjectName,
+      "chaptername": chapterName
     }).catchError((e) {
       print("00000000000000000000000$e");
     }).whenComplete(() {
@@ -68,16 +62,10 @@ class add_chapterpage extends State<add_chapter> {
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
-
-    /*database_professor()
-        .add_chapter_tosqlite(chaptername, subjectname)
-        .whenComplete(() {
-    });*/
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -98,10 +86,10 @@ class add_chapterpage extends State<add_chapter> {
                     width: MediaQuery.of(context).size.width / 1.2,
                     child: TextFormField(
                       keyboardType: TextInputType.text,
-                      controller: controllerchaptername,
-                      focusNode: chapternamenode,
+                      controller: controllerChapterName,
+                      focusNode: chapterNameNode,
                       textInputAction: TextInputAction.next,
-                      onSaved: (input) => chapternamesave = input,
+                      onSaved: (input) => chapterNameSave = input,
                       decoration: InputDecoration(
                         labelText: "chapter name",
                         filled: true,
@@ -128,7 +116,7 @@ class add_chapterpage extends State<add_chapter> {
                         bottom: MediaQuery.of(context).size.height / 55),
                     width: MediaQuery.of(context).size.width / 1.2,
                     child: DropdownButtonFormField<dynamic>(
-                      value: subjectvalue,
+                      value: subjectValue,
                       validator: (value) {
                         if (value == null) {
                           return 'Enter the subject';
@@ -147,7 +135,7 @@ class add_chapterpage extends State<add_chapter> {
                       hint: Text('Subject :'),
                       onChanged: (value) {
                         setState(() {
-                          subjectvalue = value;
+                          subjectValue = value;
                         });
                       },
                     ),
@@ -159,8 +147,8 @@ class add_chapterpage extends State<add_chapter> {
                         child: FlatButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              addchapter(
-                                  controllerchaptername.text, subjectvalue);
+                              addChapter(
+                                  controllerChapterName.text, subjectValue);
                             }
                           },
                           child: Text("add chapter",

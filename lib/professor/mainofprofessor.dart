@@ -1,39 +1,40 @@
 import 'dart:convert';
 import 'package:exam/data/globals.dart';
+import 'package:exam/professor/addchapter.dart';
+import 'package:exam/professor/getchapter.dart';
+import 'package:exam/professor/showqueation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'add_queation.dart';
-import 'addchapter.dart';
-import 'addexam.dart';
-import 'getchapter.dart';
-import 'showqueation.dart';
 
-class mainprofessor extends StatefulWidget {
+import 'add_queation.dart';
+import 'addexam.dart';
+
+class MainProfessor extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return mainprofessorpage();
+    return MainProfessorPage();
   }
 }
 
-class mainprofessorpage extends State<mainprofessor> {
-  String email, nationalid, password, realName, graduted, age;
+class MainProfessorPage extends State<MainProfessor> {
+  String email, nationalId, password, realName, graduated, age;
 
   void initState() {
     super.initState();
-    nameofsubject();
+    nameOfSubject();
 
-    get_professor_data_from_SharedPreferences();
+    getProfessorDataFromSharedPreferences();
   }
 
   List sub = [];
   GlobalState _store = GlobalState.instance;
 
-  List sub_data = new List();
-  void nameofsubject() async {
+  List subData = new List();
+  void nameOfSubject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = "http://${_store.ipaddress}/app/professor.php";
+    var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http.post(url, body: {
       "action": "get_the_subject",
       "Professor": "${prefs.getString('realName')}"
@@ -41,52 +42,41 @@ class mainprofessorpage extends State<mainprofessor> {
     print(response.body);
     String content = response.body;
     setState(() {
-      sub_data = json.decode(content);
+      subData = json.decode(content);
     });
 
-    for (int i = 0; i < sub_data.length; i++) {
-      sub.add(sub_data[i]['Name']);
+    for (int i = 0; i < subData.length; i++) {
+      sub.add(subData[i]['Name']);
     }
-    /*database_professor()
-        .get_the_subject(prefs.getString('realName'))
-        .then((result) {
-      setState(() {
-        sub_data.addAll(result);
-      });
-      print(sub_data);
-      for (int i = 0; i < result.length; i++) {
-        sub.add(sub_data[i]['Name']);
-      }
-    });*/
   }
 
-  Future get_professor_data_from_SharedPreferences() async {
+  Future getProfessorDataFromSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       email = prefs.getString('Email');
-      nationalid = prefs.getString('Nationalid');
+      nationalId = prefs.getString('Nationalid');
       password = prefs.getString('Password');
       realName = prefs.getString('realName');
-      graduted = prefs.getString('graduted');
+      graduated = prefs.getString('graduted');
       age = prefs.getString('age');
     });
   }
 
-  Widget get_the_professor_data() {
+  Widget getTheProfessorData() {
     return Card(
       child: Column(
         children: <Widget>[
           Text("Name: $realName"),
           Text("Email: $email"),
-          Text("National id: $nationalid"),
-          Text("Graduted: $graduted"),
+          Text("National id: $nationalId"),
+          Text("Graduted: $graduated"),
           Text("Age: $age"),
         ],
       ),
     );
   }
 
-  Widget datainmenu() {
+  Widget dataInMenu() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -105,7 +95,7 @@ class mainprofessorpage extends State<mainprofessor> {
     );
   }
 
-  Widget thesubjects() {
+  Widget theSubjects() {
     return Container(
       child: ListView.builder(
           itemCount: sub.length,
@@ -122,11 +112,10 @@ class mainprofessorpage extends State<mainprofessor> {
         '/chooselogin', (Route<dynamic> route) => false);
   }
 
-  List subdata = new List();
+  List subData1 = new List();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -138,7 +127,7 @@ class mainprofessorpage extends State<mainprofessor> {
           child: ListView(
             children: <Widget>[
               ListTile(
-                title: datainmenu(),
+                title: dataInMenu(),
               ),
               Divider(),
               ListTile(
@@ -146,24 +135,16 @@ class mainprofessorpage extends State<mainprofessor> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => add_chapter()));
+                      MaterialPageRoute(builder: (context) => AddChapter()));
                 },
               ),
-              /*Divider(),
-              ListTile(
-                title: Text('Profile'),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => profile()));
-                },
-              ),*/
               Divider(),
               ListTile(
                 title: Text('get chapter',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => get_chapter()));
+                      MaterialPageRoute(builder: (context) => GetChapter()));
                 },
               ),
               Divider(),
@@ -172,7 +153,7 @@ class mainprofessorpage extends State<mainprofessor> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => add_question()));
+                      MaterialPageRoute(builder: (context) => AddQuestion()));
                 },
               ),
               Divider(),
@@ -181,7 +162,7 @@ class mainprofessorpage extends State<mainprofessor> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => show_question()));
+                      MaterialPageRoute(builder: (context) => ShowQuestion()));
                 },
               ),
               Divider(),
@@ -190,7 +171,7 @@ class mainprofessorpage extends State<mainprofessor> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => addexam()));
+                      MaterialPageRoute(builder: (context) => AddExam()));
                 },
               ),
               Divider(),
@@ -217,7 +198,7 @@ class mainprofessorpage extends State<mainprofessor> {
             )),
             Container(
               width: MediaQuery.of(context).size.width / 2,
-              child: get_the_professor_data(),
+              child: getTheProfessorData(),
             ),
             Card(
                 child: Column(
@@ -229,7 +210,7 @@ class mainprofessorpage extends State<mainprofessor> {
                 Container(
                     height: 70,
                     width: MediaQuery.of(context).size.width / 2,
-                    child: thesubjects())
+                    child: theSubjects())
               ],
             ))
           ],

@@ -5,62 +5,44 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
-class Professorsignup extends StatefulWidget {
+class ProfessorSignUp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return ProfessorsignupPage();
+    return ProfessorSignUpPage();
   }
 }
 
-class ProfessorsignupPage extends State<Professorsignup> {
+class ProfessorSignUpPage extends State<ProfessorSignUp> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode Professoridnode = FocusNode();
-  final FocusNode Professoremailnode = FocusNode();
-  final FocusNode Professornamenode = FocusNode();
-  final FocusNode Professoragenode = FocusNode();
-  final FocusNode Professorgraduatednode = FocusNode();
-  final FocusNode Professorpasswordnode = FocusNode();
-  TextEditingController Professorid;
-  TextEditingController Professorname;
-  TextEditingController Professoremail;
-  TextEditingController Professorage;
-  TextEditingController Professorgraduated;
-  TextEditingController Professorpassword;
-  String Professoridsave,
-      Professorpasswordsave,
-      Professornamesave,
-      Professoremailsave,
-      Professoragesave,
-      Professorgraduatedsave;
+  final FocusNode professorIdNode = FocusNode();
+  final FocusNode professorEmailNode = FocusNode();
+  final FocusNode professorNameNode = FocusNode();
+  final FocusNode professorAgeNode = FocusNode();
+  final FocusNode professorGraduatedNode = FocusNode();
+  final FocusNode professorPasswordNode = FocusNode();
+  TextEditingController professorId;
+  TextEditingController professorName;
+  TextEditingController professorEmail;
+  TextEditingController professorAge;
+  TextEditingController professorGraduated;
+  TextEditingController professorPassword;
+  String professorIdSave,
+      professorPasswordSave,
+      professorNameSave,
+      professorEmailSave,
+      professorAgeSave,
+      professorGraduatedSave;
   void initState() {
     super.initState();
-    Professorid = new TextEditingController();
-    Professorname = new TextEditingController();
-    Professoremail = new TextEditingController();
-    Professorage = new TextEditingController();
-    Professorgraduated = new TextEditingController();
-    Professorpassword = new TextEditingController();
-    getprofessordata();
+    professorId = new TextEditingController();
+    professorName = new TextEditingController();
+    professorEmail = new TextEditingController();
+    professorAge = new TextEditingController();
+    professorGraduated = new TextEditingController();
+    professorPassword = new TextEditingController();
   }
 
   GlobalState _store = GlobalState.instance;
-
-  List data = new List();
-  void getprofessordata() async {
-    /*database_professor().getprofessordata().then((result) {
-      setState(() {
-        data.addAll(result);
-      });
-    });*/
-    var url = "http://${_store.ipaddress}/app/professor.php";
-    final response = await http.post(url, body: {"action": "getProfessordata"});
-    print(response.body);
-    String content = response.body;
-    setState(() {
-      data = json.decode(content);
-    });
-    //return json.decode(response.body);
-  }
 
   _fieldFocusChange(
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
@@ -68,20 +50,14 @@ class ProfessorsignupPage extends State<Professorsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  login(String name, String email, String id, String password, String graduated,
-      String age) async {
-    for (int i = 0; i < data.length; i++) {
-      if (id == data[i]['Nationalid'] || email == data[i]['Email']) {
-        Toast.Toast.show("that eamil or your id is used", context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-        return 0;
-      }
-    }
-    var url = "http://${_store.ipaddress}/app/admin.php";
-    final q = await http.post(url, body: {
+  //send your request to database
+  signUp(String name, String email, String id, String password,
+      String graduated, String age) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
+    final request = await http.post(url, body: {
       "action": "send_request",
       "type": "Professor",
-      "Nationalid": id,
+      "Nationalid": "$id",
       "Email": email,
       "Password": password,
       "realName": name,
@@ -89,22 +65,25 @@ class ProfessorsignupPage extends State<Professorsignup> {
       "age": age
     }).catchError((e) {
       print(e);
-    }).whenComplete(() {
+    });
+    print(request.body);
+    if (request.body == "Nationalid used") {
+      Toast.Toast.show("this national id is used", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else if (request.body == "email used") {
+      Toast.Toast.show("this email is used", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else if (request.body == "Done") {
+      Navigator.pop(context);
+      Toast.Toast.show("your request is added", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    }
+    /*.whenComplete(() {
       Toast.Toast.show("Your request is send", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
 
       Navigator.pop(context);
-    });
-    print(q.body);
-
-    // database api = new database();
-    //var l = await api.sendtodatabase1(
-    //  'Professor', name, email, id, password, graduated, age);
-    /* Navigator.pop(context);
-    Toast.Toast.show("your request is send", context,
-        duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-*/
-    //  print(l);
+    });*/
   }
 
   @override
@@ -134,13 +113,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
-                            controller: Professorid,
-                            focusNode: Professoridnode,
+                            controller: professorId,
+                            focusNode: professorIdNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Professoridsave = input,
+                            onSaved: (input) => professorIdSave = input,
                             onFieldSubmitted: (term) {
                               _fieldFocusChange(
-                                  context, Professoridnode, Professoremailnode);
+                                  context, professorIdNode, professorEmailNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -170,13 +149,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Professoremail,
-                            focusNode: Professoremailnode,
+                            controller: professorEmail,
+                            focusNode: professorEmailNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Professoremailsave = input,
+                            onSaved: (input) => professorEmailSave = input,
                             onFieldSubmitted: (term) {
-                              _fieldFocusChange(context, Professoremailnode,
-                                  Professorpasswordnode);
+                              _fieldFocusChange(context, professorEmailNode,
+                                  professorPasswordNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -206,13 +185,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Professorpassword,
-                            focusNode: Professorpasswordnode,
+                            controller: professorPassword,
+                            focusNode: professorPasswordNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Professorpasswordsave = input,
+                            onSaved: (input) => professorPasswordSave = input,
                             onFieldSubmitted: (term) {
-                              _fieldFocusChange(context, Professorpasswordnode,
-                                  Professoragenode);
+                              _fieldFocusChange(context, professorPasswordNode,
+                                  professorAgeNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -242,13 +221,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.number,
-                            controller: Professorage,
-                            focusNode: Professoragenode,
+                            controller: professorAge,
+                            focusNode: professorAgeNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Professoragesave = input,
+                            onSaved: (input) => professorAgeSave = input,
                             onFieldSubmitted: (value) {
-                              _fieldFocusChange(context, Professoragenode,
-                                  Professorgraduatednode);
+                              _fieldFocusChange(context, professorAgeNode,
+                                  professorGraduatedNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -276,13 +255,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
                             keyboardType: TextInputType.text,
-                            controller: Professorgraduated,
-                            focusNode: Professorgraduatednode,
+                            controller: professorGraduated,
+                            focusNode: professorGraduatedNode,
                             textInputAction: TextInputAction.next,
-                            onSaved: (input) => Professorgraduatedsave = input,
+                            onSaved: (input) => professorGraduatedSave = input,
                             onFieldSubmitted: (value) {
-                              _fieldFocusChange(context, Professorgraduatednode,
-                                  Professornamenode);
+                              _fieldFocusChange(context, professorGraduatedNode,
+                                  professorNameNode);
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -311,12 +290,12 @@ class ProfessorsignupPage extends State<Professorsignup> {
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: TextFormField(
                               keyboardType: TextInputType.text,
-                              controller: Professorname,
-                              focusNode: Professornamenode,
+                              controller: professorName,
+                              focusNode: professorNameNode,
                               textInputAction: TextInputAction.done,
-                              onSaved: (input) => Professornamesave = input,
+                              onSaved: (input) => professorNameSave = input,
                               onFieldSubmitted: (value) {
-                                Professornamenode.unfocus();
+                                professorNameNode.unfocus();
                               },
                               decoration: InputDecoration(
                                 labelText: "Your name",
@@ -364,14 +343,13 @@ class ProfessorsignupPage extends State<Professorsignup> {
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
-                                    login(
-                                        Professorname.text,
-                                        Professoremail.text,
-                                        Professorid.text,
-                                        Professorpassword.text,
-                                        Professorgraduated.text,
-                                        Professorage.text);
-                                    //print("cccccccccc");
+                                    signUp(
+                                        professorName.text,
+                                        professorEmail.text,
+                                        professorId.text,
+                                        professorPassword.text,
+                                        professorGraduated.text,
+                                        professorAge.text);
                                   }
                                 },
                               ),

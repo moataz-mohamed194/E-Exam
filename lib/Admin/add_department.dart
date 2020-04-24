@@ -5,27 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
-class add_department extends StatefulWidget {
+class AddDepartment extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return add_departmentpage();
+    return AddDepartmentPage();
   }
 }
 
-class add_departmentpage extends State<add_department> {
+class AddDepartmentPage extends State<AddDepartment> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode departmentnamenode = FocusNode();
-  TextEditingController departmentname;
-  String departmentnamesave;
+  final FocusNode departmentNameNode = FocusNode();
+  TextEditingController departmentName;
+  String departmentNameSave;
 
   String _ratingController;
   List _professors = [];
   GlobalState _store = GlobalState.instance;
 
   List data = new List<dynamic>();
+  //get professor data
   Future<List> getData() async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+    var url = "http://${_store.ipAddress}/app/admin.php";
     final response = await http.post(url, body: {"action": "getprofessordata"});
     String content = response.body;
     setState(() {
@@ -44,14 +44,13 @@ class add_departmentpage extends State<add_department> {
 
   void initState() {
     super.initState();
-    //  nameofprofessor();
     getData();
-    departmentname = new TextEditingController();
+    departmentName = new TextEditingController();
   }
 
-  //to add the department data to database
-  void add_departmentsql(String name, String level, String leader) async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+  //send the department data
+  void addDepartment(String name, String level, String leader) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
     await http.post(url, body: {
       "action": "add_department",
       "name": name,
@@ -92,10 +91,10 @@ class add_departmentpage extends State<add_department> {
                         child: TextFormField(
                           cursorColor: Colors.blue,
                           keyboardType: TextInputType.text,
-                          controller: departmentname,
-                          focusNode: departmentnamenode,
+                          controller: departmentName,
+                          focusNode: departmentNameNode,
                           textInputAction: TextInputAction.next,
-                          onSaved: (input) => departmentnamesave = input,
+                          onSaved: (input) => departmentNameSave = input,
                           decoration: InputDecoration(
                             labelText: "Department name",
                             filled: true,
@@ -183,8 +182,8 @@ class add_departmentpage extends State<add_department> {
                           ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              add_departmentsql(
-                                departmentname.text,
+                              addDepartment(
+                                departmentName.text,
                                 _ratingController,
                                 _ratingController1,
                               );

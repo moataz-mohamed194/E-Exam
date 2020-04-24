@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signupadmin.dart';
-
 import 'package:http/http.dart' as http;
 
 class AdminLogin extends StatefulWidget {
@@ -18,15 +16,15 @@ class AdminLogin extends StatefulWidget {
 
 class AdminLoginPage extends State<AdminLogin> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode adminidnode = FocusNode();
-  final FocusNode adminpasswordnode = FocusNode();
-  TextEditingController adminid;
-  TextEditingController adminpassword;
-  String adminidsave, adminpasswordsave;
+  final FocusNode adminIdNode = FocusNode();
+  final FocusNode adminPasswordNode = FocusNode();
+  TextEditingController adminId;
+  TextEditingController adminPassword;
+  String adminIdSave, adminPasswordSave;
   void initState() {
     super.initState();
-    adminid = new TextEditingController();
-    adminpassword = new TextEditingController();
+    adminId = new TextEditingController();
+    adminPassword = new TextEditingController();
   }
 
   _fieldFocusChange(
@@ -38,13 +36,11 @@ class AdminLoginPage extends State<AdminLogin> {
   List data = new List<dynamic>();
   var response;
   GlobalState _store = GlobalState.instance;
-
+  //send http request and get the data from admin table Dependent on email you entered
   login(String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(email);
-    print(password);
     try {
-      var url = "http://${_store.ipaddress}/app/admin.php";
+      var url = "http://${_store.ipAddress}/app/admin.php";
       response = await http.post(url, body: {
         "action": "check_your_email_and_password",
         "email": "$email",
@@ -53,8 +49,6 @@ class AdminLoginPage extends State<AdminLogin> {
       setState(() {
         data = json.decode(content);
       });
-      print("99999999999" + response.body);
-      print(data);
       if (password == data[0]['Password']) {
         prefs.setString('ID', "${data[0]['ID']}");
         prefs.setString('Nationalid', "${data[0]['Nationalid']}");
@@ -73,15 +67,17 @@ class AdminLoginPage extends State<AdminLogin> {
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
-      print("0000000000000" + response.body);
       Toast.Toast.show("Check your  Email", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
   }
 
+  final GlobalKey<ScaffoldState> scaffoldState = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldState,
       backgroundColor: Color(0xFF2E2E2E),
       body: Container(
         child: Column(
@@ -106,13 +102,13 @@ class AdminLoginPage extends State<AdminLogin> {
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: TextFormField(
                               keyboardType: TextInputType.text,
-                              controller: adminid,
-                              focusNode: adminidnode,
+                              controller: adminId,
+                              focusNode: adminIdNode,
                               textInputAction: TextInputAction.next,
-                              onSaved: (input) => adminidsave = input,
+                              onSaved: (input) => adminIdSave = input,
                               onFieldSubmitted: (term) {
                                 _fieldFocusChange(
-                                    context, adminidnode, adminpasswordnode);
+                                    context, adminIdNode, adminPasswordNode);
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -141,12 +137,12 @@ class AdminLoginPage extends State<AdminLogin> {
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: TextFormField(
                               keyboardType: TextInputType.text,
-                              controller: adminpassword,
-                              focusNode: adminpasswordnode,
+                              controller: adminPassword,
+                              focusNode: adminPasswordNode,
                               textInputAction: TextInputAction.done,
-                              onSaved: (input) => adminpasswordsave = input,
+                              onSaved: (input) => adminPasswordSave = input,
                               onFieldSubmitted: (value) {
-                                adminpasswordnode.unfocus();
+                                adminPasswordNode.unfocus();
                               },
                               decoration: InputDecoration(
                                 filled: true,
@@ -184,7 +180,17 @@ class AdminLoginPage extends State<AdminLogin> {
                             ),
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-                                login(adminid.text, adminpassword.text);
+                                scaffoldState.currentState
+                                    .showSnackBar(new SnackBar(
+                                  content: Row(
+                                    children: <Widget>[
+                                      new CircularProgressIndicator(),
+                                      new Text("Loading ...")
+                                    ],
+                                  ),
+                                ));
+
+                                login(adminId.text, adminPassword.text);
                               }
                             },
                           ),
@@ -201,7 +207,7 @@ class AdminLoginPage extends State<AdminLogin> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Adminsignup()));
+                                  builder: (context) => AdminSignUp()));
                         },
                       ),
                     )

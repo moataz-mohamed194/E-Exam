@@ -5,36 +5,35 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
-class studentsignup extends StatefulWidget {
+class StudentSignUp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return studentsignupPage();
+    return StudentSignUpPage();
   }
 }
 
-class studentsignupPage extends State<studentsignup> {
+class StudentSignUpPage extends State<StudentSignUp> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode Studentidnode = FocusNode();
-  final FocusNode Studentidcardnode = FocusNode();
-  final FocusNode Studentnamenode = FocusNode();
-  final FocusNode Studentpasswordnode = FocusNode();
-  TextEditingController Studentid;
-  TextEditingController Studentidcard;
-  TextEditingController Studentname;
-  TextEditingController Studentpassword;
-  String Studentidsave, Studentidcardsave, Studentnamesave, Studentpasswordsave;
-  String levelvalue;
+  final FocusNode studentIdNode = FocusNode();
+  final FocusNode studentIdCardNode = FocusNode();
+  final FocusNode studentNameNode = FocusNode();
+  final FocusNode studentPasswordNode = FocusNode();
+  TextEditingController studentId;
+  TextEditingController studentIdCard;
+  TextEditingController studentName;
+  TextEditingController studentPassword;
+  String studentIdSave, studentIdCardSave, studentNameSave, studentPasswordSave;
+  String levelValue;
   List level = ["level 1", "level 2", "level 3", "level 4"];
-  String departmentvalue;
+  String departmentValue;
   List department = ["general"];
-  //List departmentdata = new List();
   List data1 = new List();
   GlobalState _store = GlobalState.instance;
-
-  List _departmentlist = ["general"];
-  List datadepartment = new List();
-  void nameofdepartment(String studentlevel) async {
-    var url = "http://${_store.ipaddress}/app/admin.php";
+  List _departmentList = ["general"];
+  List dataDepartment = new List();
+  //get the names of department
+  void nameOfDepartment(String studentLevel) async {
+    var url = "http://${_store.ipAddress}/app/admin.php";
     final response =
         await http.post(url, body: {"action": "getdepartmentdata"});
     String content = response.body;
@@ -43,21 +42,20 @@ class studentsignupPage extends State<studentsignup> {
     });
     for (int i = 0; i < data1.length; i++) {
       setState(() {
-        datadepartment.add(data1[i]['Name'].toString());
+        dataDepartment.add(data1[i]['Name'].toString());
       });
     }
-    print(studentlevel);
-    _departmentlist.add("general");
+    _departmentList.add("general");
     for (int i = 0; i < data1.length; i++) {
-      if (studentlevel == "level 3" || studentlevel == "level 4") {
-        if (!_departmentlist.contains(data1[i]['Name'])) {
-          _departmentlist.add(data1[i]['Name'].toString());
+      if (studentLevel == "level 3" || studentLevel == "level 4") {
+        if (!_departmentList.contains(data1[i]['Name'])) {
+          _departmentList.add(data1[i]['Name'].toString());
         }
-      } else if (studentlevel == "level 1" || studentlevel == "level 2") {
-        if (!_departmentlist.contains(data1[i]['Name'])) {
+      } else if (studentLevel == "level 1" || studentLevel == "level 2") {
+        if (!_departmentList.contains(data1[i]['Name'])) {
           if (data1[i]['whenstart'] == "level 1" ||
               data1[i]['whenstart'] == "level 2") {
-            _departmentlist.add(data1[i]['Name'].toString());
+            _departmentList.add(data1[i]['Name'].toString());
           }
         }
       }
@@ -67,10 +65,10 @@ class studentsignupPage extends State<studentsignup> {
   @override
   void initState() {
     super.initState();
-    Studentid = new TextEditingController();
-    Studentidcard = new TextEditingController();
-    Studentname = new TextEditingController();
-    Studentpassword = new TextEditingController();
+    studentId = new TextEditingController();
+    studentIdCard = new TextEditingController();
+    studentName = new TextEditingController();
+    studentPassword = new TextEditingController();
   }
 
   _fieldFocusChange(
@@ -79,36 +77,38 @@ class studentsignupPage extends State<studentsignup> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  signup(String nationalid, String collageid, String name, String password,
+  //create student account
+  var request;
+  signUp(String nationalId, String collageId, String name, String password,
       String level, String department) async {
-    /* Databasestudent()
-        .signupstudent(nationalid, collageid, name, password, level, department)
-        .whenComplete(() {
-      Navigator.pop(context);
-      Toast.Toast.show("your data is added", context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-    });*/
-    var url = "http://${_store.ipaddress}/app/student.php";
-    await http.post(url, body: {
+    var url = "http://${_store.ipAddress}/app/student.php";
+    request = await http.post(url, body: {
       "action": "signupstudent",
       "name": name,
-      "nationalid": nationalid,
-      "collageid": collageid,
+      "nationalid": nationalId,
+      "collageid": collageId,
       "password": password,
       "level": level,
       "department": department,
     }).catchError((e) {
       print(e);
-    }).whenComplete(() {
+    });
+    print(request.body);
+    if (request.body == "Nationalid used") {
+      Toast.Toast.show("this national id is used", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else if (request.body == "collageid used") {
+      Toast.Toast.show("this collage id is used", context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else if (request.body == "Doned") {
       Navigator.pop(context);
       Toast.Toast.show("your data is added", context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         backgroundColor: Color(0xFF2E2E2E),
         body: SingleChildScrollView(
@@ -138,13 +138,13 @@ class studentsignupPage extends State<studentsignup> {
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: TextFormField(
                                     keyboardType: TextInputType.number,
-                                    controller: Studentid,
-                                    focusNode: Studentidnode,
+                                    controller: studentId,
+                                    focusNode: studentIdNode,
                                     textInputAction: TextInputAction.next,
-                                    onSaved: (input) => Studentidsave = input,
+                                    onSaved: (input) => studentIdSave = input,
                                     onFieldSubmitted: (term) {
-                                      _fieldFocusChange(context, Studentidnode,
-                                          Studentidcardnode);
+                                      _fieldFocusChange(context, studentIdNode,
+                                          studentIdCardNode);
                                     },
                                     decoration: InputDecoration(
                                       filled: true,
@@ -177,14 +177,14 @@ class studentsignupPage extends State<studentsignup> {
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: TextFormField(
                                     keyboardType: TextInputType.number,
-                                    controller: Studentidcard,
-                                    focusNode: Studentidcardnode,
+                                    controller: studentIdCard,
+                                    focusNode: studentIdCardNode,
                                     textInputAction: TextInputAction.next,
                                     onSaved: (input) =>
-                                        Studentidcardsave = input,
+                                        studentIdCardSave = input,
                                     onFieldSubmitted: (term) {
                                       _fieldFocusChange(context,
-                                          Studentidcardnode, Studentnamenode);
+                                          studentIdCardNode, studentNameNode);
                                     },
                                     decoration: InputDecoration(
                                       filled: true,
@@ -217,13 +217,13 @@ class studentsignupPage extends State<studentsignup> {
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: TextFormField(
                                     keyboardType: TextInputType.text,
-                                    controller: Studentname,
-                                    focusNode: Studentnamenode,
+                                    controller: studentName,
+                                    focusNode: studentNameNode,
                                     textInputAction: TextInputAction.next,
-                                    onSaved: (input) => Studentnamesave = input,
+                                    onSaved: (input) => studentNameSave = input,
                                     onFieldSubmitted: (term) {
                                       _fieldFocusChange(context,
-                                          Studentnamenode, Studentpasswordnode);
+                                          studentNameNode, studentPasswordNode);
                                     },
                                     decoration: InputDecoration(
                                       filled: true,
@@ -256,13 +256,13 @@ class studentsignupPage extends State<studentsignup> {
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: TextFormField(
                                     keyboardType: TextInputType.text,
-                                    controller: Studentpassword,
-                                    focusNode: Studentpasswordnode,
+                                    controller: studentPassword,
+                                    focusNode: studentPasswordNode,
                                     textInputAction: TextInputAction.done,
                                     onSaved: (input) =>
-                                        Studentpasswordsave = input,
+                                        studentPasswordSave = input,
                                     onFieldSubmitted: (term) {
-                                      Studentpasswordnode.unfocus();
+                                      studentPasswordNode.unfocus();
                                     },
                                     decoration: InputDecoration(
                                       filled: true,
@@ -295,7 +295,7 @@ class studentsignupPage extends State<studentsignup> {
                                   width:
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: DropdownButtonFormField<dynamic>(
-                                    value: levelvalue,
+                                    value: levelValue,
                                     validator: (value) {
                                       if (value == null) {
                                         return 'Enter your level';
@@ -314,10 +314,10 @@ class studentsignupPage extends State<studentsignup> {
                                     hint: Text('Level :'),
                                     onChanged: (value) {
                                       setState(() {
-                                        nameofdepartment(value);
-                                        _departmentlist.clear();
+                                        nameOfDepartment(value);
+                                        _departmentList.clear();
 
-                                        levelvalue = value;
+                                        levelValue = value;
                                       });
                                     },
                                   ),
@@ -331,7 +331,7 @@ class studentsignupPage extends State<studentsignup> {
                                   width:
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: DropdownButtonFormField<dynamic>(
-                                    value: departmentvalue,
+                                    value: departmentValue,
                                     validator: (value) {
                                       if (value == null) {
                                         return 'Enter the subject';
@@ -341,7 +341,7 @@ class studentsignupPage extends State<studentsignup> {
                                         return null;
                                       }
                                     },
-                                    items: _departmentlist
+                                    items: _departmentList
                                         .map((label) => DropdownMenuItem(
                                               child: Text(label.toString()),
                                               value: label,
@@ -350,7 +350,7 @@ class studentsignupPage extends State<studentsignup> {
                                     hint: Text('Subject :'),
                                     onChanged: (value) {
                                       setState(() {
-                                        departmentvalue = value;
+                                        departmentValue = value;
                                       });
                                     },
                                   ),
@@ -385,14 +385,13 @@ class studentsignupPage extends State<studentsignup> {
                                         onPressed: () {
                                           if (_formKey.currentState
                                               .validate()) {
-                                            print("cccccccccc");
-                                            signup(
-                                                Studentid.text,
-                                                Studentidcard.text,
-                                                Studentname.text,
-                                                Studentpassword.text,
-                                                levelvalue,
-                                                departmentvalue);
+                                            signUp(
+                                                studentId.text,
+                                                studentIdCard.text,
+                                                studentName.text,
+                                                studentPassword.text,
+                                                levelValue,
+                                                departmentValue);
                                           }
                                         },
                                       ),
