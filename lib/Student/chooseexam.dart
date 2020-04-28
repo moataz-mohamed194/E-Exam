@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/Student/takeexam.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -66,14 +68,14 @@ class ChooseExamPage extends State<ChooseExam> {
                 return Card(
                   child: Column(
                     children: <Widget>[
-                      Text(examData[index]['ID']),
+                      //    Text(examData[index]['ID']),
                       Text(examData[index]['subject']),
                       Text(examData[index]['whenstart']),
                       Text(examData[index]['time']),
                       FlatButton(
                         color: Colors.blue,
                         child: Text(
-                          "Login to exam",
+                          AppLocalizations.of(context).tr('loginToExam'),
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
@@ -101,8 +103,23 @@ class ChooseExamPage extends State<ChooseExam> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Choose Exam"),
+        title: Text(AppLocalizations.of(context).tr('chooseExam')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(

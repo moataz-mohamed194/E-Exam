@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +62,8 @@ class GetChapterPage extends State<GetChapter> {
       "subjectname": subjectName,
       "id": id
     }).whenComplete(() {
-      Toast.Toast.show("that subject is removed", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thatSubjectIsRemoved'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => GetChapter()));
@@ -82,12 +85,14 @@ class GetChapterPage extends State<GetChapter> {
                 return Card(
                   child: Column(
                     children: <Widget>[
-                      Text("Chapter $i :${data[index]['chaptername']}"),
+                      Text(
+                          "${AppLocalizations.of(context).tr('chapter')} $i :${data[index]['chaptername']}"),
                       FlatButton(
                         onPressed: () {
                           removeChapter(subjectValue, data[index]['ID']);
                         },
-                        child: Text("Remove chapter",
+                        child: Text(
+                            "${AppLocalizations.of(context).tr('removeChapter')}",
                             style: TextStyle(color: Colors.white)),
                         color: Colors.blue,
                       )
@@ -105,8 +110,23 @@ class GetChapterPage extends State<GetChapter> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Get Chapter"),
+        title: Text(AppLocalizations.of(context).tr('getChapter')),
       ),
       backgroundColor: Color(0xFF2E2E2E),
       body: Container(
@@ -121,23 +141,13 @@ class GetChapterPage extends State<GetChapter> {
                 width: MediaQuery.of(context).size.width / 1.2,
                 child: DropdownButtonFormField<dynamic>(
                   value: subjectValue,
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Enter the subject';
-                    } else if (value == " ") {
-                      return 'Enter the subject';
-                    } else {
-                      subject();
-                      return null;
-                    }
-                  },
                   items: sub
                       .map((label) => DropdownMenuItem(
                             child: Text(label.toString()),
                             value: label,
                           ))
                       .toList(),
-                  hint: Text('Subject :'),
+                  hint: Text('${AppLocalizations.of(context).tr('subject')} :'),
                   onChanged: (value) {
                     setState(() {
                       subjectValue = value;

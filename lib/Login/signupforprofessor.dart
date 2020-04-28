@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
@@ -68,14 +70,17 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
     });
     print(request.body);
     if (request.body == "Nationalid used") {
-      Toast.Toast.show("this national id is used", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thisNationalIdIsUsed'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "email used") {
-      Toast.Toast.show("this email is used", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thisEmailIsUsed'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "Done") {
       Navigator.pop(context);
-      Toast.Toast.show("your request is added", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('yourRequestIsAdded'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
     /*.whenComplete(() {
@@ -95,6 +100,25 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
           child: Container(
             child: Column(
               children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 15),
+                  alignment: Alignment.topRight,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.translate,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => LanguageView(),
+                            fullscreenDialog: true),
+                      );
+                    },
+                  ),
+                ),
                 Expanded(
                   child: Image.asset('img/logo.png'),
                   flex: 1,
@@ -129,14 +153,18 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your ID",
-                              hintText: "Enter your ID",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourID'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourID'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your ID';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourID');
                               } else if (value.length < 6) {
-                                return 'Your ID must be longer than 6 numbers';
+                                return AppLocalizations.of(context)
+                                    .tr('yourIDMustBeLongerThan6Numbers');
                               } else {
                                 return null;
                               }
@@ -165,14 +193,18 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your email",
-                              hintText: "Enter your email",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourEmail'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourEmail'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your email';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourEmail');
                               } else if (!value.contains("@")) {
-                                return 'Your Email must contain @';
+                                return AppLocalizations.of(context)
+                                    .tr('yourEmailMustContain');
                               } else {
                                 return null;
                               }
@@ -201,14 +233,18 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your Password",
-                              hintText: "Enter your Password",
+                              labelText: AppLocalizations.of(context)
+                                  .tr('yourPassword'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourPassword'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your Password';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourPassword');
                               } else if (value.length < 6) {
-                                return 'Your Password must be longer than 6 numbers';
+                                return AppLocalizations.of(context)
+                                    .tr('yourPasswordMustBeLongerThan6Numbers');
                               } else {
                                 return null;
                               }
@@ -237,12 +273,15 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your Age",
-                              hintText: "Enter your Age",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourAge'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourAge'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your Age';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourAge');
                               } else {
                                 return null;
                               }
@@ -271,12 +310,15 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your graduated",
-                              hintText: "Enter your graduated",
+                              labelText: AppLocalizations.of(context)
+                                  .tr('yourGraduated'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourGraduated'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your graduated';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourGraduated');
                               } else {
                                 return null;
                               }
@@ -298,7 +340,8 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                 professorNameNode.unfocus();
                               },
                               decoration: InputDecoration(
-                                labelText: "Your name",
+                                labelText:
+                                    AppLocalizations.of(context).tr('yourName'),
                                 filled: true,
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
@@ -306,13 +349,16 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                     color: Colors.blue,
                                   ),
                                 ),
-                                hintText: "Enter your name",
+                                hintText: AppLocalizations.of(context)
+                                    .tr('enterYourName'),
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Enter Your name';
+                                  return AppLocalizations.of(context)
+                                      .tr('enterYourName');
                                 } else if (value.length < 7) {
-                                  return 'Your Name must be longer';
+                                  return AppLocalizations.of(context)
+                                      .tr('yourNameMustBeLonger');
                                 } else {
                                   return null;
                                 }
@@ -325,7 +371,7 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             child: Text(
-                              "login ",
+                              AppLocalizations.of(context).tr('buttonLogin'),
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 20),
                             ),
@@ -339,7 +385,9 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
-                                child: Text("sign up Professor",
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .tr('pageSignUpAsProfessor'),
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {

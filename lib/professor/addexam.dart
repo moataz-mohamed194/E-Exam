@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,8 +93,24 @@ class AddExamPage extends State<AddExam> {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
+              actions: <Widget>[
+                FlatButton(
+                  child: Icon(
+                    Icons.translate,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => LanguageView(),
+                          fullscreenDialog: true),
+                    );
+                  },
+                )
+              ],
               backgroundColor: Color(0xff254660),
-              title: Text("Add Exam"),
+              title: Text(AppLocalizations.of(context).tr('addExam')),
             ),
             backgroundColor: Color(0xff2e2e2e),
             body: Container(
@@ -115,9 +133,11 @@ class AddExamPage extends State<AddExam> {
                           value: subjectValue,
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter the subject';
+                              return AppLocalizations.of(context)
+                                  .tr('enterTheSubject');
                             } else if (value == " ") {
-                              return 'Enter the subject';
+                              return AppLocalizations.of(context)
+                                  .tr('enterTheSubject');
                             } else {
                               return null;
                             }
@@ -128,7 +148,8 @@ class AddExamPage extends State<AddExam> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('Subject :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('subject')} :'),
                           onChanged: (value) {
                             setState(() {
                               subjectValue = value;
@@ -147,12 +168,15 @@ class AddExamPage extends State<AddExam> {
                         child: DateTimeField(
                           format: format,
                           decoration: InputDecoration(
-                            labelText: "When the exam will be",
-                            hintText: "Enter when the exam will be",
+                            labelText: AppLocalizations.of(context)
+                                .tr('whenTheExamWillBe'),
+                            hintText: AppLocalizations.of(context)
+                                .tr('enterWhenTheExamWillBe'),
                           ),
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter the time of exam';
+                              return AppLocalizations.of(context)
+                                  .tr('enterTheTimeOfExam');
                             } else {
                               return null;
                             }
@@ -186,9 +210,11 @@ class AddExamPage extends State<AddExam> {
                           value: timeValue,
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter the time';
+                              return AppLocalizations.of(context)
+                                  .tr('enterTheTime');
                             } else if (value == " ") {
-                              return 'Enter the time';
+                              return AppLocalizations.of(context)
+                                  .tr('enterTheTime');
                             } else {
                               return null;
                             }
@@ -199,7 +225,8 @@ class AddExamPage extends State<AddExam> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('How long of your exam :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('howLongOfYourExam')} :'),
                           onChanged: (value) {
                             setState(() {
                               timeValue = value;
@@ -216,7 +243,8 @@ class AddExamPage extends State<AddExam> {
                           value: numberValue,
                           validator: (value) {
                             if (value == null && numberValue == null) {
-                              return 'Enter number of chapter';
+                              return AppLocalizations.of(context)
+                                  .tr('enterNumberOfChapter');
                             } else {
                               return null;
                             }
@@ -227,7 +255,8 @@ class AddExamPage extends State<AddExam> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('Number of chapter :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('numberOfChapter')} :'),
                           onChanged: (value) {
                             setState(() {
                               numberValue = value;
@@ -255,7 +284,9 @@ class AddExamPage extends State<AddExam> {
                                       }));
                                 }
                               },
-                              child: Text("Choose chapter",
+                              child: Text(
+                                  AppLocalizations.of(context)
+                                      .tr('chooseChapter'),
                                   style: TextStyle(color: Colors.white)),
                               color: Colors.blue,
                             ))),

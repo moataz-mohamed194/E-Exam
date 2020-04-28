@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -90,15 +92,19 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
                     child: Column(
                   children: <Widget>[
                     Text("${data[index]['subject']}"),
-                    Text("Chapter :${data[index]['numberofchapter']}"),
-                    Text("level :${data[index]['level']}"),
-                    Text("Question :${data[index]['Question']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('chapter')} :${data[index]['numberofchapter']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('Level')} ${data[index]['level']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('Question')} :${data[index]['Question']}"),
                     Text("(A) ${data[index]['answer1']}"),
                     Text("(B) ${data[index]['answer2']}"),
                     Text("(C) ${data[index]['answer3']}"),
                     Text("(D) ${data[index]['answer4']}"),
-                    Text("Correct answer :${data[index]['correctanswer']}"),
-                    Text("bank:${data[index]['bank']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('correctAnswer')} :${data[index]['correctanswer']}"),
+                    //Text("bank:${data[index]['bank']}"),
                   ],
                 ));
               } else {
@@ -121,11 +127,14 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
                 return Card(
                     child: Column(
                   children: <Widget>[
-                    Text("Question :${data1[index]['Question']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('Question')} :${data1[index]['Question']}"),
                     Text("${data1[index]['subject']}"),
-                    Text("Chapter :${data1[index]['numberofchapter']}"),
-                    Text("Correct answer :${data1[index]['correctanswer']}"),
-                    Text("Bank:${data1[index]['bank']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('chapter')} :${data1[index]['numberofchapter']}"),
+                    Text(
+                        "${AppLocalizations.of(context).tr('correctAnswer')}:${data1[index]['correctanswer']}"),
+                    //Text("Bank:${data1[index]['bank']}"),
                   ],
                 ));
               } else {
@@ -151,8 +160,23 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Question Bank"),
+        title: Text(AppLocalizations.of(context).tr('questionBank')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
@@ -173,7 +197,8 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
                               value: label,
                             ))
                         .toList(),
-                    hint: Text('Type of question :'),
+                    hint: Text(
+                        '${AppLocalizations.of(context).tr('typeOfQuestion')} :'),
                     onChanged: (value) {
                       setState(() {
                         subjectValue = value;
@@ -194,7 +219,8 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
                               value: label,
                             ))
                         .toList(),
-                    hint: Text('Subject :'),
+                    hint:
+                        Text('${AppLocalizations.of(context).tr('subject')} :'),
                     onChanged: (value) {
                       setState(() {
                         number.clear();
@@ -222,7 +248,8 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
                                         value: label,
                                       ))
                                   .toList(),
-                              hint: Text('chapter :'),
+                              hint: Text(
+                                  '${AppLocalizations.of(context).tr('chapter')} :'),
                               onChanged: (value) {
                                 setState(() {
                                   numberValue = value;
@@ -239,7 +266,8 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
                                         value: label,
                                       ))
                                   .toList(),
-                              hint: Text('Level :'),
+                              hint: Text(
+                                  '${AppLocalizations.of(context).tr('Level')}'),
                               onChanged: (value) {
                                 setState(() {
                                   levelValue = value;

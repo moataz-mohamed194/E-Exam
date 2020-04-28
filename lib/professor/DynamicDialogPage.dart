@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 
@@ -29,7 +27,7 @@ class DynamicDialog extends StatefulWidget {
 class _DynamicDialogState extends State<DynamicDialog> {
   GlobalState _store = GlobalState.instance;
   int counter = 1, counterToSave = 0;
-  String button = "Next",
+  String button,
       result = "[",
       _title,
       valueMCQLevelA,
@@ -58,7 +56,6 @@ class _DynamicDialogState extends State<DynamicDialog> {
   }
 
   void counterTrueAndFalse(String subject) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http.post(url,
         body: {"action": "counterTrueAndFalse", "subject": "$_title"});
@@ -75,7 +72,6 @@ class _DynamicDialogState extends State<DynamicDialog> {
   }
 
   void counterMCQ(String subject) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = "http://${_store.ipAddress}/app/professor.php";
     final response = await http
         .post(url, body: {"action": "counterMCQ", "subject": "$subject"});
@@ -165,7 +161,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
         valueMCQLevelA = "0";
         if (counter == int.parse(numberValue)) {
           setState(() {
-            button = "Done";
+            button = AppLocalizations.of(context).tr('Done');
           });
         }
       });
@@ -225,7 +221,8 @@ class _DynamicDialogState extends State<DynamicDialog> {
               "$add", "$q", "C", "mcq", "${data[i]['countOfMCQLevelC']}");
       q++;
       if (q == int.parse(_store.get("numberValue"))) {
-        Toast.Toast.show("that Exam is added", context,
+        Toast.Toast.show(
+            AppLocalizations.of(context).tr('thatExamIsAdded'), context,
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
 
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -238,7 +235,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
   Widget build(BuildContext context) {
     String numberValue = _store.get("numberValue");
     return AlertDialog(
-      title: Text('Chapter $counter'),
+      title: Text('${AppLocalizations.of(context).tr('chapter')} $counter'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -254,7 +251,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                             ))
                         .toList(),
                     hint: Text(
-                      'Number of true and false question  :',
+                      '${AppLocalizations.of(context).tr('numberOfTrueAndFalseQuestion')} :',
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 29),
                     ),
@@ -283,7 +280,8 @@ class _DynamicDialogState extends State<DynamicDialog> {
                                   ))
                               .toList(),
                           hint: Text(
-                            'Number of question in level A :',
+                            //AppLocalizations.of(context).tr('numberOfTrueAndFalseQuestion')
+                            '${AppLocalizations.of(context).tr('numberOfQuestionInLevel')} A :',
                             style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width / 29),
@@ -315,7 +313,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                                   ))
                               .toList(),
                           hint: Text(
-                            'Number of question in level B :',
+                            '${AppLocalizations.of(context).tr('numberOfQuestionInLevel')} B :',
                             style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width / 29),
@@ -346,7 +344,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                                   ))
                               .toList(),
                           hint: Text(
-                            'Number of question in level C :',
+                            '${AppLocalizations.of(context).tr('numberOfQuestionInLevel')} C :',
                             style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width / 29),
@@ -367,13 +365,17 @@ class _DynamicDialogState extends State<DynamicDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text('Cancel'),
+          child: Text(AppLocalizations.of(context).tr('Cancel')),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
-          child: numberValue == "1" ? Text('Done') : Text('$button'),
+          child: numberValue == "1" || int.parse(numberValue) == counter
+              ? Text(AppLocalizations.of(context).tr('Done'))
+              : numberValue != "1"
+                  ? Text(AppLocalizations.of(context).tr('Next'))
+                  : Text('$button'),
           onPressed: () {
             nextChapter(valueTrueAndFalse, valueMCQLevelA, valueMCQLevelB,
                 valueMCQLevelC);

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -310,12 +312,12 @@ class GetExamPage extends State<GetExam> {
     Alert(
       context: context,
       title: "$title",
-      desc: "Result:$result %",
+      desc: "${AppLocalizations.of(context).tr('Result')}:$result %",
       image: Image.asset("$img"),
       buttons: [
         DialogButton(
           child: Text(
-            "Finish",
+            "${AppLocalizations.of(context).tr('Finish')}:$result",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
@@ -335,8 +337,23 @@ class GetExamPage extends State<GetExam> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Exam"),
+        title: Text(AppLocalizations.of(context).tr('exam')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       floatingActionButton: FloatingActionButton(
@@ -348,12 +365,13 @@ class GetExamPage extends State<GetExam> {
               double final2 = final1 * 100;
               double final3 = double.parse(final2.toStringAsFixed(2));
               if (final2 >= 50.0) {
-                word = 'You Passed';
+                word = '${AppLocalizations.of(context).tr('Result')}';
                 img = 'img/success.png';
 
                 _onAlertWithCustomImagePressed(context, word, final3, img);
               } else {
-                word = 'You Failed';
+                word = AppLocalizations.of(context).tr('Failed');
+                // double final3 = double.parse(final2.toStringAsFixed(2));
                 img = 'img/failed.png';
                 _onAlertWithCustomImagePressed(context, word, final3, img);
               }

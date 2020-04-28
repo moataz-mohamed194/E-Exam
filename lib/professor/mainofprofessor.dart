@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:exam/professor/addchapter.dart';
 import 'package:exam/professor/getchapter.dart';
 import 'package:exam/professor/showqueation.dart';
@@ -66,11 +68,12 @@ class MainProfessorPage extends State<MainProfessor> {
     return Card(
       child: Column(
         children: <Widget>[
-          Text("Name: $realName"),
-          Text("Email: $email"),
-          Text("National id: $nationalId"),
-          Text("Graduted: $graduated"),
-          Text("Age: $age"),
+          Text("${AppLocalizations.of(context).tr('name')}: $realName"),
+          Text("${AppLocalizations.of(context).tr('email')}: $email"),
+          Text("${AppLocalizations.of(context).tr('nationalID')}: $nationalId"),
+          Text(
+              "${AppLocalizations.of(context).tr('graduatedFrom')}: $graduated"),
+          Text("${AppLocalizations.of(context).tr('yourAge')}: $age"),
         ],
       ),
     );
@@ -119,6 +122,21 @@ class MainProfessorPage extends State<MainProfessor> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(
+                Icons.translate,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => LanguageView(), fullscreenDialog: true),
+                );
+              },
+            )
+          ],
           backgroundColor: Color(0xff254660),
           title: Text("E-exam"),
         ),
@@ -131,7 +149,7 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text('add chapter',
+                title: Text(AppLocalizations.of(context).tr('addChapter'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -140,7 +158,7 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text('get chapter',
+                title: Text(AppLocalizations.of(context).tr('getChapter'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -149,7 +167,7 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text('add qustion',
+                title: Text(AppLocalizations.of(context).tr('addQuestion'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -158,7 +176,7 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text('show qustion',
+                title: Text(AppLocalizations.of(context).tr('showQuestion'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -167,7 +185,7 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text('add exam',
+                title: Text(AppLocalizations.of(context).tr('addExam'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -176,7 +194,7 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text('log out',
+                title: Text(AppLocalizations.of(context).tr('logOut'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   logout();
@@ -193,7 +211,10 @@ class MainProfessorPage extends State<MainProfessor> {
                 child: Container(
               width: MediaQuery.of(context).size.width / 2,
               child: Wrap(
-                children: <Widget>[Text("Welcome professor :\n $realName")],
+                children: <Widget>[
+                  Text(
+                      "${AppLocalizations.of(context).tr('welcomeProfessor')}:\n $realName")
+                ],
               ),
             )),
             Container(
@@ -205,7 +226,8 @@ class MainProfessorPage extends State<MainProfessor> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(bottom: 10),
-                  child: Text("the subjects you teach :"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('subjectsYouTeach')}:"),
                 ),
                 Container(
                     height: 70,

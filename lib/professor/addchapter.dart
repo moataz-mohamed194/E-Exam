@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,20 +50,30 @@ class AddChapterPage extends State<AddChapter> {
     controllerChapterName = new TextEditingController();
   }
 
-  var d;
+  var request;
   addChapter(String subjectName, String chapterName) async {
     var url = "http://${_store.ipAddress}/app/professor.php";
-    d = await http.post(url, body: {
+    request = await http.post(url, body: {
       "action": "add_chapter",
       "subjectname": subjectName,
       "chaptername": chapterName
     }).catchError((e) {
       print("00000000000000000000000$e");
-    }).whenComplete(() {
-      Toast.Toast.show("that chapter is added", context,
+    });
+    //.whenComplete(() {
+    print(request.body);
+    if (request.body == "name used") {
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('nameOfChapterIsUsed'), context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else {
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thatChapterIsAdded'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
-    });
+    }
+
+    // });
   }
 
   @override
@@ -69,8 +81,23 @@ class AddChapterPage extends State<AddChapter> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(
+                Icons.translate,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => LanguageView(), fullscreenDialog: true),
+                );
+              },
+            )
+          ],
           backgroundColor: Color(0xff254660),
-          title: Text("Add Chapter"),
+          title: Text(AppLocalizations.of(context).tr('addChapter')),
         ),
         backgroundColor: Color(0xff2e2e2e),
         body: Container(
@@ -91,7 +118,8 @@ class AddChapterPage extends State<AddChapter> {
                       textInputAction: TextInputAction.next,
                       onSaved: (input) => chapterNameSave = input,
                       decoration: InputDecoration(
-                        labelText: "chapter name",
+                        labelText:
+                            AppLocalizations.of(context).tr('chapterName'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -99,11 +127,13 @@ class AddChapterPage extends State<AddChapter> {
                             color: Colors.blue,
                           ),
                         ),
-                        hintText: "Enter chapter name",
+                        hintText:
+                            AppLocalizations.of(context).tr('enterChapterName'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Enter chapter name';
+                          return AppLocalizations.of(context)
+                              .tr('enterChapterName');
                         } else {
                           return null;
                         }
@@ -119,9 +149,11 @@ class AddChapterPage extends State<AddChapter> {
                       value: subjectValue,
                       validator: (value) {
                         if (value == null) {
-                          return 'Enter the subject';
+                          return AppLocalizations.of(context)
+                              .tr('enterTheSubject');
                         } else if (value == " ") {
-                          return 'Enter the subject';
+                          return AppLocalizations.of(context)
+                              .tr('enterTheSubject');
                         } else {
                           return null;
                         }
@@ -132,7 +164,8 @@ class AddChapterPage extends State<AddChapter> {
                                 value: label,
                               ))
                           .toList(),
-                      hint: Text('Subject :'),
+                      hint: Text(
+                          '${AppLocalizations.of(context).tr('subject')} :'),
                       onChanged: (value) {
                         setState(() {
                           subjectValue = value;
@@ -151,7 +184,8 @@ class AddChapterPage extends State<AddChapter> {
                                   controllerChapterName.text, subjectValue);
                             }
                           },
-                          child: Text("add chapter",
+                          child: Text(
+                              AppLocalizations.of(context).tr('addChapter'),
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),

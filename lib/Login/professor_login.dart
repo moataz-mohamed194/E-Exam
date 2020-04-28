@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,14 +67,17 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
         Navigator.of(context).pushNamedAndRemoveUntil(
             '/mainprofessor', (Route<dynamic> route) => false);
 
-        Toast.Toast.show("Welcome to our app", context,
+        Toast.Toast.show(
+            AppLocalizations.of(context).tr('welcomeToOurApp'), context,
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       } else {
-        Toast.Toast.show("Check your password ", context,
+        Toast.Toast.show(
+            AppLocalizations.of(context).tr('checkYourPassword'), context,
             duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
-      Toast.Toast.show("Check your  Email", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('checkYourEmail'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
   }
@@ -83,11 +88,30 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldState,
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xFF2E2E2E),
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Container(
+              margin:
+                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 15),
+              alignment: Alignment.topRight,
+              child: FlatButton(
+                child: Icon(
+                  Icons.translate,
+                  color: Colors.blue,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => LanguageView(), fullscreenDialog: true),
+                  );
+                },
+              ),
+            ),
             Expanded(
               child: Image.asset('img/logo.png'),
               flex: 1,
@@ -116,17 +140,20 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
-                              labelText: "Your Email",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourEmail'),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.blue,
                                 ),
                               ),
-                              hintText: "Enter your Email",
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourEmail'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your Email';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourEmail');
                               } else {
                                 return null;
                               }
@@ -155,14 +182,18 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                                     color: Colors.blue,
                                   ),
                                 ),
-                                labelText: "Your Password",
-                                hintText: "Enter your Password",
+                                labelText: AppLocalizations.of(context)
+                                    .tr('yourPassword'),
+                                hintText: AppLocalizations.of(context)
+                                    .tr('enterYourPassword'),
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Enter Your Password';
+                                  return AppLocalizations.of(context)
+                                      .tr('enterYourPassword');
                                 } else if (value.length < 6) {
-                                  return 'Your Password must be longer than 6 numbers';
+                                  return AppLocalizations.of(context).tr(
+                                      'YourPasswordMustBeLongerThan6Numbers');
                                 } else {
                                   return null;
                                 }
@@ -176,7 +207,9 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                       child: Container(
                         width: MediaQuery.of(context).size.width / 2,
                         child: FlatButton(
-                          child: Text("Login as Professor",
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .tr('loginAsProfessor'),
                               style: TextStyle(color: Colors.white)),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
@@ -185,7 +218,8 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                                 content: Row(
                                   children: <Widget>[
                                     new CircularProgressIndicator(),
-                                    new Text("Loading ...")
+                                    new Text(
+                                        "${AppLocalizations.of(context).tr('loading')} ...")
                                   ],
                                 ),
                               ));
@@ -202,7 +236,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       child: Text(
-                        "sgin up ",
+                        AppLocalizations.of(context).tr('buttonSignUp'),
                         style: TextStyle(color: Colors.grey, fontSize: 20),
                       ),
                       onTap: () {

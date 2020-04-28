@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
@@ -111,7 +113,8 @@ class EditSubjectPage extends State<EditSubject> {
 
     var response = await http.post(url, body: update);
 
-    Toast.Toast.show("that subject is edited", context,
+    Toast.Toast.show(
+        AppLocalizations.of(context).tr('thatSubjectIsEdited'), context,
         duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     Navigator.pop(context);
     Navigator.pushReplacement(
@@ -129,6 +132,21 @@ class EditSubjectPage extends State<EditSubject> {
       appBar: AppBar(
         backgroundColor: Color(0xff254660),
         title: Text("Edit Subject"),
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Center(
@@ -156,12 +174,15 @@ class EditSubjectPage extends State<EditSubject> {
                             color: Colors.blue,
                           ),
                         ),
-                        labelText: "Current subject name:${_store.get('Name')}",
-                        hintText: "Enter subject name",
+                        labelText:
+                            "${AppLocalizations.of(context).tr('currentSubjectName')}:${_store.get('Name')}",
+                        hintText:
+                            AppLocalizations.of(context).tr('enterSubjectName'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Enter subject name';
+                          return AppLocalizations.of(context)
+                              .tr('enterSubjectName');
                         } else {
                           return null;
                         }
@@ -176,11 +197,13 @@ class EditSubjectPage extends State<EditSubject> {
                     child: DropdownButtonFormField<dynamic>(
                       value: _semester,
                       decoration: InputDecoration(
-                        labelText: "Current semester :$semester",
+                        labelText:
+                            "${AppLocalizations.of(context).tr('currentSemester')} :$semester",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return 'Enter semester';
+                          return AppLocalizations.of(context)
+                              .tr('enterSemester');
                         } else {
                           _store.set('semester', _semester);
 
@@ -208,11 +231,12 @@ class EditSubjectPage extends State<EditSubject> {
                     child: DropdownButtonFormField<dynamic>(
                       value: _level,
                       decoration: InputDecoration(
-                        labelText: "Current level :$level",
+                        labelText:
+                            "${AppLocalizations.of(context).tr('currentLevel')} :$level",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return 'Enter level';
+                          return AppLocalizations.of(context).tr('enterLevel');
                         } else {
                           _store.set('level', _level);
 
@@ -243,11 +267,13 @@ class EditSubjectPage extends State<EditSubject> {
                     child: DropdownButtonFormField<dynamic>(
                       value: _department,
                       decoration: InputDecoration(
-                        labelText: "Current department :$department",
+                        labelText:
+                            "${AppLocalizations.of(context).tr('currentDepartment')} :$department",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return 'Enter Department';
+                          return AppLocalizations.of(context)
+                              .tr('enterDepartment');
                         } else {
                           _store.set('department', _department);
 
@@ -275,11 +301,13 @@ class EditSubjectPage extends State<EditSubject> {
                     child: DropdownButtonFormField<dynamic>(
                       value: _professor,
                       decoration: InputDecoration(
-                        labelText: "Current professor :$professor",
+                        labelText:
+                            "${AppLocalizations.of(context).tr('currentProfessor')} :$professor",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return 'Enter Professor';
+                          return AppLocalizations.of(context)
+                              .tr('enterProfessor');
                         } else {
                           _store.set('professor', _professor);
 
@@ -306,8 +334,8 @@ class EditSubjectPage extends State<EditSubject> {
                         Icons.save,
                         color: Colors.white,
                       ),
-                      label:
-                          Text("Edit", style: TextStyle(color: Colors.white)),
+                      label: Text(AppLocalizations.of(context).tr('edit'),
+                          style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           addSubject(

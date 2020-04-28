@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
@@ -86,7 +88,7 @@ class AddSubjectPage extends State<AddSubject> {
   Future<void> addSubject(String name, String department, String professor,
       String level, String semester) async {
     var url = "http://${_store.ipAddress}/app/admin.php";
-    await http.post(url, body: {
+    var request = await http.post(url, body: {
       "action": "addsubject",
       "name": name,
       "department": department,
@@ -95,11 +97,18 @@ class AddSubjectPage extends State<AddSubject> {
       "semester": semester,
     }).catchError((e) {
       print(e);
-    }).whenComplete(() {
-      Toast.Toast.show("that subject is add", context,
+    });
+    print(request.body);
+    if (request.body == "name used") {
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('nameOfDepartmentIsUsed'), context,
+          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+    } else {
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thatSubjectIsAdd'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
-    });
+    }
   }
 
   @override
@@ -107,8 +116,23 @@ class AddSubjectPage extends State<AddSubject> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Add Subject"),
+        title: Text(AppLocalizations.of(context).tr('addSubject')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
@@ -131,7 +155,8 @@ class AddSubjectPage extends State<AddSubject> {
                           controller: subjectName,
                           onSaved: (input) => subjectNameSave = input,
                           decoration: InputDecoration(
-                            labelText: "subject name",
+                            labelText:
+                                AppLocalizations.of(context).tr('subjectName'),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -139,11 +164,13 @@ class AddSubjectPage extends State<AddSubject> {
                                 color: Colors.blue,
                               ),
                             ),
-                            hintText: "Enter subject name",
+                            hintText: AppLocalizations.of(context)
+                                .tr('enterSubjectName'),
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Enter subject name';
+                              return AppLocalizations.of(context)
+                                  .tr('enterSubjectName');
                             } else {
                               return null;
                             }
@@ -159,9 +186,11 @@ class AddSubjectPage extends State<AddSubject> {
                           value: _semester,
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter semester';
+                              return AppLocalizations.of(context)
+                                  .tr('enterSemester');
                             } else if (value == " ") {
-                              return 'Enter semester';
+                              return AppLocalizations.of(context)
+                                  .tr('enterSemester');
                             } else {
                               return null;
                             }
@@ -172,7 +201,8 @@ class AddSubjectPage extends State<AddSubject> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('Semester :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('Semester')} :'),
                           onChanged: (value) {
                             setState(() {
                               _semester = value;
@@ -189,9 +219,11 @@ class AddSubjectPage extends State<AddSubject> {
                           value: _level,
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter level';
+                              return AppLocalizations.of(context)
+                                  .tr('enterLevel');
                             } else if (value == " ") {
-                              return 'Enter level';
+                              return AppLocalizations.of(context)
+                                  .tr('enterLevel');
                             } else {
                               return null;
                             }
@@ -202,7 +234,8 @@ class AddSubjectPage extends State<AddSubject> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('level :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('level')} :'),
                           onChanged: (value) {
                             setState(() {
                               nameOfDepartment(value);
@@ -222,9 +255,11 @@ class AddSubjectPage extends State<AddSubject> {
                           value: _department,
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter Department';
+                              return AppLocalizations.of(context)
+                                  .tr('enterDepartment');
                             } else if (value == " ") {
-                              return 'Enter Department';
+                              return AppLocalizations.of(context)
+                                  .tr('enterDepartment');
                             } else {
                               return null;
                             }
@@ -235,7 +270,8 @@ class AddSubjectPage extends State<AddSubject> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('Department :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('Department')} :'),
                           onChanged: (value) {
                             setState(() {
                               _department = value;
@@ -252,9 +288,11 @@ class AddSubjectPage extends State<AddSubject> {
                           value: _professor,
                           validator: (value) {
                             if (value == null) {
-                              return 'Enter Professor';
+                              return AppLocalizations.of(context)
+                                  .tr('enterProfessor');
                             } else if (value == " ") {
-                              return 'Enter Professor';
+                              return AppLocalizations.of(context)
+                                  .tr('enterProfessor');
                             } else {
                               return null;
                             }
@@ -265,7 +303,8 @@ class AddSubjectPage extends State<AddSubject> {
                                     value: label,
                                   ))
                               .toList(),
-                          hint: Text('Professor :'),
+                          hint: Text(
+                              '${AppLocalizations.of(context).tr('Professor')} :'),
                           onChanged: (value) {
                             setState(() {
                               _professor = value;
@@ -286,7 +325,8 @@ class AddSubjectPage extends State<AddSubject> {
                                   _professor, _level, _semester);
                             }
                           },
-                          label: Text("ADD Subject",
+                          label: Text(
+                              AppLocalizations.of(context).tr('addSubject'),
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -48,15 +50,18 @@ class GetSubjectPage extends State<GetSubject> {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text("Subject Name :${data[index]['Name']}"),
+                    child: Text(
+                        "${AppLocalizations.of(context).tr('subjectName')} :${data[index]['Name']}"),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text("Professor :${data[index]['professor']}"),
+                    child: Text(
+                        "${AppLocalizations.of(context).tr('Professor')} :${data[index]['professor']}"),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text("Department :${data[index]['department']}"),
+                    child: Text(
+                        "${AppLocalizations.of(context).tr('Department')} :${data[index]['department']}"),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -64,7 +69,8 @@ class GetSubjectPage extends State<GetSubject> {
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
-                    child: Text("Semester :${data[index]['semester']}"),
+                    child: Text(
+                        "${AppLocalizations.of(context).tr('Semester')} :${data[index]['semester']}"),
                   ),
                   Card(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -87,7 +93,7 @@ class GetSubjectPage extends State<GetSubject> {
                                 builder: (context) => EditSubject()));
                       },
                       label: Text(
-                        "Edit",
+                        AppLocalizations.of(context).tr('edit'),
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blue,
@@ -105,8 +111,23 @@ class GetSubjectPage extends State<GetSubject> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Subjects"),
+        title: Text(AppLocalizations.of(context).tr('Subjects')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(

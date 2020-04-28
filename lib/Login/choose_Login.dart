@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Admin_login.dart';
@@ -21,6 +23,23 @@ class ChooseLoginPage extends State<ChooseLogin> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                Container(
+                  alignment: Alignment.topRight,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.translate,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => LanguageView(),
+                            fullscreenDialog: true),
+                      );
+                    },
+                  ),
+                ),
                 Expanded(
                   child: Image.asset('img/logo.png'),
                   flex: 2,
@@ -35,7 +54,9 @@ class ChooseLoginPage extends State<ChooseLogin> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 child: Text(
-                                  " admin",
+                                  //  " admin"
+                                  AppLocalizations.of(context)
+                                      .tr('firstButtonInChooseLogin'),
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /
@@ -56,7 +77,9 @@ class ChooseLoginPage extends State<ChooseLogin> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 child: Text(
-                                  "Professor",
+                                  // "Professor",
+                                  AppLocalizations.of(context)
+                                      .tr('secondButtonInChooseLogin'),
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /
@@ -78,7 +101,9 @@ class ChooseLoginPage extends State<ChooseLogin> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 child: Text(
-                                  "Student",
+                                  // "Student",
+                                  AppLocalizations.of(context)
+                                      .tr('thirdButtonInChooseLogin'),
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,13 +72,13 @@ class MainStudentPage extends State<MainStudent> {
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          Text("Email: $email"),
-          Text("National ID: $nationalId"),
-          Text("Name: $name"),
-          Text("Collage ID: $collageId"),
-          Text("Level: $level"),
-          Text("Password: $password"),
-          Text("Department: $department"),
+          Text("${AppLocalizations.of(context).tr('email')}: $email"),
+          Text("${AppLocalizations.of(context).tr('nationalID')}: $nationalId"),
+          Text("${AppLocalizations.of(context).tr('name')}: $name"),
+          Text("${AppLocalizations.of(context).tr('collageID')}: $collageId"),
+          Text("${AppLocalizations.of(context).tr('level')}: $level"),
+          Text("${AppLocalizations.of(context).tr('Password')}: $password"),
+          Text("${AppLocalizations.of(context).tr('department')}: $department"),
         ],
       ),
     );
@@ -111,6 +113,21 @@ class MainStudentPage extends State<MainStudent> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
         title: Text("E-exam"),
       ),
@@ -123,7 +140,7 @@ class MainStudentPage extends State<MainStudent> {
             ),
             Divider(),
             ListTile(
-              title: Text('get exam',
+              title: Text(AppLocalizations.of(context).tr('exam'),
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 Navigator.push(context,
@@ -132,8 +149,8 @@ class MainStudentPage extends State<MainStudent> {
             ),
             Divider(),
             ListTile(
-              title:
-                  Text('Bank', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(AppLocalizations.of(context).tr('bank'),
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 Navigator.push(
                     context,
@@ -143,7 +160,7 @@ class MainStudentPage extends State<MainStudent> {
             ),
             Divider(),
             ListTile(
-              title: Text('log out',
+              title: Text(AppLocalizations.of(context).tr('logOut'),
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 logout();
@@ -160,7 +177,10 @@ class MainStudentPage extends State<MainStudent> {
                 child: Container(
               width: MediaQuery.of(context).size.width / 2,
               child: Wrap(
-                children: <Widget>[Text("Welcome to our app :\n $name")],
+                children: <Widget>[
+                  Text(
+                      "${AppLocalizations.of(context).tr('Welcome')} :\n $name")
+                ],
               ),
             )),
             Container(
@@ -172,7 +192,8 @@ class MainStudentPage extends State<MainStudent> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(bottom: 10),
-                  child: Text("the subjects you teach :"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('subjectsYouTeach')} :"),
                 ),
                 Container(
                     height: 70,

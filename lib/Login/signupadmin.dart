@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
@@ -68,14 +70,17 @@ class AdminSignUpPage extends State<AdminSignUp> {
     });
     print(request.body);
     if (request.body == "Nationalid used") {
-      Toast.Toast.show("this national id is used", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thisNationalIdIsUsed'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "email used") {
-      Toast.Toast.show("this email is used", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thisEmailIsUsed'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "Done") {
       Navigator.pop(context);
-      Toast.Toast.show("your request is added", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('yourRequestIsAdded'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
   }
@@ -90,6 +95,25 @@ class AdminSignUpPage extends State<AdminSignUp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 15),
+                  alignment: Alignment.topRight,
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.translate,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => LanguageView(),
+                            fullscreenDialog: true),
+                      );
+                    },
+                  ),
+                ),
                 Expanded(
                   child: Image.asset('img/logo.png'),
                   flex: 1,
@@ -117,7 +141,8 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   context, adminNationalIdNode, adminEmailNode);
                             },
                             decoration: InputDecoration(
-                              labelText: "Your id",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourID'),
                               filled: true,
                               fillColor: Colors.white,
                               border: OutlineInputBorder(
@@ -125,11 +150,16 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              hintText: "Enter your id",
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourID'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your id';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourID');
+                              } else if (value.length < 6) {
+                                return AppLocalizations.of(context)
+                                    .tr('yourIDMustBeLongerThan6Numbers');
                               } else {
                                 return null;
                               }
@@ -158,14 +188,18 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your Email",
-                              hintText: "Enter your Email",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourEmail'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourEmail'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your Email';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourEmail');
                               } else if (!value.contains("@")) {
-                                return 'Your Email must contain @';
+                                return AppLocalizations.of(context)
+                                    .tr('yourEmailMustContain');
                               } else {
                                 return null;
                               }
@@ -194,12 +228,18 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your Password",
-                              hintText: "Enter your Password",
+                              labelText: AppLocalizations.of(context)
+                                  .tr('yourPassword'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourPassword'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your Password';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourPassword');
+                              } else if (value.length < 6) {
+                                return AppLocalizations.of(context)
+                                    .tr('yourPasswordMustBeLongerThan6Numbers');
                               } else {
                                 return null;
                               }
@@ -228,12 +268,15 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: "Your graduted",
-                              hintText: "Enter your graduted",
+                              labelText: AppLocalizations.of(context)
+                                  .tr('yourGraduated'),
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourGraduated'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your graduted';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourGraduated');
                               } else {
                                 return null;
                               }
@@ -255,7 +298,8 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   context, adminAgeNode, adminNameNode);
                             },
                             decoration: InputDecoration(
-                              labelText: "Your age",
+                              labelText:
+                                  AppLocalizations.of(context).tr('yourAge'),
                               filled: true,
                               fillColor: Colors.white,
                               border: OutlineInputBorder(
@@ -263,11 +307,13 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              hintText: "Enter your age",
+                              hintText: AppLocalizations.of(context)
+                                  .tr('enterYourAge'),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Enter Your age';
+                                return AppLocalizations.of(context)
+                                    .tr('enterYourAge');
                               } else {
                                 return null;
                               }
@@ -296,14 +342,18 @@ class AdminSignUpPage extends State<AdminSignUp> {
                                     color: Colors.blue,
                                   ),
                                 ),
-                                labelText: "Your name",
-                                hintText: "Enter your name",
+                                labelText:
+                                    AppLocalizations.of(context).tr('yourName'),
+                                hintText: AppLocalizations.of(context)
+                                    .tr('enterYourName'),
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Enter Your name';
+                                  return AppLocalizations.of(context)
+                                      .tr('enterYourName');
                                 } else if (value.length < 7) {
-                                  return 'Your Name must be longer';
+                                  return AppLocalizations.of(context)
+                                      .tr('yourNameMustBeLonger');
                                 } else {
                                   return null;
                                 }
@@ -316,7 +366,7 @@ class AdminSignUpPage extends State<AdminSignUp> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             child: Text(
-                              "login ",
+                              AppLocalizations.of(context).tr('buttonLogin'),
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 20),
                             ),
@@ -330,7 +380,9 @@ class AdminSignUpPage extends State<AdminSignUp> {
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
-                                child: Text("sign up admin",
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .tr('pageSignUpAsAdmin'),
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {

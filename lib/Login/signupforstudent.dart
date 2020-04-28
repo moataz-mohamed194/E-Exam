@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
@@ -95,14 +97,17 @@ class StudentSignUpPage extends State<StudentSignUp> {
     });
     print(request.body);
     if (request.body == "Nationalid used") {
-      Toast.Toast.show("this national id is used", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thisNationalIdIsUsed'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "collageid used") {
-      Toast.Toast.show("this collage id is used", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thisEmailIsUsed'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "Doned") {
       Navigator.pop(context);
-      Toast.Toast.show("your data is added", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('yourDataIsAdded'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
     }
   }
@@ -117,6 +122,25 @@ class StudentSignUpPage extends State<StudentSignUp> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height / 15),
+                      alignment: Alignment.topRight,
+                      child: FlatButton(
+                        child: Icon(
+                          Icons.translate,
+                          color: Colors.blue,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => LanguageView(),
+                                fullscreenDialog: true),
+                          );
+                        },
+                      ),
+                    ),
                     Expanded(
                       child: Image.asset('img/logo.png'),
                       flex: 1,
@@ -154,14 +178,18 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                           color: Colors.blue,
                                         ),
                                       ),
-                                      labelText: "Your National ID",
-                                      hintText: "Enter your National ID",
+                                      labelText: AppLocalizations.of(context)
+                                          .tr('yourID'),
+                                      hintText: AppLocalizations.of(context)
+                                          .tr('enterYourID'),
                                     ),
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return 'Enter Your National ID';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterYourID');
                                       } else if (value.length < 6) {
-                                        return 'Your ID must be longer than 6 numbers';
+                                        return AppLocalizations.of(context).tr(
+                                            'yourIDMustBeLongerThan6Numbers');
                                       } else {
                                         return null;
                                       }
@@ -194,14 +222,18 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                           color: Colors.blue,
                                         ),
                                       ),
-                                      labelText: "Your id in card",
-                                      hintText: "Enter your id in card",
+                                      labelText: AppLocalizations.of(context)
+                                          .tr('yourCollegeId'),
+                                      hintText: AppLocalizations.of(context)
+                                          .tr('enterYourCollegeId'),
                                     ),
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return 'Enter Your id in card';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterYourCollegeId');
                                       } else if (value.length < 6) {
-                                        return 'Your ID must be longer than 6 numbers';
+                                        return AppLocalizations.of(context).tr(
+                                            'yourIDMustBeLongerThan6Numbers');
                                       } else {
                                         return null;
                                       }
@@ -233,14 +265,18 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                           color: Colors.blue,
                                         ),
                                       ),
-                                      labelText: "Your Name",
-                                      hintText: "Enter your Name",
+                                      labelText: AppLocalizations.of(context)
+                                          .tr('yourName'),
+                                      hintText: AppLocalizations.of(context)
+                                          .tr('enterYourName'),
                                     ),
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return 'Enter Your Name';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterYourName');
                                       } else if (value.length < 6) {
-                                        return 'Your ID must be longer than 6 numbers';
+                                        return AppLocalizations.of(context).tr(
+                                            'yourIDMustBeLongerThan6Numbers');
                                       } else {
                                         return null;
                                       }
@@ -272,14 +308,18 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                           color: Colors.blue,
                                         ),
                                       ),
-                                      labelText: "Your Passowrd",
-                                      hintText: "Enter your Passowrd",
+                                      labelText: AppLocalizations.of(context)
+                                          .tr('yourPassword'),
+                                      hintText: AppLocalizations.of(context)
+                                          .tr('enterYourPassword'),
                                     ),
                                     validator: (value) {
                                       if (value.isEmpty) {
-                                        return 'Enter Your Passowrd';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterYourPassword');
                                       } else if (value.length < 6) {
-                                        return 'Your ID must be longer than 6 numbers';
+                                        return AppLocalizations.of(context).tr(
+                                            'yourPasswordMustBeLongerThan6Numbers');
                                       } else {
                                         return null;
                                       }
@@ -298,9 +338,11 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                     value: levelValue,
                                     validator: (value) {
                                       if (value == null) {
-                                        return 'Enter your level';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterYourLevel');
                                       } else if (value == " ") {
-                                        return 'Enter your level';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterYourLevel');
                                       } else {
                                         return null;
                                       }
@@ -311,7 +353,8 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                               value: label,
                                             ))
                                         .toList(),
-                                    hint: Text('Level :'),
+                                    hint: Text(AppLocalizations.of(context)
+                                        .tr('Level')),
                                     onChanged: (value) {
                                       setState(() {
                                         nameOfDepartment(value);
@@ -334,9 +377,11 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                     value: departmentValue,
                                     validator: (value) {
                                       if (value == null) {
-                                        return 'Enter the subject';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterTheSubject');
                                       } else if (value == " ") {
-                                        return 'Enter the subject';
+                                        return AppLocalizations.of(context)
+                                            .tr('enterTheSubject');
                                       } else {
                                         return null;
                                       }
@@ -347,7 +392,8 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                               value: label,
                                             ))
                                         .toList(),
-                                    hint: Text('Subject :'),
+                                    hint: Text(AppLocalizations.of(context)
+                                        .tr('department')),
                                     onChanged: (value) {
                                       setState(() {
                                         departmentValue = value;
@@ -364,7 +410,8 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                   alignment: Alignment.centerRight,
                                   child: InkWell(
                                     child: Text(
-                                      "login ",
+                                      AppLocalizations.of(context)
+                                          .tr('buttonLogin'),
                                       style: TextStyle(
                                           color: Colors.grey, fontSize: 20),
                                     ),
@@ -379,7 +426,9 @@ class StudentSignUpPage extends State<StudentSignUp> {
                                       width:
                                           MediaQuery.of(context).size.width / 2,
                                       child: FlatButton(
-                                        child: Text("sign up Student",
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .tr('pageSignUpAsStudent'),
                                             style:
                                                 TextStyle(color: Colors.white)),
                                         onPressed: () {

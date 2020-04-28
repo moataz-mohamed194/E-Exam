@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,23 +98,28 @@ class MainAdminPage extends State<MainAdmin> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text("Name:${data[index]['realName']}"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('name')}:${data[index]['realName']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
-                  child: Text("He is:${data[index]['type']}"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('heIs')}:${data[index]['type']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
-                  child: Text("Email:${data[index]['Email']}"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('email')}:${data[index]['Email']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
-                  child: Text("National ID:${data[index]['Nationalid']}"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('nationalID')}:${data[index]['Nationalid']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
-                  child: Text("Graduted from:${data[index]['graduted']}"),
+                  child: Text(
+                      "${AppLocalizations.of(context).tr('graduatedFrom')}:${data[index]['graduted']}"),
                 ),
                 Row(
                   children: <Widget>[
@@ -192,7 +199,7 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('Profile',
+                title: Text(AppLocalizations.of(context).tr('Profile'),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -201,7 +208,8 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('add department',
+                title: Text(
+                    '${AppLocalizations.of(context).tr('addDepartment')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -210,7 +218,7 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('add subject',
+                title: Text('${AppLocalizations.of(context).tr('addSubject')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -219,7 +227,7 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('edit subject',
+                title: Text('${AppLocalizations.of(context).tr('editSubject')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -228,7 +236,7 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('log out',
+                title: Text('${AppLocalizations.of(context).tr('logOut')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   logout();
@@ -241,6 +249,21 @@ class MainAdminPage extends State<MainAdmin> {
         appBar: AppBar(
           backgroundColor: Color(0xff254660),
           title: Text("E-exam"),
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(
+                Icons.translate,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => LanguageView(), fullscreenDialog: true),
+                );
+              },
+            )
+          ],
         ),
         body: Container(
             child: Column(

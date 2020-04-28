@@ -211,10 +211,21 @@
 	//add new department to database
 	function addDepartment($name, $whenstart,$leader){
 		global $db;
+		foreach ($db->query("SELECT * FROM Department ;") as $result){
+   		$a[]=$result;
+		}
+		for($i=0;$i<count($a);$i++){
+			if($a[$i]['Name']==$name){
+				echo"name used";
+			return "used";
+			}
+			
+		}
+		echo"dd";
 		try{
 			$state=$db->prepare("INSERT INTO Department(Name,whenstart,leader)VALUES('$name','$whenstart','$leader')");
 			$state->execute();
-    		echo "Doned";
+    		//echo "Doned";
     	}catch(PDOException $e){
 			echo "failed"." ".$e->getMessage();
 		}

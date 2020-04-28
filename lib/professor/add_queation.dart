@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
+import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,7 +103,8 @@ class AddQuestionPage extends State<AddQuestion> {
       "correctanswer": correctAnswer,
       "bank": _value1.toString()
     }).whenComplete(() {
-      Toast.Toast.show("that queation is add", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thatQueationIsAdd'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
@@ -121,7 +124,8 @@ class AddQuestionPage extends State<AddQuestion> {
     }).catchError((e) {
       print(e);
     }).whenComplete(() {
-      Toast.Toast.show("that queation is add", context,
+      Toast.Toast.show(
+          AppLocalizations.of(context).tr('thatQueationIsAdd'), context,
           duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
@@ -149,9 +153,11 @@ class AddQuestionPage extends State<AddQuestion> {
                 value: levelValue,
                 validator: (value) {
                   if (value == null) {
-                    return 'Enter the Level of queation';
+                    return AppLocalizations.of(context)
+                        .tr('enterTheLevelOfQuestion');
                   } else if (value == " ") {
-                    return 'Enter the Level of queation';
+                    return AppLocalizations.of(context)
+                        .tr('enterTheLevelOfQuestion');
                   } else {
                     return null;
                   }
@@ -162,7 +168,8 @@ class AddQuestionPage extends State<AddQuestion> {
                           value: label,
                         ))
                     .toList(),
-                hint: Text('Level of queation :'),
+                hint: Text(
+                    '${AppLocalizations.of(context).tr('levelOfQuestion')} :'),
                 onChanged: (value) {
                   setState(() {
                     levelValue = value;
@@ -183,7 +190,7 @@ class AddQuestionPage extends State<AddQuestion> {
                 textInputAction: TextInputAction.next,
                 onSaved: (input) => answer1save = input,
                 decoration: InputDecoration(
-                  labelText: "answer1",
+                  labelText: AppLocalizations.of(context).tr('answer1'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -191,14 +198,14 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: "Enter answer1",
+                  hintText: AppLocalizations.of(context).tr('enterAnswer1'),
                 ),
                 onFieldSubmitted: (input) {
                   _fieldFocusChange(context, answer1node, answer2node);
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Enter answer1';
+                    return AppLocalizations.of(context).tr('enterAnswer1');
                   } else {
                     return null;
                   }
@@ -223,7 +230,7 @@ class AddQuestionPage extends State<AddQuestion> {
                   _fieldFocusChange(context, answer2node, answer3node);
                 },
                 decoration: InputDecoration(
-                  labelText: "answer2",
+                  labelText: AppLocalizations.of(context).tr('answer2'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -231,11 +238,11 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: "Enter answer2",
+                  hintText: AppLocalizations.of(context).tr('enterAnswer2'),
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Enter answer2';
+                    return AppLocalizations.of(context).tr('enterAnswer2');
                   } else {
                     return null;
                   }
@@ -255,7 +262,7 @@ class AddQuestionPage extends State<AddQuestion> {
                 },
                 onSaved: (input) => answer3save = input,
                 decoration: InputDecoration(
-                  labelText: "answer3",
+                  labelText: AppLocalizations.of(context).tr('answer3'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -263,14 +270,14 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: "Enter answer3",
+                  hintText: AppLocalizations.of(context).tr('enterAnswer3'),
                 ),
                 onFieldSubmitted: (input) {
                   _fieldFocusChange(context, answer3node, answer4node);
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Enter answer3';
+                    return AppLocalizations.of(context).tr('enterAnswer3');
                   } else {
                     return null;
                   }
@@ -290,7 +297,7 @@ class AddQuestionPage extends State<AddQuestion> {
                 },
                 onSaved: (input) => answer4save = input,
                 decoration: InputDecoration(
-                  labelText: "answer4",
+                  labelText: AppLocalizations.of(context).tr('answer4'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -298,14 +305,14 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: "Enter answer4",
+                  hintText: AppLocalizations.of(context).tr('enterAnswer4'),
                 ),
                 onFieldSubmitted: (input) {
                   answer4node.unfocus();
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Enter answer4';
+                    return AppLocalizations.of(context).tr('enterAnswer4');
                   } else {
                     return null;
                   }
@@ -321,9 +328,11 @@ class AddQuestionPage extends State<AddQuestion> {
                 value: MCQValue,
                 validator: (value) {
                   if (value == null) {
-                    return 'Enter the correct Answer';
+                    return AppLocalizations.of(context)
+                        .tr('enterTheCorrectAnswer');
                   } else if (value == " ") {
-                    return 'Enter the correct Answer';
+                    return AppLocalizations.of(context)
+                        .tr('enterTheCorrectAnswer');
                   } else {
                     return null;
                   }
@@ -332,7 +341,7 @@ class AddQuestionPage extends State<AddQuestion> {
                       child: Text(label.toString()),
                       value: label,
                     )).toList(),
-                hint: Text('Answer :'),
+                hint: Text('${AppLocalizations.of(context).tr('answer')} :'),
                 onChanged: (value) {
                   setState(() {
                     MCQValue = value;
@@ -359,9 +368,11 @@ class AddQuestionPage extends State<AddQuestion> {
                 value: trueAndFalseValue,
                 validator: (value) {
                   if (value == null) {
-                    return 'Enter the correct Answer';
+                    return AppLocalizations.of(context)
+                        .tr('enterTheCorrectAnswer');
                   } else if (value == " ") {
-                    return 'Enter the correct Answer';
+                    return AppLocalizations.of(context)
+                        .tr('enterTheCorrectAnswer');
                   } else {
                     return null;
                   }
@@ -372,7 +383,7 @@ class AddQuestionPage extends State<AddQuestion> {
                           value: label,
                         ))
                     .toList(),
-                hint: Text('Answer :'),
+                hint: Text('${AppLocalizations.of(context).tr('answer')} :'),
                 onChanged: (value) {
                   setState(() {
                     trueAndFalseValue = value;
@@ -390,8 +401,23 @@ class AddQuestionPage extends State<AddQuestion> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => LanguageView(), fullscreenDialog: true),
+              );
+            },
+          )
+        ],
         backgroundColor: Color(0xff254660),
-        title: Text("Add Question"),
+        title: Text(AppLocalizations.of(context).tr('addQuestion')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
@@ -418,7 +444,7 @@ class AddQuestionPage extends State<AddQuestion> {
                       textInputAction: TextInputAction.next,
                       onSaved: (input) => questionSave = input,
                       decoration: InputDecoration(
-                        labelText: "question",
+                        labelText: AppLocalizations.of(context).tr('Question'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -426,11 +452,13 @@ class AddQuestionPage extends State<AddQuestion> {
                             color: Colors.blue,
                           ),
                         ),
-                        hintText: "Enter question",
+                        hintText:
+                            AppLocalizations.of(context).tr('enterQuestion'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Enter question';
+                          return AppLocalizations.of(context)
+                              .tr('enterQuestion');
                         } else {
                           return null;
                         }
@@ -446,9 +474,11 @@ class AddQuestionPage extends State<AddQuestion> {
                       value: subjectValue,
                       validator: (value) {
                         if (value == null) {
-                          return 'Enter the subject';
+                          return AppLocalizations.of(context)
+                              .tr('enterSubjectName');
                         } else if (value == " ") {
-                          return 'Enter the subject';
+                          return AppLocalizations.of(context)
+                              .tr('enterSubjectName');
                         } else {
                           return null;
                         }
@@ -459,7 +489,8 @@ class AddQuestionPage extends State<AddQuestion> {
                                 value: label,
                               ))
                           .toList(),
-                      hint: Text('Subject :'),
+                      hint: Text(
+                          '${AppLocalizations.of(context).tr('subject')} :'),
                       onChanged: (value) {
                         setState(() {
                           subjectValue = value;
@@ -480,9 +511,11 @@ class AddQuestionPage extends State<AddQuestion> {
                       value: numberValue,
                       validator: (value) {
                         if (value == null && numberValue == null) {
-                          return 'Enter number of chapter';
+                          return AppLocalizations.of(context)
+                              .tr('enterNumberOfChapter');
                         } else if (value == " ") {
-                          return 'Enter number of chapter';
+                          return AppLocalizations.of(context)
+                              .tr('enterNumberOfChapter');
                         } else {
                           return null;
                         }
@@ -493,7 +526,8 @@ class AddQuestionPage extends State<AddQuestion> {
                                 value: label,
                               ))
                           .toList(),
-                      hint: Text('Number of chapter :'),
+                      hint: Text(
+                          '${AppLocalizations.of(context).tr('numberOfChapter')} :'),
                       onChanged: (value) {
                         setState(() {
                           numberValue = value;
@@ -549,7 +583,7 @@ class AddQuestionPage extends State<AddQuestion> {
                   checkColor: Colors.white,
                   onChanged: _value1Changed,
                   title: new Text(
-                    'Add to student\'s bank',
+                    AppLocalizations.of(context).tr('addToStudentBank'),
                     style: TextStyle(color: Colors.white),
                   ),
                   controlAffinity: ListTileControlAffinity.leading,
@@ -581,7 +615,8 @@ class AddQuestionPage extends State<AddQuestion> {
                               }
                             }
                           },
-                          child: Text("Add Question",
+                          child: Text(
+                              AppLocalizations.of(context).tr('addQuestion'),
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ))),
