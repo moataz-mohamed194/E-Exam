@@ -110,7 +110,7 @@
   "enterAnswer3":"Enter answer3",
   "enterAnswer4": "Enter answer4",
   "enterTheCorrectAnswer": "Enter the correct Answer",
-  "addToStudentBank": "Add to student\\'s bank",
+  "addToStudentBank": "Add to student's bank",
   "whenTheExamWillBe": "When the exam will be",
   "enterWhenTheExamWillBe": "Enter when the exam will be",
   "enterTheTimeOfExam": "Enter the time of exam",
@@ -139,5 +139,7 @@
   "thatSubjectIsRemoved":"that subject is removed",
   "nameOfDepartmentIsUsed": "Name of department is used",
   "nameOfSubjectIsUsed": "Name of subject is used",
-  "nameOfChapterIsUsed": "name Of Chapter Is Used"
+  "nameOfChapterIsUsed": "name Of Chapter Is Used",
+  "youCannotAccessToThatExam": "you Can't Access To That Exam",
+  "yourExamIsFinish": "your Exam Is Finish"
 }

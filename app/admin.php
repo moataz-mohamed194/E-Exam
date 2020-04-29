@@ -221,11 +221,10 @@
 			}
 			
 		}
-		echo"dd";
 		try{
 			$state=$db->prepare("INSERT INTO Department(Name,whenstart,leader)VALUES('$name','$whenstart','$leader')");
 			$state->execute();
-    		//echo "Doned";
+    		echo "Doned";
     	}catch(PDOException $e){
 			echo "failed"." ".$e->getMessage();
 		}
@@ -233,6 +232,17 @@
 	//add new subject to database
 	function addSubject($name, $department,$professor,$level,$semester){
 		global $db;
+		foreach ($db->query("SELECT * FROM Subject ;") as $result){
+   		$a[]=$result;
+		}
+		for($i=0;$i<count($a);$i++){
+			if($a[$i]['Name']==$name){
+				echo"name used";
+			return "used";
+			}
+			
+		}
+		echo"ff";
 		try{
 			$state=$db->prepare("INSERT INTO Subject(Name,department,professor,level,semester,counter)VALUES('$name','$department','$professor','$level','$semester','0')");
 			$state->execute();

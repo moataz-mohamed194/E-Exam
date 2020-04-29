@@ -24,7 +24,7 @@
 	$subjectforexam=array();
 	$countMCQ=array();
 	$countTrueAndFalse=array();
-	
+	$data=array();
 	if ($action=="signupstudent"){
 		$nationalid=$_POST['nationalid'];
 		$collageid=$_POST['collageid'];
@@ -132,6 +132,7 @@
 	//gte the exam details
 	function getExamDetails($subject){
 		global $db;
+		global $data;
 		for($i=0;$i<count($subject);$i++){
 			//echo $subject[$i]."-";
 			if($subject[$i][0]==" "){
@@ -147,7 +148,16 @@
 			
 			
 		}
-		echo json_encode($a);
+		$d=date("Y-m-d");
+		for($j=0;$j<COUNT($a);$j++){
+			$rest = substr($a[$j]['whenstart'], 0, 10);
+			//echo $a[$j]['whenstart']."pp"."\n";
+			//echo $rest."v"."\n";
+			if($rest==$d){
+				$data[]=$a[$j];
+			}
+		}
+		echo json_encode($data);
 	}
 	//get The Queation Mcq
 	function getTheQueationMcq(){

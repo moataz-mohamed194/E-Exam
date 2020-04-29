@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart' as Toast;
 
 class ChooseExam extends StatefulWidget {
   @override
@@ -53,6 +54,8 @@ class ChooseExamPage extends State<ChooseExam> {
         .post(url, body: {"action": "examdetails", "subject": data.toString()});
 
     String content = response.body;
+    print(response.body);
+
     setState(() {
       examData = json.decode(content);
     });
@@ -72,6 +75,7 @@ class ChooseExamPage extends State<ChooseExam> {
                       Text(examData[index]['subject']),
                       Text(examData[index]['whenstart']),
                       Text(examData[index]['time']),
+                      //Text("${examData[index]['time'].substring(0, 1)}"),
                       FlatButton(
                         color: Colors.blue,
                         child: Text(
@@ -79,12 +83,37 @@ class ChooseExamPage extends State<ChooseExam> {
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
-                          _store.set('idexam', examData[index]['ID']);
-                          _store.set('examsubject', examData[index]['subject']);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GetExam()));
+                          var m = examData[index]['whenstart'];
+                          DateTime now = new DateTime.now();
+                          DateTime dateTime = DateTime.parse(m);
+                          var fiftyDaysFromNow =
+                              dateTime.add(new Duration(minutes: 20));
+
+                          if (dateTime.isBefore(now) &&
+                              fiftyDaysFromNow.isAfter(now)) {
+                            print(fiftyDaysFromNow);
+                            print("done");
+                            print(now);
+                            _store.set('idexam', examData[index]['ID']);
+                            _store.set(
+                                'examsubject', examData[index]['subject']);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => GetExam(
+                                        time: int.parse(examData[index]['time']
+                                            .substring(0, 1)))));
+                          } else {
+                            print(dateTime);
+                            print("not");
+                            print(now);
+                            Toast.Toast.show(
+                                AppLocalizations.of(context)
+                                    .tr('youCannotAccessToThatExam'),
+                                context,
+                                duration: Toast.Toast.LENGTH_SHORT,
+                                gravity: Toast.Toast.BOTTOM);
+                          }
                         },
                       ),
                     ],

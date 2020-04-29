@@ -284,8 +284,19 @@ function counterMCQ($subject){
 	}
 	//add new chapter
 	function addChapter($subjectname,$chaptername){
-		try{
 		global $db;
+		try{
+			foreach ($db->query("SELECT * FROM Chapter WHERE  subjectname='$chaptername';") as $result){
+   		$a[]=$result;
+		}
+		for($i=0;$i<count($a);$i++){
+			if($a[$i]['chaptername']==$subjectname){
+				echo"name used";
+			return "used";
+			}
+			
+		}
+		
 		$state=$db->prepare("INSERT INTO Chapter(subjectname,chaptername)VALUES('$chaptername','$subjectname')");
 			$state->execute();
 

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';

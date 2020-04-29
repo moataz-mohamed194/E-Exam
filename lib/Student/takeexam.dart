@@ -6,8 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:quiver/async.dart';
 
 class GetExam extends StatefulWidget {
+  GetExam({this.time});
+
+  final int time;
+
   @override
   State<StatefulWidget> createState() {
     return GetExamPage();
@@ -33,10 +38,16 @@ class GetExamPage extends State<GetExam> {
     });
   }
 
+  int _time;
   @override
   void initState() {
     super.initState();
+    _current = widget.time;
+    _start = widget.time;
+    _current = _current * 60 * 60;
+    _start = _start * 60 * 60;
     mcq();
+    startTimer();
   }
 
   int i = 0;
@@ -332,12 +343,54 @@ class GetExamPage extends State<GetExam> {
     ).show();
   }
 
+  int _start = 10;
+  int _current = 10;
+
+  void startTimer() {
+    CountdownTimer countDownTimer = new CountdownTimer(
+      new Duration(seconds: _start),
+      new Duration(seconds: 1),
+    );
+
+    var sub = countDownTimer.listen(null);
+    sub.onData((duration) {
+      setState(() {
+        _current = _start - duration.elapsed.inSeconds;
+      });
+    });
+
+    sub.onDone(() {
+      String word, img;
+      double final1 = count / data.length;
+      double final2 = final1 * 100;
+      double final3 = double.parse(final2.toStringAsFixed(2));
+      if (final2 >= 50.0) {
+        word = '${AppLocalizations.of(context).tr('Result')}';
+        img = 'img/success.png';
+
+        _onAlertWithCustomImagePressed(context, word, final3, img);
+      } else {
+        word = AppLocalizations.of(context).tr('Failed');
+        // double final3 = double.parse(final2.toStringAsFixed(2));
+        img = 'img/failed.png';
+        _onAlertWithCustomImagePressed(context, word, final3, img);
+      }
+
+      print("Done");
+      sub.cancel();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
         actions: <Widget>[
+          Center(
+            child: Text("$_current S"),
+          ),
+          //  Text("$_time"),
           FlatButton(
             child: Icon(
               Icons.translate,
@@ -359,7 +412,7 @@ class GetExamPage extends State<GetExam> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            if (i == data.length - 1) {
+            if (i == data.length - 1 || _current == 0) {
               String word, img;
               double final1 = count / data.length;
               double final2 = final1 * 100;
@@ -391,7 +444,9 @@ class GetExamPage extends State<GetExam> {
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[getMCQExam() /*, Text("$count")*/],
+          children: <Widget>[
+            getMCQExam() /*, Text("$count")*/
+          ],
         ),
       ),
     ));

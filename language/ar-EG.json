@@ -139,5 +139,7 @@
   "thatSubjectIsRemoved":"تمت إزالة هذا الموضوع",
   "nameOfDepartmentIsUsed": "اسم القسم المستخدم",
   "nameOfSubjectIsUsed": "تم استخدام اسم الموضوع",
-  "nameOfChapterIsUsed": "اسم الفصل يستخدم"
+  "nameOfChapterIsUsed": "اسم الفصل يستخدم",
+  "youCannotAccessToThatExam":"لا يمكنك الوصول إلى هذا الاختبار",
+  "yourExamIsFinish": "الامتحان الخاص بك هو الانتهاء"
 }
