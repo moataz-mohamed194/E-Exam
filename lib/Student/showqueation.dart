@@ -163,7 +163,7 @@ class ShowQuestionBankPage extends State<ShowQuestionBank> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

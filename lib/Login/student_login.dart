@@ -96,7 +96,7 @@ class StudentLoginPage extends State<StudentLogin> {
               alignment: Alignment.topRight,
               child: FlatButton(
                 child: Icon(
-                  Icons.translate,
+                  Icons.language,
                   color: Colors.blue,
                 ),
                 onPressed: () {

@@ -106,7 +106,7 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                   alignment: Alignment.topRight,
                   child: FlatButton(
                     child: Icon(
-                      Icons.translate,
+                      Icons.language,
                       color: Colors.blue,
                     ),
                     onPressed: () {

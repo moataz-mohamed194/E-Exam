@@ -404,7 +404,7 @@ class AddQuestionPage extends State<AddQuestion> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

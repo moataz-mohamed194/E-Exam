@@ -125,7 +125,7 @@ class MainProfessorPage extends State<MainProfessor> {
           actions: <Widget>[
             FlatButton(
               child: Icon(
-                Icons.translate,
+                Icons.language,
                 color: Colors.white,
               ),
               onPressed: () {
@@ -205,38 +205,44 @@ class MainProfessorPage extends State<MainProfessor> {
           ),
         ),
         body: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: 10),
             child: Column(
-          children: <Widget>[
-            Card(
-                child: Container(
-              width: MediaQuery.of(context).size.width / 2,
-              child: Wrap(
-                children: <Widget>[
-                  Text(
-                      "${AppLocalizations.of(context).tr('welcomeProfessor')}:\n $realName")
-                ],
-              ),
-            )),
-            Container(
-              width: MediaQuery.of(context).size.width / 2,
-              child: getTheProfessorData(),
-            ),
-            Card(
-                child: Column(
               children: <Widget>[
+                Card(
+                    child: Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  height: MediaQuery.of(context).size.height / 10,
+                  child: Wrap(
+                    children: <Widget>[
+                      Container(
+                          child: Text(
+                              "${AppLocalizations.of(context).tr('welcomeProfessor')}: $realName"))
+                    ],
+                  ),
+                )),
                 Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                      "${AppLocalizations.of(context).tr('subjectsYouTeach')}:"),
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: getTheProfessorData(),
                 ),
-                Container(
-                    height: 70,
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: theSubjects())
+                Card(
+                    child: Container(
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                  "${AppLocalizations.of(context).tr('subjectsYouTeach')}:"),
+                            ),
+                            Container(
+                                height: 70,
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: theSubjects())
+                          ],
+                        )))
               ],
-            ))
-          ],
-        )),
+            )),
       ),
     );
   }

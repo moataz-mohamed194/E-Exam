@@ -84,7 +84,7 @@ class AddChapterPage extends State<AddChapter> {
           actions: <Widget>[
             FlatButton(
               child: Icon(
-                Icons.translate,
+                Icons.language,
                 color: Colors.white,
               ),
               onPressed: () {

@@ -190,7 +190,7 @@ class ShowQuestionPage extends State<ShowQuestion> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

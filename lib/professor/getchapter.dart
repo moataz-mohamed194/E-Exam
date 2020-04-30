@@ -113,7 +113,7 @@ class GetChapterPage extends State<GetChapter> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

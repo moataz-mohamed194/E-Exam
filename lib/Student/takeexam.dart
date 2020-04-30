@@ -38,7 +38,6 @@ class GetExamPage extends State<GetExam> {
     });
   }
 
-  int _time;
   @override
   void initState() {
     super.initState();
@@ -393,7 +392,7 @@ class GetExamPage extends State<GetExam> {
           //  Text("$_time"),
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

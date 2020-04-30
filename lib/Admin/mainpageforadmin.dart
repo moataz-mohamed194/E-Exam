@@ -252,7 +252,7 @@ class MainAdminPage extends State<MainAdmin> {
           actions: <Widget>[
             FlatButton(
               child: Icon(
-                Icons.translate,
+                Icons.language,
                 color: Colors.white,
               ),
               onPressed: () {

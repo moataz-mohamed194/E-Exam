@@ -114,7 +114,7 @@ class GetSubjectPage extends State<GetSubject> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

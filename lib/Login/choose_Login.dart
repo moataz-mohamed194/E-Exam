@@ -27,7 +27,7 @@ class ChooseLoginPage extends State<ChooseLogin> {
                   alignment: Alignment.topRight,
                   child: FlatButton(
                     child: Icon(
-                      Icons.translate,
+                      Icons.language,
                       color: Colors.blue,
                     ),
                     onPressed: () {

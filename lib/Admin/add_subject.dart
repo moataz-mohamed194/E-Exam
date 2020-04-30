@@ -119,7 +119,7 @@ class AddSubjectPage extends State<AddSubject> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

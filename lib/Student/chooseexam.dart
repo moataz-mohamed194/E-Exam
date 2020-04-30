@@ -135,7 +135,7 @@ class ChooseExamPage extends State<ChooseExam> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {

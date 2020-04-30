@@ -116,7 +116,7 @@ class MainStudentPage extends State<MainStudent> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {
@@ -171,35 +171,45 @@ class MainStudentPage extends State<MainStudent> {
         ),
       ),
       body: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(top: 10),
         child: Column(
+//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Card(
                 child: Container(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width / 1.5,
+              height: MediaQuery.of(context).size.height / 10,
               child: Wrap(
                 children: <Widget>[
-                  Text(
-                      "${AppLocalizations.of(context).tr('Welcome')} :\n $name")
+                  Container(
+                    child: Text(
+                        "${AppLocalizations.of(context).tr('Welcome')} : $name"),
+                  ),
                 ],
               ),
             )),
             Container(
-              width: MediaQuery.of(context).size.width / 2,
+              width: MediaQuery.of(context).size.width / 1.5,
+              //height: MediaQuery.of(context).size.height / 10,
               child: getTheStudentData(),
             ),
             Card(
-                child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                      "${AppLocalizations.of(context).tr('subjectsYouTeach')} :"),
-                ),
-                Container(
-                    height: 70,
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: theSubjects())
-              ],
+                child: Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                        "${AppLocalizations.of(context).tr('subjectsYouTeach')} :"),
+                  ),
+                  Container(
+                      height: 70,
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: theSubjects())
+                ],
+              ),
             ))
           ],
         ),

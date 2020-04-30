@@ -111,7 +111,7 @@ class EditSubjectPage extends State<EditSubject> {
       update["department"] = "$department";
     }
 
-    var response = await http.post(url, body: update);
+    await http.post(url, body: update);
 
     Toast.Toast.show(
         AppLocalizations.of(context).tr('thatSubjectIsEdited'), context,
@@ -135,7 +135,7 @@ class EditSubjectPage extends State<EditSubject> {
         actions: <Widget>[
           FlatButton(
             child: Icon(
-              Icons.translate,
+              Icons.language,
               color: Colors.white,
             ),
             onPressed: () {
