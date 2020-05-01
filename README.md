@@ -4,13 +4,18 @@
   1. moataz mohamed saad  2.Mina Morkos Ishaq 3.Mohammed abd al majeed
 
 ## Problem description
+
 * make professor can create exam any time and student will take the exam in the spasific time the professor selected it 
+
 -------------------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------------------
 ## Project scope
+
 * our mobile application provides a lot of features helping professors to create a lot of  exams ,and he can choose the chapters and students will take the exam
+
 * professor can add a chapter , can question any time and can create an exam any time ,and he can choose the chapters will be in it ,and the count of questions can be in the exam  
+
 * admin can add department and subject 
  
 -------------------------------------------------------------------------------------------------
@@ -18,9 +23,11 @@
 -------------------------------------------------------------------------------------------------
 
 ##Getting Started
+
 1.copy app folder and past it in htdocs folder in XAMPP folder.
 
 2.create a database and call it "E-exam" and import file called"E-exam.sql" which is in folder called database .
+
 <img src="img/readme/1.png" width="700" height="400">
 
 3.make sure "apache web server" and "mySQL Database" in XAMPP are working
@@ -29,7 +36,9 @@
 -------------------------------------------------------------------------------------------------
 
 ## Blog Application
+
 ### our app split into three parts (Admin , Professors , Student) (Stable)
+
     - Before explain anything we will be shown how to Login the app as (Admin , professor , student)
     - After importing the database you will find nationl ID for student and email for admin and professor and password for each of them 
 
@@ -59,6 +68,7 @@
 ## Adds and edit Subject (Stable)
 
 ### add Subject screen contain (Stable)
+
 1-add subject name.
 
 2-choose the subject will be in semester one or semester two.
@@ -115,6 +125,7 @@
 ## Adds, delete  Chapter (Stable)
 
 ### add Chapter screen contain (Stable)
+
 1-add subject name.
 
 2-choose that chapter for which subject.
@@ -135,6 +146,7 @@
 ## Adds, delete  Question (Stable)
 
 ### add Question screen contain (Stable)
+
 1-add Question name.
 
 2-choose that subject for this Question.
@@ -169,6 +181,7 @@ if the Question is true&false choose the correct answer and click on the checkbo
 -------------------------------------------------------------------------------------------------
 
 ## add Exam screen contain (Stable)
+
 1-choose that subject for this Question.
 
 2-enter the time on exam.
