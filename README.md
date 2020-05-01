@@ -22,15 +22,15 @@
 
 -------------------------------------------------------------------------------------------------
 
-##Getting Started
+## Getting Started
 
 1.copy app folder and past it in htdocs folder in XAMPP folder.
 
 2.create a database and call it "E-exam" and import file called"E-exam.sql" which is in folder called database .
 
 <img src="img/readme/1.png" width="700" height="400">
-
 3.make sure "apache web server" and "mySQL Database" in XAMPP are working
+
 -------------------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------------------
@@ -139,7 +139,6 @@
 2 - Professor can delete a Chapter
 
 <img width="250" alt="portfolio_view" src="img/readme/getChapter.jpg">
--------------------------------------------------------------------------------------------------
 
   -------------------------------------------------------------------------------------------------
 
