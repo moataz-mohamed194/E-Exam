@@ -1,6 +1,7 @@
 <?php
+	include 'singleton.php';
 	$action=$_POST["action"];
-	$servername="localhost";
+	/*$servername="localhost";
 	$username="root";
 	$password="";
 	$dbname="E-exam";
@@ -10,34 +11,55 @@
 	}
 	catch(PDOException $e){
 		echo "failed"." ".$e->getMessage();
-	}
+	}*/
 	$a=array();
 	$a1=array();
 	if($action=="getProfessordata"){
-		getProfessordData();
+		$f = new professoractions;
+		$f->getProfessordData();
+		
+		//getProfessordData();
 	}else if ($action=="check_your_email_and_password"){
 		$email=$_POST['email'];
-		checkYourEmailAndPassword($email);
+		$f = new professoractions;
+		$f->checkYourEmailAndPassword($email);
+		
+		//checkYourEmailAndPassword($email);
 	}else if ($action=="get_the_subject"){
 		$Professor=$_POST['Professor'];
-		getTheSubject($Professor);
+		$f = new professoractions;
+		$f->getTheSubject($Professor);
+		
+		//getTheSubject($Professor);
 	}else if ($action=="add_chapter"){
 		$subjectname=$_POST['subjectname'];
 		$chaptername=$_POST['chaptername'];
-		addChapter($subjectname,$chaptername);
+		$f = new professoractions;
+		$f->addChapter($subjectname,$chaptername);
+		
+		//addChapter($subjectname,$chaptername);
 	}else if ($action=="getchapterdata"){
-		getChapterData();
+		$f = new professoractions;
+		$f->getChapterData();
+		
+		//getChapterData();
 	}else if ($action=="remove_chapter"){
 		$subjectname=$_POST['subjectname'];
 		$id=$_POST['id'];
-		removeChapter($subjectname,$id);
+		$f = new professoractions;
+		$f->removeChapter($subjectname,$id);
+		
+		//removeChapter($subjectname,$id);
 	}else if ($action=="add_question_true_and_false_tosqlite"){
 		$question=$_POST['question'];
 		$subject=$_POST['subject'];
 		$numberofchapter=$_POST['numberofchapter'];
 		$correctanswer=$_POST['correctanswer'];
 		$bank=$_POST['bank'];
-		addQuestionTrueAndFalseToDatabase($question,$subject,$numberofchapter,$correctanswer,$bank);
+		$f = new professoractions;
+		$f->addQuestionTrueAndFalseToDatabase($question,$subject,$numberofchapter,$correctanswer,$bank);
+		
+		//addQuestionTrueAndFalseToDatabase($question,$subject,$numberofchapter,$correctanswer,$bank);
 	}else if ($action=="add_question_mcq_tosqlite"){
 		$question=$_POST['question'];
 		$subject=$_POST['subject'];
@@ -49,23 +71,40 @@
 		$answer4=$_POST['answer4'];
 		$correctanswer=$_POST['correctanswer'];
 		$bank=$_POST['bank'];
-		addQuestionMcqToDatabase($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank);
+		$f = new professoractions;
+		$f->addQuestionMcqToDatabase($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank);
+
+		//addQuestionMcqToDatabase($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank);
 	}else if ($action=="get_the_queationtrue_and_false"){
-		getTheQueationTrueAndFalse();
+		$f = new professoractions;
+		$f->getTheQueationTrueAndFalse();
+		//getTheQueationTrueAndFalse();
 	}else if ($action=="get_the_queation_mcq"){
-		getTheQueationMCQ();
+		$f = new professoractions;
+		$f->getTheQueationMCQ();
+		
+		//getTheQueationMCQ();
 	}else if ($action=="remove_mcq_question"){
 		$id=$_POST['id'];
-		removeMCQQuestion($id);
+		$f = new professoractions;
+		$f->removeMCQQuestion($id);
+		
+		//removeMCQQuestion($id);
 	}else if ($action=="queastion_true_and_false"){
 		$id=$_POST['id'];
-		queastionTrueAndFalse($id);
+		$f = new professoractions;
+		$f->queastionTrueAndFalse($id);
+		
+		//queastionTrueAndFalse($id);
 	}else if ($action=="add_detailsexam"){
 		$subject=$_POST['subject'];
 		$when=$_POST['when'];
 		$time=$_POST['time'];
 		$data=$_POST['data'];
-		addDetailsExam($subject,$when,$time,$data);
+		$f = new professoractions;
+		$f->addDetailsExam($subject,$when,$time,$data);
+		
+		//addDetailsExam($subject,$when,$time,$data);
 		
 	}else if ($action=="addchaptertoexam"){
 		$examid=$_POST['examid'];
@@ -73,17 +112,29 @@
 		$level=$_POST['level'];
 		$type=$_POST['type'];
 		$count=$_POST['count'];
-		addChapterToExam($examid,$chapter,$level,$type,$count);
+		$f = new professoractions;
+		$f->addChapterToExam($examid,$chapter,$level,$type,$count);
+		
+		//addChapterToExam($examid,$chapter,$level,$type,$count);
 
 	}else if ($action=="counterMCQ"){
 		$subject=$_POST['subject'];
-		counterMCQ($subject);
+		$f = new professoractions;
+		$f->counterMCQ($subject);
+		
+		//counterMCQ($subject);
 	}else if ($action=="counterTrueAndFalse"){
 		$subject=$_POST['subject'];
-		counterTrueAndFalse($subject);
+		$f = new professoractions;
+		$f->counterTrueAndFalse($subject);
+		
+		//counterTrueAndFalse($subject);
 	}
+	class professoractions{
 	//add the details about the chapters will be in exam to database
 	function addChapterToExam($idexam,$chapter,$level,$type,$count) {
+		$db= Connection::getInstance();
+    	
   		  global $db;
 		$state=$db->prepare("INSERT INTO examchapter(examid,chapter,level,type,count)VALUES('$idexam','$chapter','$level','$type','$count')");
 		$state->execute();
@@ -92,6 +143,8 @@
   //add the details about exam to database
 	function addDetailsExam($subject,$when,$time,$data){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		$state=$db->prepare("INSERT INTO examdetails(subject,whenstart,time)VALUES('$subject','$when','$time')");
 		$state->execute();
 		$add = $db->lastInsertId();
@@ -118,12 +171,12 @@
 				addchaptertoexam("$add", "$q", "C", "mcq",$data[$i]['countOfMCALevelC']);
 			}
 			$q++;
-		}*/
-	 	 /* $data1=array_map($data);
+		}
+	 	  $data1=array_map($data);
 	 	  //	echo $data[];
 //	 	  	echo $data1[0];
 	 	echo $data1["chapter1trueandfalse"];
-/*	 	if($data["chapter1trueandfalse"]!=null){
+	 	if($data["chapter1trueandfalse"]!=null){
 	 		addchaptertoexam("$add", "1", "null", "trueandfalse", $data["chapter1trueandfalse"]);
 	 	}if($data["chapter2trueandfalse"]!=null){
 	 		addchaptertoexam("$add", "2", "null", "trueandfalse", $data["chapter2trueandfalse"]);
@@ -175,6 +228,8 @@
 	//get the counter of about the questions in database in level A, B or C 
 function counterMCQ($subject){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		foreach ($db->query("SELECT counter FROM Subject WHERE Name='$subject';") as $result){
    				$a[]=$result;
 		}
@@ -189,6 +244,8 @@ function counterMCQ($subject){
 	//get the counter of the true and false questions
 	function counterTrueAndFalse($subject){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		foreach ($db->query("SELECT counter FROM Subject WHERE Name='$subject';") as $result){
    				$a[]=$result;
 		}
@@ -204,18 +261,24 @@ function counterMCQ($subject){
 	//for delete the true and false question
 	function queastionTrueAndFalse($id){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		$sql="DELETE FROM queastion_true_and_false WHERE ID='$id'";
 		$db->query($sql);
 	}
 	//for delete the MCQ question
 	function removeMCQQuestion($id){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		$sql="DELETE FROM queastion_mcq WHERE ID='$id'";
 		$db->query($sql);
 	}
 	//get the mcq questions
 	function getTheQueationMCQ(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM queastion_mcq ;") as $result){
    			$a[]=$result;
 		}
@@ -224,6 +287,8 @@ function counterMCQ($subject){
 	//get the true and false questions
 	function getTheQueationTrueAndFalse(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM queastion_true_and_false ;") as $result){
    			$a[]=$result;
 		}
@@ -232,6 +297,8 @@ function counterMCQ($subject){
 	//add the mcq question
 	function addQuestionMcqToDatabase($question,$subject,$numberofchapter,$level,$answer1,$answer2,$answer3,$answer4,$correctanswer,$bank){
 		global $db;
+		$db= Connection::getInstance();
+    	
 			foreach ($db->query("SELECT COUNT(*) FROM Chapter WHERE subjectname='$subjectname';") as $result){
    			$a[]=$result;
 		}
@@ -242,6 +309,8 @@ function counterMCQ($subject){
 	}
 	// add the true and false question
 	function addQuestionTrueAndFalseToDatabase($question,$subject,$numberofchapter,$correctanswer,$bank){
+		$db= Connection::getInstance();
+    	
 		global $db;
 			foreach ($db->query("SELECT COUNT(*) FROM Chapter WHERE subjectname='$subjectname';") as $result){
    			$a[]=$result;
@@ -256,6 +325,8 @@ function counterMCQ($subject){
 	}
 	//to remove the chapter
 	function removeChapter($subjectname,$id){
+		$db= Connection::getInstance();
+    	
 		try{
 		global $db;
 		$sql="DELETE FROM Chapter WHERE ID='$id'";
@@ -276,6 +347,8 @@ function counterMCQ($subject){
 	//get the data about chapter
 	function getChapterData(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM Chapter ;") as $result){
    			$a[]=$result;
 		}
@@ -285,6 +358,8 @@ function counterMCQ($subject){
 	//add new chapter
 	function addChapter($subjectname,$chaptername){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		try{
 			foreach ($db->query("SELECT * FROM Chapter WHERE  subjectname='$chaptername';") as $result){
    		$a[]=$result;
@@ -316,6 +391,8 @@ function counterMCQ($subject){
 	//get the subject based on the name of professor
 	function getTheSubject($Professor){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM Subject WHERE professor='$Professor'  ;") as $result){
    			$a[]=$result;
 		}
@@ -324,6 +401,8 @@ function counterMCQ($subject){
 	//get the professor data
 	function getProfessordData(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM Professor ;") as $result){
    			$a[]=$result;
 		}
@@ -332,11 +411,13 @@ function counterMCQ($subject){
 	}
 	//when login get the all data when the email is equal the email you enter
 	function checkYourEmailAndPassword($email){
-    	global $db;
+    	//global $db;
+    	$db= Connection::getInstance();
+    	
     	foreach ($db->query("SELECT * FROM Professor WHERE Email='$email'") as $result) {
     		$a[]=$result;
 		}
 		echo json_encode($a);
 	}
-
+ }
 ?>

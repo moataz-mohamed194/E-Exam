@@ -1,6 +1,7 @@
 <?php
+	include 'singleton.php';
 	$action=$_POST["action"];
-	$servername="localhost";
+	/*$servername="localhost";
 	$username="root";
 	$password="";
 	$dbname="E-exam";
@@ -11,14 +12,26 @@
 	}
 	catch(PDOException $e){
 		echo "failed"." ".$e->getMessage();
-	}
+	}*/
+//	$db = Database::getInstance();
+    //$con = $db->getConnection();
+  //$con =$db->getConnection();
 	$a=array();
 	if($action=="getrequestdata"){
-		getRequestdata();
+
+		$f = new Adminactions;
+		$f->getRequestdata();
+		//getRequestdata();
 	}else if($action=="getsubject"){
-		getSubject();
+		$f = new Adminactions;
+		$f->getSubject();
+		
+		//getSubject();
 	}else if($action=="getprofessordata"){
-		getProfessorData();
+		$f = new Adminactions;
+		$f->getProfessorData();
+		
+		//getProfessorData();
 		}else if ($action=="send_request") {
 		$table=$_POST['type'];
 		$nationalid=$_POST['Nationalid'];
@@ -27,13 +40,21 @@
 		$name=$_POST['realName'];
 		$graduted=$_POST['graduted'];
 		$age=$_POST['age'];
-		sendRequest($table, $name,$email,$nationalid,$password, $graduted, $age);
+		$f = new Adminactions;
+		$f->sendRequest($table, $name,$email,$nationalid,$password, $graduted, $age);
+		
+		//sendRequest($table, $name,$email,$nationalid,$password, $graduted, $age);
 	}else if ($action=="check_your_email_and_password"){
 		$email=$_POST['email'];
-		checkYourEmailAndPassword($email);
+		$f = new Adminactions;
+		$f->checkYourEmailAndPassword($email);
+		//checkYourEmailAndPassword($email);
 	}else if ($action=="rejected"){
 		$id=$_POST['id'];
-		rejected($id);
+		$f = new Adminactions;
+		$f->rejected($id);
+		
+		//rejected($id);
 	}else if ($action=="accept"){
 		$id=$_POST['id'];
 		$type=$_POST['type'];
@@ -43,21 +64,33 @@
 		$realName=$_POST['realName'];
 		$graduted=$_POST['graduted'];
 		$age=$_POST['age'];
-		accept($nationalid, $email,$realName,$password,$id,$graduted,$age,$type);
+		$f = new Adminactions;
+		$f->accept($nationalid, $email,$realName,$password,$id,$graduted,$age,$type);
+		
+		//accept($nationalid, $email,$realName,$password,$id,$graduted,$age,$type);
 	}else if ($action=="add_department"){
 		$name=$_POST['name'];
 		$whenstart=$_POST['whenstart'];
 		$leader=$_POST['leader'];
-		addDepartment($name, $whenstart,$leader);
+		$f = new Adminactions;
+		$f->addDepartment($name, $whenstart,$leader);
+		
+		//addDepartment($name, $whenstart,$leader);
 	}else if ($action=="addsubject"){
 		$name=$_POST['name'];
 		$department=$_POST['department'];
 		$professor=$_POST['professor'];
 		$level=$_POST['level'];
 		$semester=$_POST['semester'];
-		addSubject($name, $department,$professor,$level,$semester);
+		$f = new Adminactions;
+		$f->addSubject($name, $department,$professor,$level,$semester);
+		
+		//addSubject($name, $department,$professor,$level,$semester);
 	}else if($action=="getdepartmentdata"){
-		getDepartmentData();
+		$f = new Adminactions;
+		$f->getDepartmentData();
+		
+//		getDepartmentData();
 	}else if ($action=="updatesubject"){
 		$name=$_POST['name'];
 		$department=$_POST['department'];
@@ -65,12 +98,18 @@
 		$semester=$_POST['semester'];
 		$professor=$_POST['professor0000'];
 		$id=$_POST['id'];
-		updateSubject($name,$department,$professor,$level,$semester,$id);
+		$f = new Adminactions;
+		$f->updateSubject($name,$department,$professor,$level,$semester,$id);;
+		
+		//updateSubject($name,$department,$professor,$level,$semester,$id);
 	}
-
+class Adminactions{ 
+	
 	//check if every any on the name of subject, for department, which professor will tech it, for which level and in which semester and update it
 	function updateSubject($name,$department,$professor,$level,$semester,$id){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		if($name!=null){
 	   		$db->query("UPDATE Subject SET Name='".$name."' WHERE id=".$id);			
 		}
@@ -98,6 +137,8 @@
 	//get the requests data
 	function getRequestdata(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM request") as $result){
    			$a[]=$result;
 		}
@@ -106,6 +147,8 @@
 	//get the department data
 	function getDepartmentData(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM Department") as $result){
 			$a[]=$result;
 		}
@@ -114,6 +157,8 @@
 	//get the subject data
 	function getSubject(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM Subject") as $result){
    			$a[]=$result;
 		}
@@ -122,6 +167,8 @@
 	//get professor data
 	function getProfessorData(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM Professor") as $result){
 			$a[]=$result;
 		}
@@ -129,6 +176,8 @@
 	}
 	//send the requeset if you are admin or professor
 	function sendRequest($table, $name,$email,$nationalid,$password, $graduted, $age){
+		$db= Connection::getInstance();
+    	
 		global $db;
 		global $a;
 		foreach ($db->query("SELECT * FROM request ;") as $result){
@@ -164,6 +213,7 @@
 	//when login get the all data when the email is equal the email you enter
 	function checkYourEmailAndPassword($email){
     	global $db;
+		$db= Connection::getInstance();
     	foreach ($db->query("SELECT * FROM Admin WHERE Email='$email'") as $result) {
     		$a[]=$result;
 		}
@@ -172,6 +222,8 @@
 	//when admin reject request delete the request from database
 	function rejected($id){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		try{
 			$sql="DELETE FROM request WHERE ID='$id'";
 			$db->query($sql);
@@ -183,6 +235,8 @@
 	//when admin accept request delete it from request table after add it to its table
 	function accept($nationalid, $email,$realName,$password,$id,$graduted,$age,$type){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		if ($type == 'Professor') {
 
 			try{
@@ -211,6 +265,8 @@
 	//add new department to database
 	function addDepartment($name, $whenstart,$leader){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		foreach ($db->query("SELECT * FROM Department ;") as $result){
    		$a[]=$result;
 		}
@@ -232,6 +288,8 @@
 	//add new subject to database
 	function addSubject($name, $department,$professor,$level,$semester){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		foreach ($db->query("SELECT * FROM Subject ;") as $result){
    		$a[]=$result;
 		}
@@ -251,7 +309,7 @@
 			echo "failed"." ".$e->getMessage();
 		}
 	}
-	
+	}
 	
 	
 

@@ -1,6 +1,7 @@
 <?php
+	include 'singleton.php';
 	$action=$_POST["action"];
-	$servername="localhost";
+	/*$servername="localhost";
 	$username="root";
 	$password="";
 	$dbname="E-exam";
@@ -11,7 +12,7 @@
 	}
 	catch(PDOException $e){
 		echo "failed"." ".$e->getMessage();
-	}
+	}*/
 	$examChapters=array();
 	$idOfTrueAndFalse=array();
 	$idOfMCQ=array();
@@ -32,31 +33,55 @@
 		$password=$_POST['password'];
 		$level=$_POST['level'];
 		$department=$_POST['department'];
-		signupStudent($nationalid,$collageid,$name,$password,$level,$department);
+		$f = new Studentactions;
+		$f->signupStudent($nationalid,$collageid,$name,$password,$level,$department);
+		
+		//signupStudent($nationalid,$collageid,$name,$password,$level,$department);
 	}else if ($action=="check_your_email_and_password"){
 		$email=$_POST['email'];
-		checkYourEmailAndPassword($email);
+		$f = new Studentactions;
+		$f->checkYourEmailAndPassword($email);
+		
+		//checkYourEmailAndPassword($email);
 	}else if ($action=="getstudentsubject"){
 		$level=$_POST['level'];
 		$department=$_POST['department'];
-		getStudentSubject($level,$department);
+		$f = new Studentactions;
+		$f->getStudentSubject($level,$department);
+		
+		//getStudentSubject($level,$department);
 	}else if ($action=="get_the_queationtrue_and_false"){
-		getTheQueationTrueAndFalse();
+		$f = new Studentactions;
+		$f->getTheQueationTrueAndFalse();
+		
+		//getTheQueationTrueAndFalse();
 	}else if ($action=="get_the_queation_mcq"){
-		getTheQueationMcq();
+		$f = new Studentactions;
+		$f->getTheQueationMcq();
+		
+		//getTheQueationMcq();
 	}else if ($action=="examdetails"){
 		$subject1=$_POST['subject'];
 		$upd = str_replace('[', '', $subject1);
 		$upd1 = str_replace(']', '', $upd);
 		$pieces = explode(",", $upd1);
-		getExamDetails($pieces);
+		$f = new Studentactions;
+		$f->getExamDetails($pieces);
+		
+		//getExamDetails($pieces);
 	}else if ($action=="getExam"){
 		$subject=$_POST['subject'];
    		$id=$_POST['id'];
-		getExam($id,$subject);
+   		$f = new Studentactions;
+		$f->getExam($id,$subject);
+		
+		//getExam($id,$subject);
 	}
+	class Studentactions{
 		//get the exam questions
 		function getExam($id,$subject){
+			$db= Connection::getInstance();
+    	
 			global $db;
 			global $quection1;
 			global $quection2;
@@ -69,6 +94,8 @@
 		}
 		for($counter=0;$counter<count($examChapters);$counter++){
 			global $db;
+			$db= Connection::getInstance();
+    	
 			global $quection1;
 			global $quection2;
 			global $quection;
@@ -132,6 +159,8 @@
 	//gte the exam details
 	function getExamDetails($subject){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		global $data;
 		for($i=0;$i<count($subject);$i++){
 			//echo $subject[$i]."-";
@@ -162,6 +191,8 @@
 	//get The Queation Mcq
 	function getTheQueationMcq(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM queastion_mcq WHERE bank='true';") as $result){
    			$a[]=$result;
 		}
@@ -170,6 +201,8 @@
 	// get The Queation True And False
 	function getTheQueationTrueAndFalse(){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		foreach ($db->query("SELECT * FROM queastion_true_and_false WHERE bank='true';") as $result){
    			$a[]=$result;
 		}
@@ -178,6 +211,8 @@
 	//get the subjects
 	function getStudentSubject($level,$department){
 		global $db;
+		$db= Connection::getInstance();
+    	
    		//foreach ($db->query("SELECT * FROM Subject WHERE level='$level'  ;") as $result){
    		foreach ($db->query("SELECT * FROM Subject WHERE level='$level' AND department='$department' OR level='$level' AND department='general';") as $result){
    			$a[]=$result;
@@ -187,6 +222,8 @@
 	//check Your Email And Password
 	function checkYourEmailAndPassword($email){
     	global $db;
+    	$db= Connection::getInstance();
+    	
     	foreach ($db->query("SELECT * FROM Student WHERE Collageid='$email'") as $result) {
     		$a[]=$result;
 		}
@@ -195,6 +232,8 @@
 	//signup for Student
 	function signupStudent($nationalid,$collageid,$name,$password,$level,$department){
 		global $db;
+		$db= Connection::getInstance();
+    	
 		foreach ($db->query("SELECT * FROM Student ;") as $result){
    		$a[]=$result;
 		}
@@ -217,5 +256,5 @@
 		}
 	}
 	
-
+}
 ?>

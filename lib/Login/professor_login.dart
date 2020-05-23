@@ -52,6 +52,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
         "email": "$id",
       });
       String content = response.body;
+      print(response.body);
       setState(() {
         data = json.decode(content);
       });
