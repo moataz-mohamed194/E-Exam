@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -104,8 +104,10 @@ class AddQuestionPage extends State<AddQuestion> {
       "bank": _value1.toString()
     }).whenComplete(() {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thatQueationIsAdd'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "thatQueationIsAdd" ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
   }
@@ -125,8 +127,10 @@ class AddQuestionPage extends State<AddQuestion> {
       print(e);
     }).whenComplete(() {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thatQueationIsAdd'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "thatQueationIsAdd".trArgs(),
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     });
   }
@@ -153,11 +157,11 @@ class AddQuestionPage extends State<AddQuestion> {
                 value: levelValue,
                 validator: (value) {
                   if (value == null) {
-                    return AppLocalizations.of(context)
-                        .tr('enterTheLevelOfQuestion');
+                    return "enterTheLevelOfQuestion".trArgs(); // AppLocalizations.of(context)
+                    //.tr('enterTheLevelOfQuestion');
                   } else if (value == " ") {
-                    return AppLocalizations.of(context)
-                        .tr('enterTheLevelOfQuestion');
+                    return "enterTheLevelOfQuestion".trArgs(); // AppLocalizations.of(context)
+//                        .tr('enterTheLevelOfQuestion');
                   } else {
                     return null;
                   }
@@ -169,7 +173,7 @@ class AddQuestionPage extends State<AddQuestion> {
                         ))
                     .toList(),
                 hint: Text(
-                    '${AppLocalizations.of(context).tr('levelOfQuestion')} :'),
+                    '${ "levelOfQuestion".trArgs()} :'),
                 onChanged: (value) {
                   setState(() {
                     levelValue = value;
@@ -190,7 +194,8 @@ class AddQuestionPage extends State<AddQuestion> {
                 textInputAction: TextInputAction.next,
                 onSaved: (input) => answer1save = input,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).tr('answer1'),
+                  labelText:
+                      "answer1".trArgs(), //AppLocalizations.of(context).tr('answer1'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -198,14 +203,15 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: AppLocalizations.of(context).tr('enterAnswer1'),
+                  hintText:
+                      "enterAnswer1".trArgs(), // AppLocalizations.of(context).tr('enterAnswer1'),
                 ),
                 onFieldSubmitted: (input) {
                   _fieldFocusChange(context, answer1node, answer2node);
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context).tr('enterAnswer1');
+                    return "enterAnswer1".trArgs(); //AppLocalizations.of(context).tr('enterAnswer1');
                   } else {
                     return null;
                   }
@@ -230,7 +236,8 @@ class AddQuestionPage extends State<AddQuestion> {
                   _fieldFocusChange(context, answer2node, answer3node);
                 },
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).tr('answer2'),
+                  labelText:
+                      "answer2".trArgs(), // AppLocalizations.of(context).tr('answer2'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -238,11 +245,12 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: AppLocalizations.of(context).tr('enterAnswer2'),
+                  hintText:
+                      "enterAnswer2".trArgs(), // AppLocalizations.of(context).tr('enterAnswer2'),
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context).tr('enterAnswer2');
+                    return "enterAnswer2".trArgs(); //AppLocalizations.of(context).tr('enterAnswer2');
                   } else {
                     return null;
                   }
@@ -262,7 +270,8 @@ class AddQuestionPage extends State<AddQuestion> {
                 },
                 onSaved: (input) => answer3save = input,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).tr('answer3'),
+                  labelText:
+                      "answer3".trArgs(), // AppLocalizations.of(context).tr('answer3'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -270,14 +279,15 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: AppLocalizations.of(context).tr('enterAnswer3'),
+                  hintText:
+                      "enterAnswer3".trArgs(), // AppLocalizations.of(context).tr('enterAnswer3'),
                 ),
                 onFieldSubmitted: (input) {
                   _fieldFocusChange(context, answer3node, answer4node);
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context).tr('enterAnswer3');
+                    return "enterAnswer3".trArgs(); // AppLocalizations.of(context).tr('enterAnswer3');
                   } else {
                     return null;
                   }
@@ -297,7 +307,8 @@ class AddQuestionPage extends State<AddQuestion> {
                 },
                 onSaved: (input) => answer4save = input,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).tr('answer4'),
+                  labelText:
+                      "answer4".trArgs(), //AppLocalizations.of(context).tr('answer4'),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -305,14 +316,15 @@ class AddQuestionPage extends State<AddQuestion> {
                       color: Colors.blue,
                     ),
                   ),
-                  hintText: AppLocalizations.of(context).tr('enterAnswer4'),
+                  hintText:
+                      "enterAnswer4".trArgs(), // AppLocalizations.of(context).tr('enterAnswer4'),
                 ),
                 onFieldSubmitted: (input) {
                   answer4node.unfocus();
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context).tr('enterAnswer4');
+                    return "enterAnswer4".trArgs(); // AppLocalizations.of(context).tr('enterAnswer4');
                   } else {
                     return null;
                   }
@@ -328,11 +340,11 @@ class AddQuestionPage extends State<AddQuestion> {
                 value: MCQValue,
                 validator: (value) {
                   if (value == null) {
-                    return AppLocalizations.of(context)
-                        .tr('enterTheCorrectAnswer');
+                    return "enterTheCorrectAnswer".trArgs(); //AppLocalizations.of(context)
+                    //.tr('enterTheCorrectAnswer');
                   } else if (value == " ") {
-                    return AppLocalizations.of(context)
-                        .tr('enterTheCorrectAnswer');
+                    return "enterTheCorrectAnswer".trArgs(); //AppLocalizations.of(context)
+                    //.tr('enterTheCorrectAnswer');
                   } else {
                     return null;
                   }
@@ -341,7 +353,8 @@ class AddQuestionPage extends State<AddQuestion> {
                       child: Text(label.toString()),
                       value: label,
                     )).toList(),
-                hint: Text('${AppLocalizations.of(context).tr('answer')} :'),
+                hint: Text(
+                    '${"answer".trArgs() } :'),
                 onChanged: (value) {
                   setState(() {
                     MCQValue = value;
@@ -368,11 +381,11 @@ class AddQuestionPage extends State<AddQuestion> {
                 value: trueAndFalseValue,
                 validator: (value) {
                   if (value == null) {
-                    return AppLocalizations.of(context)
-                        .tr('enterTheCorrectAnswer');
+                    return "enterTheCorrectAnswer".trArgs(); // AppLocalizations.of(context)
+                    //.tr('enterTheCorrectAnswer');
                   } else if (value == " ") {
-                    return AppLocalizations.of(context)
-                        .tr('enterTheCorrectAnswer');
+                    return "enterTheCorrectAnswer".trArgs(); // AppLocalizations.of(context)
+                    //.tr('enterTheCorrectAnswer');
                   } else {
                     return null;
                   }
@@ -383,7 +396,8 @@ class AddQuestionPage extends State<AddQuestion> {
                           value: label,
                         ))
                     .toList(),
-                hint: Text('${AppLocalizations.of(context).tr('answer')} :'),
+                hint: Text(
+                    '${"answer".trArgs()} :'),
                 onChanged: (value) {
                   setState(() {
                     trueAndFalseValue = value;
@@ -417,7 +431,8 @@ class AddQuestionPage extends State<AddQuestion> {
           )
         ],
         backgroundColor: Color(0xff254660),
-        title: Text(AppLocalizations.of(context).tr('addQuestion')),
+        title: Text(
+            "addQuestion".trArgs()), //AppLocalizations.of(context).tr('addQuestion')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
@@ -444,7 +459,8 @@ class AddQuestionPage extends State<AddQuestion> {
                       textInputAction: TextInputAction.next,
                       onSaved: (input) => questionSave = input,
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context).tr('Question'),
+                        labelText:
+                            "Question".trArgs(), //AppLocalizations.of(context).tr('Question'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -452,13 +468,13 @@ class AddQuestionPage extends State<AddQuestion> {
                             color: Colors.blue,
                           ),
                         ),
-                        hintText:
-                            AppLocalizations.of(context).tr('enterQuestion'),
+                        hintText: "enterQuestion".trArgs(),
+//                            AppLocalizations.of(context).tr('enterQuestion'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)
-                              .tr('enterQuestion');
+                          return "enterQuestion".trArgs(); // AppLocalizations.of(context)
+//                              .tr('enterQuestion');
                         } else {
                           return null;
                         }
@@ -474,11 +490,11 @@ class AddQuestionPage extends State<AddQuestion> {
                       value: subjectValue,
                       validator: (value) {
                         if (value == null) {
-                          return AppLocalizations.of(context)
-                              .tr('enterSubjectName');
+                          return "enterSubjectName".trArgs(); // AppLocalizations.of(context)
+                          //.tr('enterSubjectName');
                         } else if (value == " ") {
-                          return AppLocalizations.of(context)
-                              .tr('enterSubjectName');
+                          return "enterSubjectName".trArgs(); // AppLocalizations.of(context)
+                          //.tr('enterSubjectName');
                         } else {
                           return null;
                         }
@@ -490,7 +506,7 @@ class AddQuestionPage extends State<AddQuestion> {
                               ))
                           .toList(),
                       hint: Text(
-                          '${AppLocalizations.of(context).tr('subject')} :'),
+                          '${ "subject".trArgs()} :'),
                       onChanged: (value) {
                         setState(() {
                           subjectValue = value;
@@ -511,11 +527,11 @@ class AddQuestionPage extends State<AddQuestion> {
                       value: numberValue,
                       validator: (value) {
                         if (value == null && numberValue == null) {
-                          return AppLocalizations.of(context)
-                              .tr('enterNumberOfChapter');
+                          return "enterNumberOfChapter".trArgs(); // AppLocalizations.of(context)
+                          //.tr('enterNumberOfChapter');
                         } else if (value == " ") {
-                          return AppLocalizations.of(context)
-                              .tr('enterNumberOfChapter');
+                          return "enterNumberOfChapter".trArgs(); // AppLocalizations.of(context)
+//                              .tr('enterNumberOfChapter');
                         } else {
                           return null;
                         }
@@ -527,7 +543,7 @@ class AddQuestionPage extends State<AddQuestion> {
                               ))
                           .toList(),
                       hint: Text(
-                          '${AppLocalizations.of(context).tr('numberOfChapter')} :'),
+                          '${ "numberOfChapter".trArgs()} :'),
                       onChanged: (value) {
                         setState(() {
                           numberValue = value;
@@ -583,7 +599,8 @@ class AddQuestionPage extends State<AddQuestion> {
                   checkColor: Colors.white,
                   onChanged: _value1Changed,
                   title: new Text(
-                    AppLocalizations.of(context).tr('addToStudentBank'),
+                    'addToStudentBank'.trArgs(),
+//                    AppLocalizations.of(context).tr('addToStudentBank'),
                     style: TextStyle(color: Colors.white),
                   ),
                   controlAffinity: ListTileControlAffinity.leading,
@@ -615,8 +632,8 @@ class AddQuestionPage extends State<AddQuestion> {
                               }
                             }
                           },
-                          child: Text(
-                              AppLocalizations.of(context).tr('addQuestion'),
+                          child: Text('addQuestion'.trArgs(),
+//                              AppLocalizations.of(context).tr('addQuestion'),
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ))),

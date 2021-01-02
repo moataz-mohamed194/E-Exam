@@ -3,7 +3,7 @@ class GlobalState {
   static GlobalState instance = new GlobalState._();
 
   GlobalState._();
-  String ipAddress = "192.168.1.4";
+  String ipAddress ='192.168.1.7:81'; //"192.168.43.246"; //"192.168.1.4";
   set(dynamic key, dynamic value) => _data[key] = value;
 
   get(dynamic key) => _data[key];

@@ -1,6 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,27 +98,27 @@ class MainAdminPage extends State<MainAdmin> {
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 5),
                   child: Text(
-                      "${AppLocalizations.of(context).tr('name')}:${data[index]['realName']}"),
+                      "${"name".trArgs()}:${data[index]['realName']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
                   child: Text(
-                      "${AppLocalizations.of(context).tr('heIs')}:${data[index]['type']}"),
+                      "${"type".trArgs() }:${data[index]['type']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
                   child: Text(
-                      "${AppLocalizations.of(context).tr('email')}:${data[index]['Email']}"),
+                      "${"email".trArgs() }:${data[index]['Email']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
                   child: Text(
-                      "${AppLocalizations.of(context).tr('nationalID')}:${data[index]['Nationalid']}"),
+                      "${"nationalID".trArgs() }:${data[index]['Nationalid']}"),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 5),
                   child: Text(
-                      "${AppLocalizations.of(context).tr('graduatedFrom')}:${data[index]['graduted']}"),
+                      "${"graduatedFrom".trArgs() }:${data[index]['graduted']}"),
                 ),
                 Row(
                   children: <Widget>[
@@ -199,7 +198,8 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('Profile'),
+                title: Text(
+                    "Profile".trArgs() ,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -208,8 +208,8 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text(
-                    '${AppLocalizations.of(context).tr('addDepartment')}',
+                title: Text("addDepartment".trArgs(),
+//                    '${AppLocalizations.of(context).tr('addDepartment')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -218,7 +218,8 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('${AppLocalizations.of(context).tr('addSubject')}',
+                title: Text(
+                    "addSubject".trArgs(), //'${AppLocalizations.of(context).tr('addSubject')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -227,7 +228,8 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('${AppLocalizations.of(context).tr('editSubject')}',
+                title: Text(
+                    "editSubject".trArgs(), //'${AppLocalizations.of(context).tr('editSubject')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -236,7 +238,8 @@ class MainAdminPage extends State<MainAdmin> {
               ),
               Divider(),
               ListTile(
-                title: Text('${AppLocalizations.of(context).tr('logOut')}',
+                title: Text(
+                    "logOut".trArgs(), //'${AppLocalizations.of(context).tr('logOut')}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   logout();

@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
+import 'package:get/get.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,24 +70,24 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
     print(request.body);
     if (request.body == "Nationalid used") {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thisNationalIdIsUsed'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "thisNationalIdIsUsed".trArgs() ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "email used") {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thisEmailIsUsed'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "thisEmailIsUsed".trArgs() ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     } else if (request.body == "Done") {
       Navigator.pop(context);
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('yourRequestIsAdded'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "yourRequestIsAdded".trArgs() ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     }
-    /*.whenComplete(() {
-      Toast.Toast.show("Your request is send", context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
-
-      Navigator.pop(context);
-    });*/
   }
 
   @override
@@ -154,17 +153,15 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                 ),
                               ),
                               labelText:
-                                  AppLocalizations.of(context).tr('yourID'),
-                              hintText: AppLocalizations.of(context)
-                                  .tr('enterYourID'),
+                                  "yourID".trArgs(), //AppLocalizations.of(context).tr('yourID'),
+                              hintText:
+                                  "enterYourID".trArgs() ,
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .tr('enterYourID');
+                                return "enterYourID".trArgs() ;
                               } else if (value.length < 6) {
-                                return AppLocalizations.of(context)
-                                    .tr('yourIDMustBeLongerThan6Numbers');
+                                return "yourIDMustBeLongerThan6Numbers".trArgs() ;
                               } else {
                                 return null;
                               }
@@ -194,17 +191,15 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                 ),
                               ),
                               labelText:
-                                  AppLocalizations.of(context).tr('yourEmail'),
-                              hintText: AppLocalizations.of(context)
-                                  .tr('enterYourEmail'),
+                                  "yourEmail".trArgs(),
+                              hintText:
+                                  "enterYourEmail".trArgs() ,
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .tr('enterYourEmail');
+                                return "enterYourEmail".trArgs() ;
                               } else if (!value.contains("@")) {
-                                return AppLocalizations.of(context)
-                                    .tr('yourEmailMustContain');
+                                return "yourEmailMustContain".trArgs();
                               } else {
                                 return null;
                               }
@@ -233,18 +228,16 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: AppLocalizations.of(context)
-                                  .tr('yourPassword'),
-                              hintText: AppLocalizations.of(context)
-                                  .tr('enterYourPassword'),
+                              labelText:
+                                  "yourPassword".trArgs() ,
+                              hintText:
+                                  "enterYourPassword".trArgs(),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .tr('enterYourPassword');
+                                return "enterYourPassword".trArgs() ;
                               } else if (value.length < 6) {
-                                return AppLocalizations.of(context)
-                                    .tr('yourPasswordMustBeLongerThan6Numbers');
+                                return "yourPasswordMustBeLongerThan6Numbers".trArgs() ;
                               } else {
                                 return null;
                               }
@@ -274,14 +267,13 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                 ),
                               ),
                               labelText:
-                                  AppLocalizations.of(context).tr('yourAge'),
-                              hintText: AppLocalizations.of(context)
-                                  .tr('enterYourAge'),
+                                  "yourAge".trArgs() ,
+                              hintText:
+                                  "enterYourAge".trArgs() ,
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .tr('enterYourAge');
+                                return "enterYourAge".trArgs();
                               } else {
                                 return null;
                               }
@@ -310,15 +302,14 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                   color: Colors.blue,
                                 ),
                               ),
-                              labelText: AppLocalizations.of(context)
-                                  .tr('yourGraduated'),
-                              hintText: AppLocalizations.of(context)
-                                  .tr('enterYourGraduated'),
+                              labelText:
+                                  "yourGraduated".trArgs(),
+                              hintText:
+                                  "enterYourGraduated".trArgs(),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .tr('enterYourGraduated');
+                                return "enterYourGraduated".trArgs();
                               } else {
                                 return null;
                               }
@@ -341,7 +332,7 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                               },
                               decoration: InputDecoration(
                                 labelText:
-                                    AppLocalizations.of(context).tr('yourName'),
+                                    "yourName".trArgs() ,
                                 filled: true,
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
@@ -349,16 +340,14 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                                     color: Colors.blue,
                                   ),
                                 ),
-                                hintText: AppLocalizations.of(context)
-                                    .tr('enterYourName'),
+                                hintText:
+                                    "enterYourName".trArgs(),
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .tr('enterYourName');
+                                  return "enterYourName".trArgs() ;
                                 } else if (value.length < 7) {
-                                  return AppLocalizations.of(context)
-                                      .tr('yourNameMustBeLonger');
+                                  return "yourNameMustBeLonger".trArgs();
                                 } else {
                                   return null;
                                 }
@@ -371,7 +360,8 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             child: Text(
-                              AppLocalizations.of(context).tr('buttonLogin'),
+                              "buttonLogin".trArgs(),
+                              // AppLocalizations.of(context).tr('buttonLogin'),
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 20),
                             ),
@@ -386,8 +376,7 @@ class ProfessorSignUpPage extends State<ProfessorSignUp> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 child: Text(
-                                    AppLocalizations.of(context)
-                                        .tr('pageSignUpAsProfessor'),
+                                    "pageSignUpAsProfessor".trArgs() ,
                                     style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {

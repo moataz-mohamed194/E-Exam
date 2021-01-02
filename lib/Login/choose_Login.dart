@@ -1,11 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Admin_login.dart';
 import 'professor_login.dart';
 import 'student_login.dart';
-
+import 'package:get/get.dart';
 class ChooseLogin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -53,10 +52,8 @@ class ChooseLoginPage extends State<ChooseLogin> {
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
-                                child: Text(
-                                  //  " admin"
-                                  AppLocalizations.of(context)
-                                      .tr('firstButtonInChooseLogin'),
+                                child:
+                                Text("firstButtonInChooseLogin".trArgs(),
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /
@@ -77,9 +74,7 @@ class ChooseLoginPage extends State<ChooseLogin> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 child: Text(
-                                  // "Professor",
-                                  AppLocalizations.of(context)
-                                      .tr('secondButtonInChooseLogin'),
+                                    "secondButtonInChooseLogin".trArgs(),
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /
@@ -101,9 +96,8 @@ class ChooseLoginPage extends State<ChooseLogin> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: FlatButton(
                                 child: Text(
-                                  // "Student",
-                                  AppLocalizations.of(context)
-                                      .tr('thirdButtonInChooseLogin'),
+
+                                  "thirdButtonInChooseLogin".trArgs(),
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width /

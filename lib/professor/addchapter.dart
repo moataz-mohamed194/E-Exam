@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
@@ -64,12 +64,16 @@ class AddChapterPage extends State<AddChapter> {
     print(request.body);
     if (request.body == "name used") {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('nameOfChapterIsUsed'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "nameOfChapterIsUsed".trArgs() ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     } else {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thatChapterIsAdded'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "thatChapterIsAdded".trArgs() ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     }
 
@@ -97,7 +101,8 @@ class AddChapterPage extends State<AddChapter> {
             )
           ],
           backgroundColor: Color(0xff254660),
-          title: Text(AppLocalizations.of(context).tr('addChapter')),
+          title: Text(
+              "addChapter".trArgs() ),
         ),
         backgroundColor: Color(0xff2e2e2e),
         body: Container(
@@ -118,8 +123,8 @@ class AddChapterPage extends State<AddChapter> {
                       textInputAction: TextInputAction.next,
                       onSaved: (input) => chapterNameSave = input,
                       decoration: InputDecoration(
-                        labelText:
-                            AppLocalizations.of(context).tr('chapterName'),
+                        labelText: "chapterName".trArgs(),
+//                            AppLocalizations.of(context).tr('chapterName'),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -127,13 +132,12 @@ class AddChapterPage extends State<AddChapter> {
                             color: Colors.blue,
                           ),
                         ),
-                        hintText:
-                            AppLocalizations.of(context).tr('enterChapterName'),
+                        hintText: "enterChapterName".trArgs(),
+//                            AppLocalizations.of(context).tr('enterChapterName'),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)
-                              .tr('enterChapterName');
+                          return "enterChapterName".trArgs();
                         } else {
                           return null;
                         }
@@ -149,11 +153,9 @@ class AddChapterPage extends State<AddChapter> {
                       value: subjectValue,
                       validator: (value) {
                         if (value == null) {
-                          return AppLocalizations.of(context)
-                              .tr('enterTheSubject');
+                          return "enterTheSubject".trArgs();
                         } else if (value == " ") {
-                          return AppLocalizations.of(context)
-                              .tr('enterTheSubject');
+                          return "enterTheSubject".trArgs();
                         } else {
                           return null;
                         }
@@ -165,7 +167,7 @@ class AddChapterPage extends State<AddChapter> {
                               ))
                           .toList(),
                       hint: Text(
-                          '${AppLocalizations.of(context).tr('subject')} :'),
+                          '${"subject".trArgs()} :'),
                       onChanged: (value) {
                         setState(() {
                           subjectValue = value;
@@ -184,8 +186,8 @@ class AddChapterPage extends State<AddChapter> {
                                   controllerChapterName.text, subjectValue);
                             }
                           },
-                          child: Text(
-                              AppLocalizations.of(context).tr('addChapter'),
+                          child: Text("addChapter".trArgs(),
+//                              AppLocalizations.of(context).tr('addChapter'),
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),

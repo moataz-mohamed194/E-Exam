@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
@@ -72,13 +72,19 @@ class MainStudentPage extends State<MainStudent> {
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          Text("${AppLocalizations.of(context).tr('email')}: $email"),
-          Text("${AppLocalizations.of(context).tr('nationalID')}: $nationalId"),
-          Text("${AppLocalizations.of(context).tr('name')}: $name"),
-          Text("${AppLocalizations.of(context).tr('collageID')}: $collageId"),
-          Text("${AppLocalizations.of(context).tr('level')}: $level"),
-          Text("${AppLocalizations.of(context).tr('Password')}: $password"),
-          Text("${AppLocalizations.of(context).tr('department')}: $department"),
+          Text(
+              "${"email".trArgs() }: $email"),
+          Text(
+              "${ "nationalID".trArgs()}: $nationalId"),
+          Text("${ "name".trArgs()}: $name"),
+          Text(
+              "${ "collageID".trArgs()}: $collageId"),
+          Text(
+              "${ "level".trArgs()}: $level"),
+          Text(
+              "${ "Password".trArgs()}: $password"),
+          Text(
+              "${ "department".trArgs()}: $department"),
         ],
       ),
     );
@@ -140,7 +146,7 @@ class MainStudentPage extends State<MainStudent> {
             ),
             Divider(),
             ListTile(
-              title: Text(AppLocalizations.of(context).tr('exam'),
+              title: Text("exam".trArgs(),
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 Navigator.push(context,
@@ -149,7 +155,7 @@ class MainStudentPage extends State<MainStudent> {
             ),
             Divider(),
             ListTile(
-              title: Text(AppLocalizations.of(context).tr('bank'),
+              title: Text("bank".trArgs(),
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 Navigator.push(
@@ -160,7 +166,7 @@ class MainStudentPage extends State<MainStudent> {
             ),
             Divider(),
             ListTile(
-              title: Text(AppLocalizations.of(context).tr('logOut'),
+              title: Text("logOut".trArgs(),
                   style: TextStyle(fontWeight: FontWeight.bold)),
               onTap: () {
                 logout();
@@ -184,7 +190,7 @@ class MainStudentPage extends State<MainStudent> {
                 children: <Widget>[
                   Container(
                     child: Text(
-                        "${AppLocalizations.of(context).tr('Welcome')} : $name"),
+                        "${ "Welcome".trArgs()} : $name"),
                   ),
                 ],
               ),
@@ -200,10 +206,9 @@ class MainStudentPage extends State<MainStudent> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                        "${AppLocalizations.of(context).tr('subjectsYouTeach')} :"),
-                  ),
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Text("subjectsYouTeach".trArgs())
+                      ),
                   Container(
                       height: 70,
                       width: MediaQuery.of(context).size.width / 2,

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart' as Toast;
 import 'package:http/http.dart' as http;
 import 'get_subject.dart';
-
+import 'package:get/get.dart';
 class EditSubject extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -114,8 +113,10 @@ class EditSubjectPage extends State<EditSubject> {
     await http.post(url, body: update);
 
     Toast.Toast.show(
-        AppLocalizations.of(context).tr('thatSubjectIsEdited'), context,
-        duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+        "thatSubjectIsEdited".trArgs() ,
+        context,
+        duration: Toast.Toast.LENGTH_SHORT,
+        gravity: Toast.Toast.BOTTOM);
     Navigator.pop(context);
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => GetSubject()));
@@ -175,14 +176,13 @@ class EditSubjectPage extends State<EditSubject> {
                           ),
                         ),
                         labelText:
-                            "${AppLocalizations.of(context).tr('currentSubjectName')}:${_store.get('Name')}",
+                            "${"currentSubjectName".trArgs() }:${_store.get('Name')}",
                         hintText:
-                            AppLocalizations.of(context).tr('enterSubjectName'),
+                            "enterSubjectName".trArgs(),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)
-                              .tr('enterSubjectName');
+                          return "enterSubjectName".trArgs();
                         } else {
                           return null;
                         }
@@ -198,12 +198,11 @@ class EditSubjectPage extends State<EditSubject> {
                       value: _semester,
                       decoration: InputDecoration(
                         labelText:
-                            "${AppLocalizations.of(context).tr('currentSemester')} :$semester",
+                            "${"currentSemester".trArgs() } :$semester",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return AppLocalizations.of(context)
-                              .tr('enterSemester');
+                          return "enterSemester".trArgs();
                         } else {
                           _store.set('semester', _semester);
 
@@ -232,11 +231,11 @@ class EditSubjectPage extends State<EditSubject> {
                       value: _level,
                       decoration: InputDecoration(
                         labelText:
-                            "${AppLocalizations.of(context).tr('currentLevel')} :$level",
+                            "${"currentLevel".trArgs() } :$level",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return AppLocalizations.of(context).tr('enterLevel');
+                          return "enterLevel".trArgs();
                         } else {
                           _store.set('level', _level);
 
@@ -268,12 +267,11 @@ class EditSubjectPage extends State<EditSubject> {
                       value: _department,
                       decoration: InputDecoration(
                         labelText:
-                            "${AppLocalizations.of(context).tr('currentDepartment')} :$department",
+                            "${"currentDepartment".trArgs() } :$department",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return AppLocalizations.of(context)
-                              .tr('enterDepartment');
+                          return "enterDepartment".trArgs();
                         } else {
                           _store.set('department', _department);
 
@@ -302,12 +300,11 @@ class EditSubjectPage extends State<EditSubject> {
                       value: _professor,
                       decoration: InputDecoration(
                         labelText:
-                            "${AppLocalizations.of(context).tr('currentProfessor')} :$professor",
+                            "${"currentProfessor".trArgs() } :$professor",
                       ),
                       validator: (value) {
                         if (value == " ") {
-                          return AppLocalizations.of(context)
-                              .tr('enterProfessor');
+                          return "enterProfessor".trArgs();
                         } else {
                           _store.set('professor', _professor);
 
@@ -334,7 +331,8 @@ class EditSubjectPage extends State<EditSubject> {
                         Icons.save,
                         color: Colors.white,
                       ),
-                      label: Text(AppLocalizations.of(context).tr('edit'),
+                      label: Text(
+                          "edit".trArgs() /*AppLocalizations.of(context).tr('edit')*/,
                           style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {

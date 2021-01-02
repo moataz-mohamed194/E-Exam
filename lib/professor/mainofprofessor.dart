@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:exam/professor/addchapter.dart';
@@ -68,12 +68,16 @@ class MainProfessorPage extends State<MainProfessor> {
     return Card(
       child: Column(
         children: <Widget>[
-          Text("${AppLocalizations.of(context).tr('name')}: $realName"),
-          Text("${AppLocalizations.of(context).tr('email')}: $email"),
-          Text("${AppLocalizations.of(context).tr('nationalID')}: $nationalId"),
           Text(
-              "${AppLocalizations.of(context).tr('graduatedFrom')}: $graduated"),
-          Text("${AppLocalizations.of(context).tr('yourAge')}: $age"),
+              "${'name'.trArgs()}: $realName"),
+          Text(
+              "${'email'.trArgs() }: $email"),
+          Text(
+              "${ 'nationalID'.trArgs()}: $nationalId"),
+          Text(
+              "${'graduatedFrom'.trArgs() }: $graduated"),
+          Text(
+              "${'yourAge'.trArgs() }: $age"),
         ],
       ),
     );
@@ -149,7 +153,8 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('addChapter'),
+                title: Text(
+                    'addChapter'.trArgs() ,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -158,7 +163,8 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('getChapter'),
+                title: Text(
+                    'getChapter'.trArgs() ,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -167,7 +173,8 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('addQuestion'),
+                title: Text(
+                    'addQuestion'.trArgs() ,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -176,7 +183,8 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('showQuestion'),
+                title: Text(
+                    'showQuestion'.trArgs() ,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -185,7 +193,8 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('addExam'),
+                title: Text(
+                    'addExam'.trArgs(),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.push(context,
@@ -194,7 +203,8 @@ class MainProfessorPage extends State<MainProfessor> {
               ),
               Divider(),
               ListTile(
-                title: Text(AppLocalizations.of(context).tr('logOut'),
+                title: Text(
+                    'logOut'.trArgs() ,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 onTap: () {
                   logout();
@@ -217,7 +227,7 @@ class MainProfessorPage extends State<MainProfessor> {
                     children: <Widget>[
                       Container(
                           child: Text(
-                              "${AppLocalizations.of(context).tr('welcomeProfessor')}: $realName"))
+                              "${'welcomeProfessor'.trArgs() }: $realName"))
                     ],
                   ),
                 )),
@@ -233,7 +243,7 @@ class MainProfessorPage extends State<MainProfessor> {
                             Container(
                               margin: EdgeInsets.only(bottom: 10),
                               child: Text(
-                                  "${AppLocalizations.of(context).tr('subjectsYouTeach')}:"),
+                                  "${'subjectsYouTeach'.trArgs() }:"),
                             ),
                             Container(
                                 height: 70,

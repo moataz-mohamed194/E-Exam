@@ -1,14 +1,10 @@
-import 'dart:developer';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
-
+import 'package:get/get.dart';
+import 'AppLanguage.dart';
 class LanguageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var data = EasyLocalizationProvider.of(context).data;
-
+    final controller = Get.put(AppLanguage());
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -49,10 +45,8 @@ class LanguageView extends StatelessWidget {
                   'عربي',
                 ),
                 onTap: () {
-                  /*log(locale.toString(), name: toString());
-                  EasyLocalization.of(context).locale = locale;*/
-                  data.changeLocale(Locale('ar', 'EG'));
-                  Navigator.pop(context);
+                  controller.changeLanguage('ar');
+                  Get.updateLocale(Locale('ar'));
                 }),
             buildDivider(),
             ListTile(
@@ -64,8 +58,8 @@ class LanguageView extends StatelessWidget {
                   'English',
                 ),
                 onTap: () {
-                  data.changeLocale(Locale('en', 'US'));
-                  Navigator.pop(context);
+                  controller.changeLanguage('en');
+                  Get.updateLocale(Locale('en'));
                 }),
             buildDivider(),
           ],

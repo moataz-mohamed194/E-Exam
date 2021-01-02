@@ -1,6 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,17 +50,17 @@ class GetSubjectPage extends State<GetSubject> {
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                        "${AppLocalizations.of(context).tr('subjectName')} :${data[index]['Name']}"),
+                        "${"subjectName".trArgs()} :${data[index]['Name']}"),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                        "${AppLocalizations.of(context).tr('Professor')} :${data[index]['professor']}"),
+                        "${ "Professor".trArgs()} :${data[index]['professor']}"),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                        "${AppLocalizations.of(context).tr('Department')} :${data[index]['department']}"),
+                        "${"Department".trArgs()} :${data[index]['department']}"),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -70,7 +69,7 @@ class GetSubjectPage extends State<GetSubject> {
                   Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
                     child: Text(
-                        "${AppLocalizations.of(context).tr('Semester')} :${data[index]['semester']}"),
+                        "${"Semester".trArgs()} :${data[index]['semester']}"),
                   ),
                   Card(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -93,7 +92,8 @@ class GetSubjectPage extends State<GetSubject> {
                                 builder: (context) => EditSubject()));
                       },
                       label: Text(
-                        AppLocalizations.of(context).tr('edit'),
+                        "edit".trArgs(),
+//                        AppLocalizations.of(context).tr('edit'),
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blue,
@@ -127,7 +127,7 @@ class GetSubjectPage extends State<GetSubject> {
           )
         ],
         backgroundColor: Color(0xff254660),
-        title: Text(AppLocalizations.of(context).tr('Subjects')),
+        title: Text("Subjects".trArgs()), //AppLocalizations.of(context).tr('Subjects')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(

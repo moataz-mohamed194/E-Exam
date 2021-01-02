@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/Student/takeexam.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
@@ -79,7 +79,8 @@ class ChooseExamPage extends State<ChooseExam> {
                       FlatButton(
                         color: Colors.blue,
                         child: Text(
-                          AppLocalizations.of(context).tr('loginToExam'),
+                          "LoginToExam".trArgs(),
+                          //AppLocalizations.of(context).tr('loginToExam'),
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
@@ -108,8 +109,9 @@ class ChooseExamPage extends State<ChooseExam> {
                             print("not");
                             print(now);
                             Toast.Toast.show(
-                                AppLocalizations.of(context)
-                                    .tr('youCannotAccessToThatExam'),
+                                "youCannotAccessToThatExam".trArgs(),
+                                //AppLocalizations.of(context)
+                                //  .tr('youCannotAccessToThatExam'),
                                 context,
                                 duration: Toast.Toast.LENGTH_SHORT,
                                 gravity: Toast.Toast.BOTTOM);
@@ -148,7 +150,8 @@ class ChooseExamPage extends State<ChooseExam> {
           )
         ],
         backgroundColor: Color(0xff254660),
-        title: Text(AppLocalizations.of(context).tr('chooseExam')),
+        title: Text(
+            "chooseExam".trArgs()),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(

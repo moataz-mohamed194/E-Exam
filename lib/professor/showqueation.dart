@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization_delegate.dart';
+import 'package:get/get.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -203,7 +203,8 @@ class ShowQuestionPage extends State<ShowQuestion> {
           )
         ],
         backgroundColor: Color(0xff254660),
-        title: Text(AppLocalizations.of(context).tr('Questions')),
+        title:
+            Text('Questions'.trArgs() ),
       ),
       backgroundColor: Color(0xff2e2e2e),
       body: Container(
@@ -224,8 +225,8 @@ class ShowQuestionPage extends State<ShowQuestion> {
                               value: label,
                             ))
                         .toList(),
-                    hint:
-                        Text('${AppLocalizations.of(context).tr('subject')} :'),
+                    hint: Text(
+                        '${'subject'.trArgs() } :'),
                     onChanged: (value) {
                       setState(() {
                         enterNumberChapter(value);
@@ -247,7 +248,7 @@ class ShowQuestionPage extends State<ShowQuestion> {
                             ))
                         .toList(),
                     hint: Text(
-                        '${AppLocalizations.of(context).tr('typeOfQuestion')} :'),
+                        '${'typeOfQuestion'.trArgs() } :'),
                     onChanged: (value) {
                       setState(() {
                         subjectValue = value;
@@ -273,7 +274,7 @@ class ShowQuestionPage extends State<ShowQuestion> {
                                       ))
                                   .toList(),
                               hint: Text(
-                                  '${AppLocalizations.of(context).tr('chapter')} :'),
+                                  '${'chapter'.trArgs() } :'),
                               onChanged: (value) {
                                 setState(() {
                                   numberValue = value;
@@ -291,7 +292,7 @@ class ShowQuestionPage extends State<ShowQuestion> {
                                       ))
                                   .toList(),
                               hint: Text(
-                                  '${AppLocalizations.of(context).tr('subject')} :'),
+                                  '${'subject'.trArgs() } :'),
                               onChanged: (value) {
                                 setState(() {
                                   levelValue = value;

@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
@@ -63,8 +63,10 @@ class GetChapterPage extends State<GetChapter> {
       "id": id
     }).whenComplete(() {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thatSubjectIsRemoved'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          'thatSubjectIsRemoved'.trArgs(),
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => GetChapter()));
     });
@@ -86,13 +88,13 @@ class GetChapterPage extends State<GetChapter> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                          "${AppLocalizations.of(context).tr('chapter')} $i :${data[index]['chaptername']}"),
+                          "${ 'chapter'.trArgs()} $i :${data[index]['chaptername']}"),
                       FlatButton(
                         onPressed: () {
                           removeChapter(subjectValue, data[index]['ID']);
                         },
-                        child: Text(
-                            "${AppLocalizations.of(context).tr('removeChapter')}",
+                        child: Text('removeChapter'.trArgs(),
+//                            "${AppLocalizations.of(context).tr('removeChapter')}",
                             style: TextStyle(color: Colors.white)),
                         color: Colors.blue,
                       )
@@ -110,24 +112,25 @@ class GetChapterPage extends State<GetChapter> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        actions: <Widget>[
-          FlatButton(
-            child: Icon(
-              Icons.language,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => LanguageView(), fullscreenDialog: true),
-              );
-            },
-          )
-        ],
-        backgroundColor: Color(0xff254660),
-        title: Text(AppLocalizations.of(context).tr('getChapter')),
-      ),
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(
+                Icons.language,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => LanguageView(), fullscreenDialog: true),
+                );
+              },
+            )
+          ],
+          backgroundColor: Color(0xff254660),
+          title: Text(
+              'getChapter'.trArgs()) //AppLocalizations.of(context).tr('getChapter')),
+          ),
       backgroundColor: Color(0xFF2E2E2E),
       body: Container(
         alignment: Alignment.center,
@@ -147,7 +150,8 @@ class GetChapterPage extends State<GetChapter> {
                             value: label,
                           ))
                       .toList(),
-                  hint: Text('${AppLocalizations.of(context).tr('subject')} :'),
+                  hint: Text(
+                      '${ 'subject'.trArgs()} :'),
                   onChanged: (value) {
                     setState(() {
                       subjectValue = value;

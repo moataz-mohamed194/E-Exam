@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Admin/mainpageforadmin.dart';
 import 'Login/choose_Login.dart';
 import 'Student/mainpageforstudent.dart';
+import 'language/AppLanguage.dart';
+import 'language/Translation.dart';
 import 'professor/mainofprofessor.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString('loginasadmin') == "yes") {
-    runApp(EasyLocalization(child: Admin()));
+    runApp( Admin());
   } else if (prefs.getString('loginasprofessor') == "yes") {
-    runApp(EasyLocalization(child: Professor()));
+    runApp( Professor());
   } else if (prefs.getString('loginasstudent') == "yes") {
-    runApp(EasyLocalization(child: Student()));
+    runApp( Student());
   } else {
-    runApp(EasyLocalization(
-      child: MyApp(),
-    ));
+    runApp( MyApp(),
+    );
   }
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var data = EasyLocalizationProvider.of(context).data;
+    final controller = Get.put(AppLanguage());
 
-    return EasyLocalizationProvider(
-      data: data,
-      child: MaterialApp(
+    return GetMaterialApp(
         title: 'E-exam',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -44,14 +44,9 @@ class MyApp extends StatelessWidget {
           '/mainprofessor': (BuildContext context) => new MainProfessor(),
         },
         home: ChooseLogin(),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          EasylocaLizationDelegate(locale: data.locale, path: 'language')
-        ],
-        supportedLocales: [Locale('en', 'US'), Locale('ar', 'EG')],
-        locale: data.savedLocale,
-      ),
+        translations: Translation(),
+        locale: Locale(controller.appLocale),
+        fallbackLocale: Locale(controller.appLocale),
     );
   }
 }
@@ -59,10 +54,9 @@ class MyApp extends StatelessWidget {
 class Admin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var data = EasyLocalizationProvider.of(context).data;
-    return EasyLocalizationProvider(
-      data: data,
-      child: MaterialApp(
+    final controller = Get.put(AppLanguage());
+
+    return GetMaterialApp(
         title: 'E-exam',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -76,26 +70,19 @@ class Admin extends StatelessWidget {
           '/mainprofessor': (BuildContext context) => new MainProfessor(),
         },
         home: MainAdmin(),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          EasylocaLizationDelegate(locale: data.locale, path: 'language')
-        ],
-        supportedLocales: [Locale('en', 'US'), Locale('ar', 'EG')],
-        locale: data.savedLocale,
-      ),
-    );
+      translations: Translation(),
+      locale: Locale(controller.appLocale),
+      fallbackLocale: Locale(controller.appLocale),
+      );
   }
 }
 
 class Professor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var data = EasyLocalizationProvider.of(context).data;
+    final controller = Get.put(AppLanguage());
 
-    return EasyLocalizationProvider(
-        data: data,
-        child: MaterialApp(
+    return  GetMaterialApp(
           title: 'E-exam',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -109,25 +96,19 @@ class Professor extends StatelessWidget {
             '/mainprofessor': (BuildContext context) => new MainProfessor(),
           },
           home: MainProfessor(),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            EasylocaLizationDelegate(locale: data.locale, path: 'language')
-          ],
-          supportedLocales: [Locale('en', 'US'), Locale('ar', 'EG')],
-          locale: data.savedLocale,
-        ));
+          translations: Translation(),
+          locale: Locale(controller.appLocale),
+          fallbackLocale: Locale(controller.appLocale),
+        );
   }
 }
 
 class Student extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var data = EasyLocalizationProvider.of(context).data;
+    final controller = Get.put(AppLanguage());
 
-    return EasyLocalizationProvider(
-        data: data,
-        child: MaterialApp(
+    return GetMaterialApp(
           title: 'E-exam',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -141,13 +122,9 @@ class Student extends StatelessWidget {
             '/mainprofessor': (BuildContext context) => new MainProfessor(),
           },
           home: MainStudent(),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            EasylocaLizationDelegate(locale: data.locale, path: 'language')
-          ],
-          supportedLocales: [Locale('en', 'US'), Locale('ar', 'EG')],
-          locale: data.savedLocale,
-        ));
+      translations: Translation(),
+      locale: Locale(controller.appLocale),
+      fallbackLocale: Locale(controller.appLocale),
+        );
   }
 }

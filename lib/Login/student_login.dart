@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,9 +41,10 @@ class StudentLoginPage extends State<StudentLogin> {
   //send http request and get the data from student table Dependent on email you entered
   login(String id, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     try {
       var url = "http://${_store.ipAddress}/app/student.php";
-      final response = await http.post(url, body: {
+      final response = await http.post(url,body: {
         "action": "check_your_email_and_password",
         "email": "$id",
       });
@@ -52,6 +53,8 @@ class StudentLoginPage extends State<StudentLogin> {
       setState(() {
         data = json.decode(content);
       });
+      print(data);
+
       if (password == data[0]['password']) {
         prefs.setString('ID', "${data[0]['ID']}");
         prefs.setString('Nationalid', "${data[0]['Nationalid']}");
@@ -65,18 +68,26 @@ class StudentLoginPage extends State<StudentLogin> {
         Navigator.of(context).pushNamedAndRemoveUntil(
             '/mainstudent', (Route<dynamic> route) => false);
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('welcomeToOurApp'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+            "welcomeToOurApp".trArgs()
+            ,
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
         data.clear();
       } else {
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('checkYourPassword'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+            "checkYourPassword".trArgs() ,
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
+      print(e);
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('checkYourEmail'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "checkYourEmail".trArgs() ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     }
   }
 
@@ -143,18 +154,16 @@ class StudentLoginPage extends State<StudentLogin> {
                                     color: Colors.blue,
                                   ),
                                 ),
-                                labelText: AppLocalizations.of(context)
-                                    .tr('yourCollegeId'),
-                                hintText: AppLocalizations.of(context)
-                                    .tr('enterYourCollegeId'),
+                                labelText:
+                                    "yourCollegeId".trArgs() ,
+                                hintText:
+                                    "enterYourCollegeId".trArgs() ,
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .tr('enterYourCollegeId');
+                                  return "enterYourCollegeId".trArgs() ;
                                 } else if (value.length < 6) {
-                                  return AppLocalizations.of(context)
-                                      .tr('yourIDMustBeLongerThan6Numbers');
+                                  return "yourIDMustBeLongerThan6Numbers".trArgs() ;
                                 } else {
                                   return null;
                                 }
@@ -183,18 +192,16 @@ class StudentLoginPage extends State<StudentLogin> {
                                       color: Colors.blue,
                                     ),
                                   ),
-                                  labelText: AppLocalizations.of(context)
-                                      .tr('yourPassword'),
-                                  hintText: AppLocalizations.of(context)
-                                      .tr('enterYourPassword'),
+                                  labelText:
+                                      "yourPassword".trArgs(),
+                                  hintText:
+                                      "enterYourPassword".trArgs(),
                                 ),
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    return AppLocalizations.of(context)
-                                        .tr('enterYourPassword');
+                                    return "enterYourPassword".trArgs() ;
                                   } else if (value.length < 6) {
-                                    return AppLocalizations.of(context).tr(
-                                        'yourPasswordMustBeLongerThan6Numbers');
+                                    return "yourPasswordMustBeLongerThan6Numbers".trArgs() ;
                                   } else {
                                     return null;
                                   }
@@ -209,8 +216,7 @@ class StudentLoginPage extends State<StudentLogin> {
                           width: MediaQuery.of(context).size.width / 2,
                           child: FlatButton(
                             child: Text(
-                                AppLocalizations.of(context)
-                                    .tr('loginAsStudent'),
+                                "loginAsStudent".trArgs(),
                                 style: TextStyle(color: Colors.white)),
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
@@ -219,8 +225,8 @@ class StudentLoginPage extends State<StudentLogin> {
                                   content: Row(
                                     children: <Widget>[
                                       new CircularProgressIndicator(),
-                                      new Text(
-                                          "${AppLocalizations.of(context).tr('loading')} ...")
+                                      new Text("loading".trArgs())
+                                      //   "${AppLocalizations.of(context).tr('loading')} ...")
                                     ],
                                   ),
                                 ));
@@ -236,7 +242,7 @@ class StudentLoginPage extends State<StudentLogin> {
                       alignment: Alignment.centerRight,
                       child: InkWell(
                         child: Text(
-                          AppLocalizations.of(context).tr('buttonSignUp'),
+                          "buttonSignUp".trArgs() ,
                           style: TextStyle(color: Colors.grey, fontSize: 20),
                         ),
                         onTap: () {

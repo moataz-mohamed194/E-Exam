@@ -1,17 +1,13 @@
 import 'dart:convert';
-
+import 'package:get/get.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart' as Toast;
-
 import 'package:http/http.dart' as http;
-
 import 'DynamicDialogPage.dart';
 
 class AddExam extends StatefulWidget {
@@ -43,16 +39,6 @@ class AddExamPage extends State<AddExam> {
   final format = DateFormat("yyyy-MM-dd HH:mm");
 
   final examChapter = Map<String, String>();
-  /* addChapterToExam(String idExam, String chapter, String level, String type,
-      String count) async {
-    /*String arrayObjsText =
-        ' [{"name": "dart", "quantity": 12}, {"name": "flutter", "quantity": 25}, {"name": "json", "quantity": 8}]';
-    List<dynamic> stringList =
-        (jsonDecode(arrayObjsText) as List<dynamic>).cast<dynamic>();
-
-    print(stringList[0]['name']);
-  }*/
-  }*/
 
   void enterNumberChapter(String name) {
     int j = data[name];
@@ -110,7 +96,8 @@ class AddExamPage extends State<AddExam> {
                 )
               ],
               backgroundColor: Color(0xff254660),
-              title: Text(AppLocalizations.of(context).tr('addExam')),
+              title: Text(
+                  'addExam'.trArgs() ),
             ),
             backgroundColor: Color(0xff2e2e2e),
             body: Container(
@@ -133,11 +120,9 @@ class AddExamPage extends State<AddExam> {
                           value: subjectValue,
                           validator: (value) {
                             if (value == null) {
-                              return AppLocalizations.of(context)
-                                  .tr('enterTheSubject');
+                              return 'enterTheSubject'.trArgs() ;
                             } else if (value == " ") {
-                              return AppLocalizations.of(context)
-                                  .tr('enterTheSubject');
+                              return 'enterTheSubject'.trArgs() ;
                             } else {
                               return null;
                             }
@@ -149,7 +134,7 @@ class AddExamPage extends State<AddExam> {
                                   ))
                               .toList(),
                           hint: Text(
-                              '${AppLocalizations.of(context).tr('subject')} :'),
+                              '${'subject'.trArgs() } :'),
                           onChanged: (value) {
                             setState(() {
                               subjectValue = value;
@@ -168,15 +153,14 @@ class AddExamPage extends State<AddExam> {
                         child: DateTimeField(
                           format: format,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                .tr('whenTheExamWillBe'),
-                            hintText: AppLocalizations.of(context)
-                                .tr('enterWhenTheExamWillBe'),
+                            labelText:
+                                "whenTheExamWillBe".trArgs() ,
+                            hintText:
+                                "enterWhenTheExamWillBe".trArgs() ,
                           ),
                           validator: (value) {
                             if (value == null) {
-                              return AppLocalizations.of(context)
-                                  .tr('enterTheTimeOfExam');
+                              return "enterTheTimeOfExam".trArgs();
                             } else {
                               return null;
                             }
@@ -210,11 +194,9 @@ class AddExamPage extends State<AddExam> {
                           value: timeValue,
                           validator: (value) {
                             if (value == null) {
-                              return AppLocalizations.of(context)
-                                  .tr('enterTheTime');
+                              return "enterTheTime".trArgs();
                             } else if (value == " ") {
-                              return AppLocalizations.of(context)
-                                  .tr('enterTheTime');
+                              return 'enterTheTime'.trArgs();
                             } else {
                               return null;
                             }
@@ -226,7 +208,7 @@ class AddExamPage extends State<AddExam> {
                                   ))
                               .toList(),
                           hint: Text(
-                              '${AppLocalizations.of(context).tr('howLongOfYourExam')} :'),
+                              '${'howLongOfYourExam'.trArgs() } :'),
                           onChanged: (value) {
                             setState(() {
                               timeValue = value;
@@ -243,8 +225,7 @@ class AddExamPage extends State<AddExam> {
                           value: numberValue,
                           validator: (value) {
                             if (value == null && numberValue == null) {
-                              return AppLocalizations.of(context)
-                                  .tr('enterNumberOfChapter');
+                              return "enterNumberOfChapter".trArgs();
                             } else {
                               return null;
                             }
@@ -256,7 +237,7 @@ class AddExamPage extends State<AddExam> {
                                   ))
                               .toList(),
                           hint: Text(
-                              '${AppLocalizations.of(context).tr('numberOfChapter')} :'),
+                              '${'numberOfChapter'.trArgs() } :'),
                           onChanged: (value) {
                             setState(() {
                               numberValue = value;
@@ -285,8 +266,7 @@ class AddExamPage extends State<AddExam> {
                                 }
                               },
                               child: Text(
-                                  AppLocalizations.of(context)
-                                      .tr('chooseChapter'),
+                                  'chooseChapter'.trArgs() ,
                                   style: TextStyle(color: Colors.white)),
                               color: Colors.blue,
                             ))),

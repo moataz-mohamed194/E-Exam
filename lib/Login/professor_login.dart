@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:easy_localization/easy_localization_delegate.dart';
+import 'package:get/get.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,6 +50,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
         "action": "check_your_email_and_password",
         "email": "$id",
       });
+      print("done");
       String content = response.body;
       print(response.body);
       setState(() {
@@ -69,17 +69,24 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
             '/mainprofessor', (Route<dynamic> route) => false);
 
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('welcomeToOurApp'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+            "welcomeToOurApp".trArgs() ,
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
       } else {
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('checkYourPassword'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+             "checkYourPassword".trArgs(),
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
+      print(e);
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('checkYourEmail'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "checkYourEmail".trArgs(),
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     }
   }
 
@@ -142,19 +149,21 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                               filled: true,
                               fillColor: Colors.white,
                               labelText:
-                                  AppLocalizations.of(context).tr('yourEmail'),
+                              "yourEmail".trArgs(),//"your Email",
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.blue,
                                 ),
                               ),
-                              hintText: AppLocalizations.of(context)
-                                  .tr('enterYourEmail'),
+                              hintText:
+
+                              "enterYourEmail".trArgs()
+                              ,
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .tr('enterYourEmail');
+                                return "enterYourEmail".trArgs()
+                                    ;
                               } else {
                                 return null;
                               }
@@ -183,18 +192,20 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                                     color: Colors.blue,
                                   ),
                                 ),
-                                labelText: AppLocalizations.of(context)
-                                    .tr('yourPassword'),
-                                hintText: AppLocalizations.of(context)
-                                    .tr('enterYourPassword'),
+                                labelText:
+                                    "yourPassword".trArgs()
+                                ,
+                                hintText:
+                                    "enterYourPassword".trArgs()
+                                ,
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .tr('enterYourPassword');
+                                  return "enterYourPassword".trArgs()
+                                      ;
                                 } else if (value.length < 6) {
-                                  return AppLocalizations.of(context).tr(
-                                      'YourPasswordMustBeLongerThan6Numbers');
+                                  return "YourPasswordMustBeLongerThan6Numbers".trArgs()
+                                      ;
                                 } else {
                                   return null;
                                 }
@@ -209,8 +220,8 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                         width: MediaQuery.of(context).size.width / 2,
                         child: FlatButton(
                           child: Text(
-                              AppLocalizations.of(context)
-                                  .tr('loginAsProfessor'),
+                                  "loginAsProfessor".trArgs()
+                              ,
                               style: TextStyle(color: Colors.white)),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
@@ -219,8 +230,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                                 content: Row(
                                   children: <Widget>[
                                     new CircularProgressIndicator(),
-                                    new Text(
-                                        "${AppLocalizations.of(context).tr('loading')} ...")
+                                    new Text("loading".trArgs())
                                   ],
                                 ),
                               ));
@@ -237,7 +247,7 @@ class ProfessorLoginPage extends State<ProfessorLogin> {
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       child: Text(
-                        AppLocalizations.of(context).tr('buttonSignUp'),
+                        "buttonSignUp".trArgs() ,
                         style: TextStyle(color: Colors.grey, fontSize: 20),
                       ),
                       onTap: () {

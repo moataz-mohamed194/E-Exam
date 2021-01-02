@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +7,7 @@ import 'package:toast/toast.dart' as Toast;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signupadmin.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:get/get.dart';
 class AdminLogin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -64,17 +63,25 @@ class AdminLoginPage extends State<AdminLogin> {
         Navigator.of(context).pushNamedAndRemoveUntil(
             '/mainforadmin', (Route<dynamic> route) => false);
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('welcomeToOurApp'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+            "welcomeToOurApp"
+            ,
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
       } else {
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('checkYourPassword'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+            "checkYourPassword"
+            ,
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
       }
     } catch (e) {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('checkYourEmail'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "checkYourEmail" ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     }
   }
 
@@ -138,20 +145,21 @@ class AdminLoginPage extends State<AdminLogin> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
-                                labelText: AppLocalizations.of(context)
-                                    .tr('yourEmail'),
+                                labelText:"yourEmail".trArgs(),
+
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.blue,
                                   ),
                                 ),
-                                hintText: AppLocalizations.of(context)
-                                    .tr('enterYourEmail'),
+                                hintText:
+                                "enterYourEmail".trArgs()
+                                ,
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .tr('enterYourEmail');
+                                  return "enterYourEmail".trArgs()
+                                      ;
                                 } else {
                                   return null;
                                 }
@@ -175,23 +183,23 @@ class AdminLoginPage extends State<AdminLogin> {
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
-                                labelText: AppLocalizations.of(context)
-                                    .tr('yourPassword'),
+                                labelText:"yourPassword".trArgs()
+                                ,
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.blue,
                                   ),
                                 ),
-                                hintText: AppLocalizations.of(context)
-                                    .tr('enterYourPassword'),
+                                hintText:"enterYourPassword".trArgs()
+                                ,
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .tr('enterYourPassword');
+                                  return "enterYourPassword".trArgs()
+                                      ;
                                 } else if (value.length < 6) {
-                                  return AppLocalizations.of(context).tr(
-                                      'YourPasswordMustBeLongerThan6Numbers');
+                                  return "YourPasswordMustBeLongerThan6Numbers".trArgs()
+                                      ;
                                 } else {
                                   return null;
                                 }
@@ -207,8 +215,8 @@ class AdminLoginPage extends State<AdminLogin> {
                           width: MediaQuery.of(context).size.width / 2,
                           child: FlatButton(
                             child: Text(
-                              AppLocalizations.of(context).tr('loginAsAdmin'),
-                              style: TextStyle(color: Colors.white),
+                              'loginAsAdmin'.trArgs()
+                          ,    style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
@@ -217,8 +225,8 @@ class AdminLoginPage extends State<AdminLogin> {
                                   content: Row(
                                     children: <Widget>[
                                       new CircularProgressIndicator(),
-                                      new Text(
-                                          "${AppLocalizations.of(context).tr('loading')} ...")
+                                      new Text("loading".trArgs()),
+                                      //"${AppLocalizations.of(context).tr('loading')} ...")
                                     ],
                                   ),
                                 ));
@@ -233,7 +241,8 @@ class AdminLoginPage extends State<AdminLogin> {
                       alignment: Alignment.centerRight,
                       child: InkWell(
                         child: Text(
-                          AppLocalizations.of(context).tr('buttonSignUp'),
+                            'buttonSignUp'.trArgs(),
+                          //"sign up", // AppLocalizations.of(context).tr('buttonSignUp'),
                           style: TextStyle(color: Colors.grey, fontSize: 20),
                         ),
                         onTap: () {

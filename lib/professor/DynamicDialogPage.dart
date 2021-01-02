@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,9 +114,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
           (jsonDecode(result) as List<dynamic>).cast<dynamic>();
       addExam(examSubject, examTime, examDurationOfTheExam, stringList);
 
-      //print(stringList[0]);
-      //  print(result);
-    } else {
+     } else {
       String data =
           '{"countOfTrueAndFalse":$countOfTrueAndFalse,"countOfMCQLevelA":$countOfMCQLevelA,"countOfMCQLevelB":$countOfMCQLevelB,"countOfMCQLevelC":$countOfMCQLevelC},';
       setState(() {
@@ -161,7 +159,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
         valueMCQLevelA = "0";
         if (counter == int.parse(numberValue)) {
           setState(() {
-            button = AppLocalizations.of(context).tr('Done');
+            button = 'Done'.trArgs(); //AppLocalizations.of(context).tr('Done');
           });
         }
       });
@@ -222,8 +220,11 @@ class _DynamicDialogState extends State<DynamicDialog> {
       q++;
       if (q == int.parse(_store.get("numberValue"))) {
         Toast.Toast.show(
-            AppLocalizations.of(context).tr('thatExamIsAdded'), context,
-            duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+            'thatExamIsAdded'.trArgs()
+            ,
+            context,
+            duration: Toast.Toast.LENGTH_SHORT,
+            gravity: Toast.Toast.BOTTOM);
 
         Navigator.of(context).pushNamedAndRemoveUntil(
             '/mainprofessor', (Route<dynamic> route) => false);
@@ -235,7 +236,8 @@ class _DynamicDialogState extends State<DynamicDialog> {
   Widget build(BuildContext context) {
     String numberValue = _store.get("numberValue");
     return AlertDialog(
-      title: Text('${AppLocalizations.of(context).tr('chapter')} $counter'),
+      title: Text(
+          '${'chapter'.trArgs() } $counter'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -251,7 +253,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                             ))
                         .toList(),
                     hint: Text(
-                      '${AppLocalizations.of(context).tr('numberOfTrueAndFalseQuestion')} :',
+                      '${'numberOfTrueAndFalseQuestion'.trArgs() } :',
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 29),
                     ),
@@ -280,8 +282,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                                   ))
                               .toList(),
                           hint: Text(
-                            //AppLocalizations.of(context).tr('numberOfTrueAndFalseQuestion')
-                            '${AppLocalizations.of(context).tr('numberOfQuestionInLevel')} A :',
+                            '${'numberOfQuestionInLevel'.trArgs()} A :',
                             style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width / 29),
@@ -313,7 +314,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                                   ))
                               .toList(),
                           hint: Text(
-                            '${AppLocalizations.of(context).tr('numberOfQuestionInLevel')} B :',
+                            '${'numberOfQuestionInLevel'.trArgs() } B :',
                             style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width / 29),
@@ -344,7 +345,7 @@ class _DynamicDialogState extends State<DynamicDialog> {
                                   ))
                               .toList(),
                           hint: Text(
-                            '${AppLocalizations.of(context).tr('numberOfQuestionInLevel')} C :',
+                            '${'numberOfQuestionInLevel'.trArgs() } C :',
                             style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width / 29),
@@ -365,16 +366,16 @@ class _DynamicDialogState extends State<DynamicDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(AppLocalizations.of(context).tr('Cancel')),
+          child: Text('Cancel'.trArgs() ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         FlatButton(
           child: numberValue == "1" || int.parse(numberValue) == counter
-              ? Text(AppLocalizations.of(context).tr('Done'))
+              ? Text('Done'.trArgs()) //AppLocalizations.of(context).tr('Done'))
               : numberValue != "1"
-                  ? Text(AppLocalizations.of(context).tr('Next'))
+                  ? Text('Next'.trArgs()) //AppLocalizations.of(context).tr('Next'))
                   : Text('$button'),
           onPressed: () {
             nextChapter(valueTrueAndFalse, valueMCQLevelA, valueMCQLevelB,

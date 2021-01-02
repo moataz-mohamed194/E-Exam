@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,12 +65,20 @@ class AddDepartmentPage extends State<AddDepartment> {
     print(request.body);
     if (request.body == "name used") {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('nameOfDepartmentIsUsed'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "nameOfDepartmentIsUsed".trArgs()//"Name of department is used"
+          //AppLocalizations.of(context).tr('nameOfDepartmentIsUsed')
+          ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
     } else {
       Toast.Toast.show(
-          AppLocalizations.of(context).tr('thatDepartmentIsAdd'), context,
-          duration: Toast.Toast.LENGTH_SHORT, gravity: Toast.Toast.BOTTOM);
+          "thatDepartmentIsAdd".trArgs()//"that department is add"
+//          AppLocalizations.of(context).tr('thatDepartmentIsAdd')
+          ,
+          context,
+          duration: Toast.Toast.LENGTH_SHORT,
+          gravity: Toast.Toast.BOTTOM);
       Navigator.pop(context);
     }
     //});
@@ -97,7 +105,8 @@ class AddDepartmentPage extends State<AddDepartment> {
             )
           ],
           backgroundColor: Color(0xff254660),
-          title: Text("${AppLocalizations.of(context).tr('addDepartment')}"),
+          title: Text("addDepartment".trArgs()),
+          //"${AppLocalizations.of(context).tr('addDepartment')}"),
         ),
         backgroundColor: Color(0xff2e2e2e),
         body: Container(
@@ -122,21 +131,21 @@ class AddDepartmentPage extends State<AddDepartment> {
                           textInputAction: TextInputAction.next,
                           onSaved: (input) => departmentNameSave = input,
                           decoration: InputDecoration(
-                            labelText:
-                                "${AppLocalizations.of(context).tr('departmentName')}",
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.blue,
+                              labelText: "departmentName".trArgs(),//"Department name",
+                              // "${AppLocalizations.of(context).tr('departmentName')}",
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.blue,
+                                ),
                               ),
-                            ),
-                            hintText:
-                                "${AppLocalizations.of(context).tr('enterDepartmentName')}",
-                          ),
+                              hintText: "enterDepartmentName".trArgs()//"Enter department name"
+//                                "${AppLocalizations.of(context).tr('enterDepartmentName')}",
+                              ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return '${AppLocalizations.of(context).tr('enterDepartmentName')}';
+                              return "enterDepartmentName".trArgs();//"Enter department name"; //'${AppLocalizations.of(context).tr('enterDepartmentName')}';
                             } else {
                               return null;
                             }
@@ -152,9 +161,9 @@ class AddDepartmentPage extends State<AddDepartment> {
                             value: _ratingController,
                             validator: (value) {
                               if (value == null) {
-                                return '${AppLocalizations.of(context).tr('enterTheTimeCanStudentJoin')}';
+                                return "enterTheTimeCanStudentJoin".trArgs();
                               } else if (value == " ") {
-                                return '${AppLocalizations.of(context).tr('enterTheTimeCanStudentJoin')}';
+                                return "enterTheTimeCanStudentJoin".trArgs();
                               } else {
                                 return null;
                               }
@@ -165,8 +174,7 @@ class AddDepartmentPage extends State<AddDepartment> {
                                       value: label,
                                     ))
                                 .toList(),
-                            hint: Text(
-                                '${AppLocalizations.of(context).tr('studentCanEnterFrom')}:'),
+                            hint: Text("studentCanEnterFrom".trArgs()),
                             onChanged: (value) {
                               setState(() {
                                 _ratingController = value;
@@ -182,9 +190,9 @@ class AddDepartmentPage extends State<AddDepartment> {
                             value: _ratingController1,
                             validator: (value) {
                               if (value == null) {
-                                return '${AppLocalizations.of(context).tr('enterDepartmentLeader')}';
+                                return "enterDepartmentLeader".trArgs();//"Enter Department Leader"; //'${AppLocalizations.of(context).tr('enterDepartmentLeader')}';
                               } else if (value == " ") {
-                                return '${AppLocalizations.of(context).tr('enterDepartmentLeader')}';
+                                return "enterDepartmentLeader".trArgs();//"Enter Department Leader"; //'${AppLocalizations.of(context).tr('enterDepartmentLeader')}';
                               } else {
                                 return null;
                               }
@@ -195,8 +203,7 @@ class AddDepartmentPage extends State<AddDepartment> {
                                       value: label,
                                     ))
                                 .toList(),
-                            hint: Text(
-                                '${AppLocalizations.of(context).tr('leaderOfDepartment')} :'),
+                            hint: Text("leaderOfDepartment".trArgs()),
                             onChanged: (value) {
                               setState(() {
                                 _ratingController1 = value;
@@ -219,8 +226,8 @@ class AddDepartmentPage extends State<AddDepartment> {
                               );
                             }
                           },
-                          label: Text(
-                              "${AppLocalizations.of(context).tr('addDepartment')}",
+                          label: Text("addDepartment".trArgs(),
+                              // "${AppLocalizations.of(context).tr('addDepartment')}",
                               style: TextStyle(color: Colors.white)),
                           color: Colors.blue,
                         ),

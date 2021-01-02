@@ -1,5 +1,5 @@
+import 'package:get/get.dart';
 import 'dart:convert';
-import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:exam/data/globals.dart';
 import 'package:exam/language/lang_view.dart';
 import 'package:http/http.dart' as http;
@@ -217,16 +217,6 @@ class GetExamPage extends State<GetExam> {
                             },
                           ))
                       : Container(),
-                  /*Card(
-                    child: Column(
-                      children: <Widget>[
-                        Text(data[i]['subject']),
-                        Text(data[i]['numberofchapter']),
-                        Text(data[i]['level']),
-                        Text(data[i]['correctanswer']),
-                      ],
-                    ),
-                  )*/
                 ],
               )
             : Column(
@@ -299,16 +289,7 @@ class GetExamPage extends State<GetExam> {
                           }
                         },
                       )),
-                  /*Card(
-                    child: Column(
-                      children: <Widget>[
-                        Text(data[i]['subject']),
-                        Text(data[i]['numberofchapter']),
-                        Text(data[i]['correctanswer']),
-                      ],
-                    ),
-                  )*/
-                ],
+                 ],
               ),
       );
     } else {
@@ -322,12 +303,13 @@ class GetExamPage extends State<GetExam> {
     Alert(
       context: context,
       title: "$title",
-      desc: "${AppLocalizations.of(context).tr('Result')}:$result %",
+      desc:
+          "${'Result'.trArgs() }:$result %",
       image: Image.asset("$img"),
       buttons: [
         DialogButton(
           child: Text(
-            "${AppLocalizations.of(context).tr('Finish')}:$result",
+            "${'Finish'.trArgs() }:$result",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
@@ -364,12 +346,12 @@ class GetExamPage extends State<GetExam> {
       double final2 = final1 * 100;
       double final3 = double.parse(final2.toStringAsFixed(2));
       if (final2 >= 50.0) {
-        word = '${AppLocalizations.of(context).tr('Result')}';
+        word = 'Result'.trArgs().trArgs(); //'${AppLocalizations.of(context).tr('Result')}';
         img = 'img/success.png';
 
         _onAlertWithCustomImagePressed(context, word, final3, img);
       } else {
-        word = AppLocalizations.of(context).tr('Failed');
+        word = 'Failed'.trArgs(); // AppLocalizations.of(context).tr('Failed');
         // double final3 = double.parse(final2.toStringAsFixed(2));
         img = 'img/failed.png';
         _onAlertWithCustomImagePressed(context, word, final3, img);
@@ -405,7 +387,7 @@ class GetExamPage extends State<GetExam> {
           )
         ],
         backgroundColor: Color(0xff254660),
-        title: Text(AppLocalizations.of(context).tr('exam')),
+        title: Text('exam'.trArgs()), //AppLocalizations.of(context).tr('exam')),
       ),
       backgroundColor: Color(0xff2e2e2e),
       floatingActionButton: FloatingActionButton(
@@ -417,12 +399,13 @@ class GetExamPage extends State<GetExam> {
               double final2 = final1 * 100;
               double final3 = double.parse(final2.toStringAsFixed(2));
               if (final2 >= 50.0) {
-                word = '${AppLocalizations.of(context).tr('Result')}';
+                word =
+                    'Result'.trArgs(); //'${AppLocalizations.of(context).tr('Result')}';
                 img = 'img/success.png';
 
                 _onAlertWithCustomImagePressed(context, word, final3, img);
               } else {
-                word = AppLocalizations.of(context).tr('Failed');
+                word = 'Failed'.trArgs(); // AppLocalizations.of(context).tr('Failed');
                 // double final3 = double.parse(final2.toStringAsFixed(2));
                 img = 'img/failed.png';
                 _onAlertWithCustomImagePressed(context, word, final3, img);
@@ -444,7 +427,7 @@ class GetExamPage extends State<GetExam> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            getMCQExam() /*, Text("$count")*/
+            getMCQExam()
           ],
         ),
       ),
